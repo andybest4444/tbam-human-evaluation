@@ -34,15 +34,15 @@ EXPECTED_PUBLIC_MANIFEST_SHA256 = (
     "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c"
 )
 EXPECTED_COLLECTION_PROTOCOL_ID = (
-    "ed1693ccd7b4bb750c2e677378d5f0db27b454f745fadd9e0dde879367a3a338"
+    "fb40f2bd42dff9e6e1e1b108a9f53bb90c56cc39b06f50ae664f9c8a435d32d3"
 )
 EXPECTED_BUNDLE_ID = (
-    "ec71dedd8af43dcb21df43734efa37c00e24b68a22a5ea09d42d046183a36ebe"
+    "61c919ce6a1043c79f9b3db3a4a7030ef0ffd52071c5a3896ca78769a36188f0"
 )
 STUDY_ID = "tbam_s6_human_forced_choice_full_catalog_pages_v1"
 PRESENTATION_MEDIUM = "static_route_maps_bilingual_pages_v1"
 ASSIGNMENT_RULE_ID = "complete_catalog_round_robin_v1"
-ASSET_VERSION = "full-catalog-bilingual-v1"
+ASSET_VERSION = "full-catalog-bilingual-v2"
 RATER_SLOT_MIN = 0
 RATER_SLOT_MAX = 4
 ITEMS_PER_RATER = 240
