@@ -4,7 +4,7 @@
   const scriptUrl = new URL(document.currentScript.src);
   const siteBase = new URL("./", scriptUrl);
   const nativeFetch = window.fetch.bind(window);
-  const namespace = "tbam.pages.local.v1";
+  const namespace = "tbam.pages.local.v2";
   const expectedManifestSha =
     "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c";
   const encoder = new TextEncoder();
@@ -68,7 +68,8 @@
             !/^[0-9a-f]{64}$/.test(
               manifest?.consent_text_sha256 || "",
             ) ||
-            manifest?.consent_version !== "pages-pilot-notice-v2" ||
+            manifest?.consent_version !==
+              "pages-forced-choice-notice-v1" ||
             manifest?.presentation_medium !==
               "static_route_maps_pages_v1" ||
             manifest?.assignment_rule_id !==
@@ -103,7 +104,7 @@
 
   function emptyStore(manifest) {
     return {
-      schema_version: "tbam.pages_local_store.v1",
+      schema_version: "tbam.pages_local_store.v2",
       study_id: manifest.study_id,
       collection_protocol_id: manifest.collection_protocol_id,
       presentation_medium: manifest.presentation_medium,
@@ -125,7 +126,7 @@
       throw new LocalApiError(500, "此浏览器中的进度文件已损坏。");
     }
     if (
-      store?.schema_version !== "tbam.pages_local_store.v1" ||
+      store?.schema_version !== "tbam.pages_local_store.v2" ||
       store?.study_id !== manifest.study_id ||
       store?.collection_protocol_id !== manifest.collection_protocol_id ||
       store?.presentation_medium !== manifest.presentation_medium ||
@@ -319,7 +320,6 @@
         item_id: item.item_id,
         blind_map_id: item.blind_map_id,
         catalog_number: index + 1,
-        both_completed: item.both_completed,
         status,
         started_utc: local.started_utc,
         updated_utc: local.draft?.updated_utc || null,
@@ -351,85 +351,24 @@
     }
   }
 
-  function validateRating(rating, field) {
-    const required = [
-      "overall",
-      "terrain",
-      "cover",
-      "coordination",
-      "efficiency",
-      "confidence",
-      "evidence_time_steps",
-      "rationale",
-    ];
-    if (
-      !rating ||
-      typeof rating !== "object" ||
-      Object.keys(rating).sort().join(",") !== required.sort().join(",")
-    ) {
-      throw new LocalApiError(400, `${field} 的评分字段不完整。`);
+  function validateChoice(choice) {
+    if (choice !== "A" && choice !== "B") {
+      throw new LocalApiError(400, "必须选择路线 A 或路线 B。");
     }
-    if (!["A", "B", "tie"].includes(rating.overall)) {
-      throw new LocalApiError(400, `${field}.overall 无效。`);
-    }
-    for (const key of ["terrain", "cover", "coordination", "efficiency"]) {
-      if (!["A", "B", "tie", "unclear"].includes(rating[key])) {
-        throw new LocalApiError(400, `${field}.${key} 无效。`);
-      }
-    }
-    if (!Number.isInteger(rating.confidence) || rating.confidence < 1 ||
-        rating.confidence > 5) {
-      throw new LocalApiError(400, `${field}.confidence 无效。`);
-    }
-    if (
-      !Array.isArray(rating.evidence_time_steps) ||
-      rating.evidence_time_steps.length > 8 ||
-      new Set(rating.evidence_time_steps).size !==
-        rating.evidence_time_steps.length ||
-      rating.evidence_time_steps.some(
-        (step) => !Number.isInteger(step) || step < 0 || step > 96,
-      )
-    ) {
-      throw new LocalApiError(400, `${field}.evidence_time_steps 无效。`);
-    }
-    if (typeof rating.rationale !== "string" || rating.rationale.length > 500) {
-      throw new LocalApiError(400, `${field}.rationale 无效。`);
-    }
-    return {
-      overall: rating.overall,
-      terrain: rating.terrain,
-      cover: rating.cover,
-      coordination: rating.coordination,
-      efficiency: rating.efficiency,
-      confidence: rating.confidence,
-      evidence_time_steps: [...rating.evidence_time_steps].sort(
-        (first, second) => first - second,
-      ),
-      rationale: rating.rationale.trim(),
-    };
+    return choice;
   }
 
-  function validateEndpoints(endpoints, bothCompleted) {
-    const required = ["all_sample", "conditional_semantic"];
+  function validateDraftPayload(payload) {
     if (
-      !endpoints ||
-      typeof endpoints !== "object" ||
-      Array.isArray(endpoints) ||
-      Object.keys(endpoints).sort().join(",") !== required.sort().join(",")
+      !payload ||
+      typeof payload !== "object" ||
+      Array.isArray(payload) ||
+      Object.keys(payload).join(",") !== "choice" ||
+      ![null, "A", "B"].includes(payload.choice)
     ) {
-      throw new LocalApiError(400, "评分终点不完整。");
+      throw new LocalApiError(400, "草稿选择无效。");
     }
-    const allSample = validateRating(endpoints.all_sample, "all_sample");
-    let conditional = endpoints.conditional_semantic;
-    if (bothCompleted) {
-      conditional = validateRating(conditional, "conditional_semantic");
-    } else if (conditional !== null) {
-      throw new LocalApiError(400, "未共同完成项目不能提交条件终点。");
-    }
-    return {
-      all_sample: allSample,
-      conditional_semantic: conditional,
-    };
+    return { choice: payload.choice };
   }
 
   async function register(manifest, body) {
@@ -523,7 +462,7 @@
     profile,
     item,
     local,
-    endpoints,
+    choice,
     activeSeconds,
   ) {
     const duration = Number(activeSeconds);
@@ -532,7 +471,7 @@
     }
     const completed = now();
     return {
-      schema_version: "tbam.blind_judgment.v1",
+      schema_version: "tbam.blind_pairwise_choice.v1",
       study_id: manifest.study_id,
       item_id: item.item_id,
       judge_type: "human",
@@ -544,7 +483,7 @@
       },
       control_item: false,
       attention_check_passed: null,
-      endpoints: validateEndpoints(endpoints, item.both_completed),
+      choice: validateChoice(choice),
       started_utc: local.started_utc || completed,
       completed_utc: completed,
       duration_seconds: Math.round(duration * 1000) / 1000,
@@ -587,7 +526,7 @@
       "input_artifact_sha256",
       "control_item",
       "attention_check_passed",
-      "endpoints",
+      "choice",
       "started_utc",
       "completed_utc",
       "duration_seconds",
@@ -597,7 +536,7 @@
       typeof record !== "object" ||
       Array.isArray(record) ||
       Object.keys(record).sort().join(",") !== required.join(",") ||
-      record.schema_version !== "tbam.blind_judgment.v1" ||
+      record.schema_version !== "tbam.blind_pairwise_choice.v1" ||
       record.study_id !== manifest.study_id ||
       record.item_id !== item.item_id ||
       record.judge_type !== "human" ||
@@ -620,7 +559,7 @@
     ) {
       throw new Error(`备份中的制品哈希不匹配：${item.item_id}`);
     }
-    validateEndpoints(record.endpoints, item.both_completed);
+    validateChoice(record.choice);
     if (
       !validTimestamp(record.started_utc) ||
       !validTimestamp(record.completed_utc) ||
@@ -720,6 +659,7 @@
         ) {
           throw new Error(`备份中的草稿无效：${itemId}`);
         }
+        validateDraftPayload(local.draft.payload);
         if (local.judgment !== null) {
           throw new Error(`已提交项目不能同时带草稿：${itemId}`);
         }
@@ -835,7 +775,6 @@
         consent_text: manifest.consent_text,
         item_count: manifest.item_count,
         map_count: manifest.map_count,
-        both_completed_count: manifest.both_completed_count,
         items_per_rater: manifest.items_per_rater,
         judgments_per_item:
           manifest.judgments_per_item_if_all_slots_complete,
@@ -892,14 +831,12 @@
       return jsonResponse({
         item_id: item.item_id,
         blind_map_id: item.blind_map_id,
-        both_completed: item.both_completed,
         map_index: item.map_index,
         item_index: item.item_index,
         directive: item.directive,
         media: {
           judge_input: item.judge_input_path,
         },
-        max_evidence_step: 96,
         draft: local.draft,
       });
     }
@@ -942,15 +879,14 @@
       if (
         !Number.isFinite(activeSeconds) ||
         activeSeconds < 0 ||
-        activeSeconds > 43200 ||
-        !body.payload ||
-        typeof body.payload !== "object"
+        activeSeconds > 43200
       ) {
         throw new LocalApiError(400, "草稿数据无效。");
       }
+      const payload = validateDraftPayload(body.payload);
       local.started_utc ||= now();
       local.draft = {
-        payload: body.payload,
+        payload,
         active_seconds: activeSeconds,
         revision: currentRevision + 1,
         updated_utc: now(),
@@ -980,7 +916,7 @@
         profile,
         item,
         local,
-        body.endpoints,
+        body.choice,
         body.active_seconds,
       );
       local.draft = null;
@@ -1033,7 +969,7 @@
       .filter(Boolean)
       .sort((first, second) => first.item_id.localeCompare(second.item_id));
     return {
-      schema_version: "tbam.pages_human_rater_export.v1",
+      schema_version: "tbam.pages_human_rater_export.v2",
       study_id: manifest.study_id,
       judge_system_id: profile.rater_id,
       rater_slot: profile.rater_slot,
@@ -1055,7 +991,7 @@
     const store = readStore(manifest);
     const profile = currentProfile(manifest, store);
     return {
-      schema_version: "tbam.pages_browser_backup.v1",
+      schema_version: "tbam.pages_browser_backup.v2",
       study_id: manifest.study_id,
       presentation_medium: manifest.presentation_medium,
       collection_protocol_id: manifest.collection_protocol_id,
@@ -1112,7 +1048,7 @@
       throw new Error("备份文件不是有效 JSON。");
     }
     if (
-      payload?.schema_version !== "tbam.pages_browser_backup.v1" ||
+      payload?.schema_version !== "tbam.pages_browser_backup.v2" ||
       payload?.study_id !== manifest.study_id ||
       payload?.source_public_manifest_sha256 !==
         manifest.source_public_manifest_sha256 ||

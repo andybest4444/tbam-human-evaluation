@@ -2,17 +2,14 @@
 
 const MANIFEST_URL = "./data/pages_manifest.json";
 const MANIFEST_SCHEMA = "tbam.github_pages_bundle.v1";
-const PAGES_EXPORT_SCHEMA = "tbam.pages_human_rater_export.v1";
-const JUDGMENT_SCHEMA = "tbam.blind_judgment.v1";
-const MERGED_EXPORT_SCHEMA = "tbam.merged_judgments.v1";
+const PAGES_EXPORT_SCHEMA = "tbam.pages_human_rater_export.v2";
+const JUDGMENT_SCHEMA = "tbam.blind_pairwise_choice.v1";
+const MERGED_EXPORT_SCHEMA = "tbam.merged_pairwise_choices.v1";
 const ASSIGNMENT_SIZE = 30;
 const ITEMS_PER_MAP = 8;
 const RATER_SLOT_MIN = 0;
 const RATER_SLOT_MAX = 39;
 const MAX_DURATION_SECONDS = 43200;
-const MAX_EVIDENCE_STEPS = 8;
-const MAX_EVIDENCE_TIME_STEP = 96;
-const MAX_RATIONALE_LENGTH = 500;
 const PAGES_EXPORT_FIELDS = [
   "schema_version",
   "study_id",
@@ -39,25 +36,13 @@ const JUDGMENT_FIELDS = [
   "input_artifact_sha256",
   "control_item",
   "attention_check_passed",
-  "endpoints",
+  "choice",
   "started_utc",
   "completed_utc",
   "duration_seconds",
 ];
 const ARTIFACT_HASH_FIELDS = ["A_video", "B_video", "judge_input"];
-const ENDPOINT_FIELDS = ["all_sample", "conditional_semantic"];
-const RATING_FIELDS = [
-  "overall",
-  "terrain",
-  "cover",
-  "coordination",
-  "efficiency",
-  "confidence",
-  "evidence_time_steps",
-  "rationale",
-];
-const OVERALL_CHOICES = new Set(["A", "B", "tie"]);
-const DIMENSION_CHOICES = new Set(["A", "B", "tie", "unclear"]);
+const PAIRWISE_CHOICES = new Set(["A", "B"]);
 const HASH_PATTERN = /^[a-f0-9]{64}$/i;
 const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}$/;
 const ISO_TIMESTAMP_PATTERN =
@@ -237,9 +222,6 @@ function validateManifest(manifest) {
     assertPlainObject(item, `manifest.items[${index}]`);
     assertSafeId(item.item_id, `manifest.items[${index}].item_id`);
     assertSafeId(item.blind_map_id, `manifest.items[${index}].blind_map_id`);
-    if (typeof item.both_completed !== "boolean") {
-      throw new Error(`manifest.items[${index}].both_completed 必须是布尔值`);
-    }
     if (seen.has(item.item_id)) {
       throw new Error(`清单中项目编号重复：${item.item_id}`);
     }
@@ -524,26 +506,8 @@ function validateJudgment(judgment, expectedRater, index) {
     throw new Error(`${label}.attention_check_passed 必须为 null`);
   }
 
-  assertExactKeys(judgment.endpoints, ENDPOINT_FIELDS, `${label}.endpoints`);
-  validateRating(
-    judgment.endpoints.all_sample,
-    `${label}.endpoints.all_sample`,
-  );
-  const conditional = judgment.endpoints.conditional_semantic;
-  if (manifestItem.both_completed) {
-    if (conditional === null) {
-      throw new Error(
-        `${label}.endpoints.conditional_semantic 在共同完成项目中不能为 null`,
-      );
-    }
-    validateRating(
-      conditional,
-      `${label}.endpoints.conditional_semantic`,
-    );
-  } else if (conditional !== null) {
-    throw new Error(
-      `${label}.endpoints.conditional_semantic 在非共同完成项目中必须为 null`,
-    );
+  if (!PAIRWISE_CHOICES.has(judgment.choice)) {
+    throw new Error(`${label}.choice 必须为 A 或 B`);
   }
 
   const startedTime = parseTimestamp(
@@ -568,53 +532,6 @@ function validateJudgment(judgment, expectedRater, index) {
     );
   }
   return judgment;
-}
-
-function validateRating(rating, label) {
-  assertExactKeys(rating, RATING_FIELDS, label);
-  if (!OVERALL_CHOICES.has(rating.overall)) {
-    throw new Error(`${label}.overall 必须为 A、B 或 tie`);
-  }
-  for (const field of ["terrain", "cover", "coordination", "efficiency"]) {
-    if (!DIMENSION_CHOICES.has(rating[field])) {
-      throw new Error(`${label}.${field} 必须为 A、B、tie 或 unclear`);
-    }
-  }
-  if (
-    !Number.isInteger(rating.confidence) ||
-    rating.confidence < 1 ||
-    rating.confidence > 5
-  ) {
-    throw new Error(`${label}.confidence 必须是 1–5 的整数`);
-  }
-  if (
-    !Array.isArray(rating.evidence_time_steps) ||
-    rating.evidence_time_steps.length > MAX_EVIDENCE_STEPS
-  ) {
-    throw new Error(`${label}.evidence_time_steps 必须是最多 8 项的数组`);
-  }
-  const seenSteps = new Set();
-  for (const [index, step] of rating.evidence_time_steps.entries()) {
-    if (
-      !Number.isInteger(step) ||
-      step < 0 ||
-      step > MAX_EVIDENCE_TIME_STEP
-    ) {
-      throw new Error(
-        `${label}.evidence_time_steps[${index}] 必须是 0–96 的整数`,
-      );
-    }
-    if (seenSteps.has(step)) {
-      throw new Error(`${label}.evidence_time_steps 不能包含重复值`);
-    }
-    seenSteps.add(step);
-  }
-  if (
-    typeof rating.rationale !== "string" ||
-    rating.rationale.length > MAX_RATIONALE_LENGTH
-  ) {
-    throw new Error(`${label}.rationale 必须是不超过 500 字符的字符串`);
-  }
 }
 
 function validateArtifactHashes(binding, label, expected = null) {
@@ -773,22 +690,14 @@ function buildItemRows(judgments) {
     mapIndex: numericOrInfinity(item.map_index),
     itemIndex: numericOrInfinity(item.item_index),
     total: 0,
-    allA: 0,
-    allB: 0,
-    allTie: 0,
-    conditionalA: 0,
-    conditionalB: 0,
-    conditionalTie: 0,
+    choiceA: 0,
+    choiceB: 0,
   }));
   const byId = new Map(rows.map((row) => [row.itemId, row]));
   for (const judgment of judgments) {
     const row = byId.get(judgment.item_id);
     row.total += 1;
-    incrementChoice(row, "all", judgment.endpoints.all_sample.overall);
-    const conditional = judgment.endpoints.conditional_semantic;
-    if (conditional !== null) {
-      incrementChoice(row, "conditional", conditional.overall);
-    }
+    row[`choice${judgment.choice}`] += 1;
   }
   return rows.sort(
     (left, right) =>
@@ -797,11 +706,6 @@ function buildItemRows(judgments) {
       left.blindMapId.localeCompare(right.blindMapId) ||
       left.itemId.localeCompare(right.itemId),
   );
-}
-
-function incrementChoice(row, prefix, choice) {
-  const suffix = choice === "tie" ? "Tie" : choice;
-  row[`${prefix}${suffix}`] += 1;
 }
 
 function render() {
@@ -889,7 +793,7 @@ function renderItems() {
   const body = elements["item-body"];
   body.replaceChildren();
   if (state.latestExports.length === 0) {
-    body.appendChild(emptyTableRow(9, "导入结果后显示项目计数。"));
+    body.appendChild(emptyTableRow(5, "导入结果后显示项目计数。"));
     return;
   }
   for (const row of state.itemRows) {
@@ -897,12 +801,8 @@ function renderItems() {
     tr.appendChild(textCell(row.itemId, "mono"));
     tr.appendChild(textCell(row.blindMapId, "mono"));
     tr.appendChild(textCell(row.total, "number-cell"));
-    tr.appendChild(textCell(row.allA, "number-cell"));
-    tr.appendChild(textCell(row.allB, "number-cell"));
-    tr.appendChild(textCell(row.allTie, "number-cell"));
-    tr.appendChild(textCell(row.conditionalA, "number-cell"));
-    tr.appendChild(textCell(row.conditionalB, "number-cell"));
-    tr.appendChild(textCell(row.conditionalTie, "number-cell"));
+    tr.appendChild(textCell(row.choiceA, "number-cell"));
+    tr.appendChild(textCell(row.choiceB, "number-cell"));
     body.appendChild(tr);
   }
 }
@@ -1029,23 +929,15 @@ function downloadItemSummary() {
     "item_id",
     "blind_map_id",
     "judgment_count",
-    "all_A",
-    "all_B",
-    "all_tie",
-    "conditional_A",
-    "conditional_B",
-    "conditional_tie",
+    "choice_A",
+    "choice_B",
   ];
   const rows = state.itemRows.map((row) => [
     row.itemId,
     row.blindMapId,
     row.total,
-    row.allA,
-    row.allB,
-    row.allTie,
-    row.conditionalA,
-    row.conditionalB,
-    row.conditionalTie,
+    row.choiceA,
+    row.choiceB,
   ]);
   downloadCsv(`tbam_item_summary_${dateStamp()}.csv`, headers, rows);
 }

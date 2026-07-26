@@ -33,12 +33,12 @@ EXPECTED_PUBLIC_MANIFEST_SHA256 = (
     "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c"
 )
 EXPECTED_COLLECTION_PROTOCOL_ID = (
-    "52c87e87c4e62f89f4036db1d403d160a9a0add9f9e3a9df669002b47f1377f2"
+    "6a0df11e93221b31f89b0cfde1a341431cb3702ddd12155bd28b50f243f7b2eb"
 )
 EXPECTED_BUNDLE_ID = (
-    "f5b39d33b436bdd0d30dd61b6612ad0419e150c065f90da57aa249e7e117abf5"
+    "77904d85499cd27f527934ea2bcdc02305571179c2dce2845987e23b1575a2d2"
 )
-STUDY_ID = "tbam_s6_human_pages_pilot_v1"
+STUDY_ID = "tbam_s6_human_forced_choice_pages_v1"
 PRESENTATION_MEDIUM = "static_route_maps_pages_v1"
 ASSIGNMENT_RULE_ID = "latin_rotation_r_plus_map_mod_8_v1"
 RUNTIME_FILES = (
@@ -65,199 +65,280 @@ SOURCE_MIRROR_FILES = (
 )
 START_RUBRIC_HTML = """
             <section class="start-rubric" aria-labelledby="start-rubric-title">
-              <header class="start-rubric-heading">
-                <p class="kicker">统一尺度 · 所有项目适用</p>
-                <h2 id="start-rubric-title">评判标准</h2>
-                <p>
-                  总体请直接回答完整指令，不要机械地把四个解释维度相加；
-                  四维仅用于解释。
-                </p>
-              </header>
-              <article class="start-rubric-item overall">
-                <div>
-                  <p class="start-rubric-primary-label">主要终点</p>
-                  <h3>总体 Overall</h3>
-                  <p>综合任务完成情况与可见路线行为，判断哪条路线更符合完整指令。</p>
-                </div>
-              </article>
-              <ol class="start-rubric-grid" aria-label="四个解释维度">
-                <li class="start-rubric-item">
-                  <span aria-hidden="true">01</span>
-                  <div>
-                    <h3>地形 Terrain</h3>
-                    <p>哪条路线更少出现与到达目标无关的不必要升降？</p>
-                  </div>
-                </li>
-                <li class="start-rubric-item">
-                  <span aria-hidden="true">02</span>
-                  <div>
-                    <h3>掩体 Cover</h3>
-                    <p>哪条路线更合理地利用隐蔽区域，而非无理由暴露？</p>
-                  </div>
-                </li>
-                <li class="start-rubric-item">
-                  <span aria-hidden="true">03</span>
-                  <div>
-                    <h3>协同 Coordination</h3>
-                    <p>比较同编号时间标记：暴露时是否分散、隐蔽时是否聚集？</p>
-                  </div>
-                </li>
-                <li class="start-rubric-item">
-                  <span aria-hidden="true">04</span>
-                  <div>
-                    <h3>效率 Efficiency</h3>
-                    <p>在不牺牲上述要求时，哪条路线更直接、少停留或绕行？</p>
-                  </div>
-                </li>
-              </ol>
-              <p class="start-rubric-note">
-                <strong>作答原则：</strong>
-                两条路线相当时可选“平局”；单个解释维度证据不足时可选“不清楚”。
-                只依据匿名路线图中的可见证据，不猜测生成方法。
+              <p class="kicker">所有项目只有一个问题</p>
+              <h2 id="start-rubric-title">路线 A 和路线 B，哪条整体更好？</h2>
+              <p>
+                根据任务指令和两张匿名路线图，必须选择 A 或 B。
+                不区分路线是否完成，不做分项评分，也不猜测生成方法。
               </p>
             </section>
 """
 START_RUBRIC_CSS = """
 
-/* GitHub Pages start-page evaluation criteria. */
+/* GitHub Pages start-page forced-choice rule. */
+.toast-region {
+  pointer-events: none;
+}
+
 .start-rubric {
   max-width: 690px;
   margin-top: 26px;
   padding: 22px;
-  border: 1px solid rgba(18, 60, 59, 0.14);
+  border: 1px solid rgba(27, 87, 83, 0.2);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.66);
+  background: var(--mint-light);
   box-shadow: 0 14px 38px rgba(31, 50, 47, 0.08);
 }
 
-.start-rubric-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: 18px;
-  align-items: end;
-}
-
-.start-rubric-heading .kicker {
-  grid-column: 1 / -1;
-  margin-bottom: 7px;
-}
-
-.start-rubric-heading h2 {
+.start-rubric h2 {
   margin: 0;
   color: var(--forest);
   font-size: 25px;
   letter-spacing: -0.025em;
 }
 
-.start-rubric-heading > p:last-child {
-  max-width: 450px;
-  margin: 0;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-  text-align: right;
-}
-
-.start-rubric-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 9px;
-  margin: 9px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.start-rubric-item {
-  display: grid;
-  grid-template-columns: 30px minmax(0, 1fr);
-  gap: 10px;
-  min-height: 94px;
-  padding: 14px;
-  border: 1px solid var(--line);
-  border-radius: 13px;
-  background: rgba(250, 250, 246, 0.86);
-}
-
-.start-rubric-item.overall {
-  display: block;
-  min-height: 0;
-  margin-top: 17px;
-  border-color: rgba(27, 87, 83, 0.2);
-  background: var(--mint-light);
-}
-
-.start-rubric-item > span {
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  background: white;
-  color: var(--forest-2);
-  font-size: 10px;
-  font-weight: 850;
-}
-
-.start-rubric-item h3 {
-  margin: 3px 0 5px;
-  color: var(--forest);
-  font-size: 14px;
-}
-
-.start-rubric-primary-label {
-  margin: 0 0 4px;
-  color: var(--forest-2);
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: 0.14em;
-}
-
-.start-rubric-item p {
-  margin: 0;
+.start-rubric > p:last-child {
+  margin: 10px 0 0;
   color: #59645f;
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.start-rubric-item .start-rubric-primary-label {
-  margin: 0 0 4px;
-  color: var(--forest-2);
-  font-size: 11px;
-}
-
-.start-rubric-note {
-  margin: 14px 0 0;
-  padding-top: 13px;
-  border-top: 1px solid var(--line);
-  color: #56615d;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.65;
 }
 
-.start-rubric-note strong {
-  color: var(--forest);
+.pairwise-choice-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  padding: 24px;
 }
 
-@media (max-width: 760px) {
+.pairwise-choice-card {
+  position: relative;
+  cursor: pointer;
+}
+
+.pairwise-choice-card input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pairwise-choice-card > span {
+  min-height: 112px;
+  display: grid;
+  place-items: center;
+  gap: 5px;
+  padding: 20px;
+  border: 2px solid var(--line);
+  border-radius: 16px;
+  background: white;
+  color: var(--forest);
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+  transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
+}
+
+.pairwise-choice-card > span strong {
+  font-family: Georgia, serif;
+  font-size: 34px;
+}
+
+.pairwise-choice-card:hover > span {
+  transform: translateY(-2px);
+  border-color: var(--forest-2);
+}
+
+.pairwise-choice-card input:checked + span {
+  border-color: var(--forest);
+  background: var(--mint-light);
+  box-shadow: 0 0 0 3px rgba(27, 87, 83, 0.12);
+}
+
+.pairwise-choice-card input:focus-visible + span {
+  outline: 3px solid rgba(229, 167, 70, 0.5);
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
   .start-rubric {
     padding: 18px;
   }
 
-  .start-rubric-heading {
-    display: block;
-  }
-
-  .start-rubric-heading > p:last-child {
-    margin-top: 8px;
-    text-align: left;
-  }
-
-  .start-rubric-grid {
+  .pairwise-choice-group {
     grid-template-columns: 1fr;
+    padding: 18px;
   }
 }
 """
 
+SIMPLE_TUTORIAL_HTML = """
+        <section class="view tutorial-view" id="tutorial-view">
+          <div class="page-heading">
+            <div>
+              <p class="kicker">开始前 · 约 1 分钟</p>
+              <h1>每项只做一次 A/B 二选一</h1>
+              <p>不判断是否完成，不做分项评分，也没有平局选项。</p>
+            </div>
+            <span class="step-chip">说明 1 / 1</span>
+          </div>
+
+          <div class="tutorial-layout">
+            <div class="tutorial-main">
+              <article class="instruction-card">
+                <div class="mini-map" aria-label="路线图例示意">
+                  <div class="terrain-grid" aria-hidden="true"></div>
+                  <span class="mini-start">S</span>
+                  <span class="mini-goal">G</span>
+                  <span class="mini-agent agent-one"></span>
+                  <span class="mini-agent agent-two"></span>
+                  <span class="mini-agent agent-three"></span>
+                  <span class="mini-path path-one"></span>
+                  <span class="mini-path path-two"></span>
+                </div>
+                <div>
+                  <p class="kicker">唯一问题</p>
+                  <h2>路线 A 和路线 B，哪条整体更好？</h2>
+                  <p>
+                    两张图使用相同地图、任务指令、图例和渲染规则。
+                    结合任务指令与可见路线整体判断，必须选择 A 或 B；
+                    A/B 只是匿名位置，不代表具体方法。
+                  </p>
+                </div>
+              </article>
+            </div>
+
+            <aside class="tutorial-checklist">
+              <p class="kicker">确认理解</p>
+              <h2>开始评判前</h2>
+              <label class="check-card">
+                <input type="checkbox" class="tutorial-check">
+                <span>
+                  <strong>我会直接选择 A 或 B</strong>
+                  不区分是否完成，不做分项评分，不猜测生成方法。
+                </span>
+              </label>
+              <button class="primary-button wide" id="finish-tutorial" type="button" disabled>
+                解锁我的 30 项目录
+                <span aria-hidden="true">→</span>
+              </button>
+            </aside>
+          </div>
+        </section>
+
+"""
+
+FORCED_CHOICE_RATING_JS = r"""
+function ratingSection() {
+  return `
+    <section class="rating-section" data-choice-section>
+      <header class="rating-heading">
+        <span class="endpoint-number">选择</span>
+        <div>
+          <h2>路线 A 和路线 B，哪条整体更好？</h2>
+          <p>结合任务指令和两张匿名路线图，必须选择一条；不区分是否完成，不做分项评分。</p>
+        </div>
+        <span class="endpoint-tag">A/B 二选一</span>
+      </header>
+      <div class="pairwise-choice-group" role="radiogroup" aria-label="选择整体更好的路线">
+        <label class="pairwise-choice-card">
+          <input type="radio" name="pairwise-choice" value="A" data-rating-field>
+          <span><strong>A</strong>选择路线 A</span>
+        </label>
+        <label class="pairwise-choice-card">
+          <input type="radio" name="pairwise-choice" value="B" data-rating-field>
+          <span><strong>B</strong>选择路线 B</span>
+        </label>
+      </div>
+    </section>
+  `;
+}
+"""
+
+FORCED_CHOICE_STATE_JS = r"""
+function applyDraft(draft) {
+  const choice = draft?.payload?.choice;
+  state.activeSeconds = Number(draft?.active_seconds || 0);
+  state.draftRevision = Number(draft?.revision || 0);
+  if (choice === "A" || choice === "B") {
+    const input = document.querySelector(
+      `input[name="pairwise-choice"][value="${choice}"]`,
+    );
+    if (input) input.checked = true;
+  }
+}
+
+function draftPayload() {
+  const selected = document.querySelector(
+    'input[name="pairwise-choice"]:checked',
+  );
+  return { choice: selected?.value || null };
+}
+
+function finalChoice() {
+  const choice = draftPayload().choice;
+  if (choice !== "A" && choice !== "B") {
+    document
+      .querySelector("[data-choice-section]")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    throw new Error("请选择路线 A 或路线 B。");
+  }
+  return choice;
+}
+"""
+
+FORCED_CHOICE_EVENTS_JS = r"""
+function updateCharacterCounts() {}
+
+function bindRatingEvents() {
+  const form = document.querySelector("#rating-form");
+  form.oninput = (event) => {
+    if (event.target.matches("[data-rating-field]")) {
+      scheduleDraftSave();
+    }
+  };
+  form.onclick = null;
+  form.onkeydown = null;
+  form.onchange = null;
+}
+"""
+
+FORCED_CHOICE_SUBMIT_JS = r"""
+async function submitRating(event) {
+  event.preventDefault();
+  let choice;
+  try {
+    choice = finalChoice();
+  } catch (error) {
+    toast(error.message, "error");
+    return;
+  }
+  if (!(await confirmFinalSubmission())) return;
+  const button = $("#submit-rating");
+  button.disabled = true;
+  try {
+    const result = await api(`/api/item/${state.activeItem.item_id}/submit`, {
+      method: "POST",
+      body: JSON.stringify({
+        choice,
+        active_seconds: Math.max(0.001, state.activeSeconds),
+      }),
+    });
+    localStorage.removeItem(localDraftKey(state.activeItem.item_id));
+    toast(`项目 ${state.activeItem.catalog_number} 已最终提交并锁定。`);
+    const currentId = state.activeItem.item_id;
+    state.activeItem = null;
+    const item = state.catalog.find((row) => row.item_id === currentId);
+    if (item) {
+      item.status = "submitted";
+      item.submitted_utc = result.record.completed_utc;
+    }
+    await loadDashboard();
+  } catch (error) {
+    toast(error.message, "error");
+    button.disabled = false;
+  }
+}
+"""
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
@@ -407,6 +488,20 @@ def checked_public_items(
     return manifest, checked
 
 
+def replace_block(
+    source: str,
+    start_marker: str,
+    end_marker: str,
+    replacement: str,
+    label: str,
+) -> str:
+    if source.count(start_marker) != 1 or source.count(end_marker) != 1:
+        raise RuntimeError(f"{label} changed unexpectedly")
+    start = source.index(start_marker)
+    end = source.index(end_marker, start)
+    return source[:start] + replacement + source[end:]
+
+
 def transformed_index(portal: Path) -> str:
     source = (portal / "web" / "index.html").read_text(encoding="utf-8")
     source = source.replace('href="/styles.css"', 'href="styles.css"')
@@ -449,6 +544,24 @@ def transformed_index(portal: Path) -> str:
     if source.count(auth_hero_close) != 1:
         raise RuntimeError("portal auth hero changed unexpectedly")
     source = source.replace(auth_hero_close, rubric_replacement, 1)
+    source = replace_block(
+        source,
+        '        <section class="view tutorial-view" id="tutorial-view">',
+        '        <section class="view dashboard-view" id="dashboard-view">',
+        SIMPLE_TUTORIAL_HTML,
+        "portal tutorial",
+    )
+    route_note_before = """            <span>
+              高程图用于判断升降；掩体图用于判断隐蔽与协同。数字 0–5 分别对应
+              t=0、19、38、58、77、96，同编号标记表示同一时刻。
+            </span>"""
+    route_note_after = """            <span>
+              左侧显示高程，右侧显示掩体；数字 0–5 分别对应
+              t=0、19、38、58、77、96，同编号标记表示同一时刻。
+            </span>"""
+    if source.count(route_note_before) != 1:
+        raise RuntimeError("portal route-map note changed unexpectedly")
+    source = source.replace(route_note_before, route_note_after, 1)
     if 'href="/' in source or 'src="/' in source:
         raise RuntimeError("generated Pages index still contains a root URL")
     return source
@@ -461,6 +574,20 @@ def transformed_styles(portal: Path) -> str:
 
 def transformed_app(portal: Path) -> str:
     source = (portal / "web" / "app.js").read_text(encoding="utf-8")
+    evidence_state = """  evidence: {
+    all_sample: [],
+    conditional_semantic: [],
+  },
+"""
+    if source.count(evidence_state) != 1:
+        raise RuntimeError("portal evidence state changed unexpectedly")
+    source = source.replace(evidence_state, "", 1)
+    evidence_reset = (
+        "    state.evidence = { all_sample: [], conditional_semantic: [] };\n"
+    )
+    if source.count(evidence_reset) != 1:
+        raise RuntimeError("portal evidence reset changed unexpectedly")
+    source = source.replace(evidence_reset, "", 1)
     storage_before = "    state.config.study_id,\n"
     storage_after = "    state.config.storage_namespace_id,\n"
     if source.count(storage_before) != 1:
@@ -515,7 +642,59 @@ def transformed_app(portal: Path) -> str:
 """
     if source.count(recovery_before) != 1:
         raise RuntimeError("portal local-draft recovery changed unexpectedly")
-    return source.replace(recovery_before, recovery_after, 1)
+    source = source.replace(recovery_before, recovery_after, 1)
+    source = replace_block(
+        source,
+        "function ratingSection(",
+        "\nfunction localDraftKey",
+        FORCED_CHOICE_RATING_JS.rstrip() + "\n",
+        "portal rating form",
+    )
+    source = replace_block(
+        source,
+        "function applyDraft(",
+        "\nfunction setSaveState",
+        FORCED_CHOICE_STATE_JS.rstrip() + "\n",
+        "portal rating state",
+    )
+    source = replace_block(
+        source,
+        "function updateCharacterCounts(",
+        "\nfunction startActiveTimer",
+        FORCED_CHOICE_EVENTS_JS.rstrip() + "\n",
+        "portal rating events",
+    )
+    source = replace_block(
+        source,
+        "async function submitRating(",
+        "\nfunction openAdmin",
+        FORCED_CHOICE_SUBMIT_JS.rstrip() + "\n",
+        "portal rating submission",
+    )
+    rating_render_before = """    $("#endpoint-forms").innerHTML =
+      ratingSection("all_sample", 1, false) +
+      (item.both_completed
+        ? ratingSection("conditional_semantic", 2, true)
+        : "");"""
+    rating_render_after = """    $("#endpoint-forms").innerHTML =
+      ratingSection();"""
+    if source.count(rating_render_before) != 1:
+        raise RuntimeError("portal rating rendering changed unexpectedly")
+    source = source.replace(rating_render_before, rating_render_after, 1)
+    admin_head_before = """        <th>Overall A</th><th>Overall B</th><th>平局</th>
+        <th>条件 A</th><th>条件 B</th><th>条件平局</th>"""
+    admin_head_after = """        <th>选择 A</th><th>选择 B</th>"""
+    admin_cells_before = """            <td>${row.all_A ?? "封存"}</td><td>${row.all_B ?? "封存"}</td><td>${row.all_tie ?? "封存"}</td>
+            <td>${row.conditional_A ?? "封存"}</td><td>${row.conditional_B ?? "封存"}</td><td>${row.conditional_tie ?? "封存"}</td>"""
+    admin_cells_after = """            <td>${row.choice_A ?? "封存"}</td><td>${row.choice_B ?? "封存"}</td>"""
+    if (
+        source.count(admin_head_before) != 1
+        or source.count(admin_cells_before) != 1
+    ):
+        raise RuntimeError("portal admin preference table changed unexpectedly")
+    return source.replace(
+        admin_head_before, admin_head_after, 1
+    ).replace(admin_cells_before, admin_cells_after, 1)
 
 
 def stable_collection_binding(manifest: dict[str, Any]) -> dict[str, Any]:
@@ -538,7 +717,6 @@ def stable_collection_binding(manifest: dict[str, Any]) -> dict[str, Any]:
         "judgments_per_item_if_all_slots_complete": manifest[
             "judgments_per_item_if_all_slots_complete"
         ],
-        "both_completed_count": manifest["both_completed_count"],
         "directive": manifest["directive"],
         "consent_version": manifest["consent_version"],
         "consent_text_sha256": manifest["consent_text_sha256"],
@@ -550,7 +728,6 @@ def stable_collection_binding(manifest: dict[str, Any]) -> dict[str, Any]:
             {
                 "item_id": item["item_id"],
                 "blind_map_id": item["blind_map_id"],
-                "both_completed": item["both_completed"],
                 "map_index": item["map_index"],
                 "item_index": item["item_index"],
                 "directive": item["directive"],
@@ -644,7 +821,7 @@ def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
             {
                 key: value
                 for key, value in item.items()
-                if key != "judge_source"
+                if key not in {"judge_source", "both_completed"}
             }
         )
 
@@ -681,9 +858,8 @@ def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
         "items_per_map": 8,
         "items_per_rater": 30,
         "judgments_per_item_if_all_slots_complete": 5,
-        "both_completed_count": int(manifest["both_completed_count"]),
         "directive": str(manifest["directive"]),
-        "consent_version": "pages-pilot-notice-v2",
+        "consent_version": "pages-forced-choice-notice-v1",
         "consent_text": consent_text,
         "consent_text_sha256": consent_text_sha256,
         "runtime_sha256": runtime_hashes,
@@ -737,7 +913,8 @@ def verify_site(site: Path) -> dict[str, Any]:
         or manifest.get("items_per_map") != 8
         or manifest.get("items_per_rater") != 30
         or manifest.get("judgments_per_item_if_all_slots_complete") != 5
-        or manifest.get("consent_version") != "pages-pilot-notice-v2"
+        or manifest.get("consent_version")
+        != "pages-forced-choice-notice-v1"
         or manifest.get("collection_protocol_id")
         != collection_digest(manifest)
         or manifest.get("collection_protocol_id")
@@ -800,7 +977,6 @@ def verify_site(site: Path) -> dict[str, Any]:
             item_id in seen
             or not item_id.startswith("item_")
             or not blind_map_id.startswith("map_")
-            or not isinstance(item.get("both_completed"), bool)
             or not isinstance(item.get("map_index"), int)
             or not isinstance(item.get("item_index"), int)
             or not isinstance(item.get("directive"), str)
@@ -833,10 +1009,6 @@ def verify_site(site: Path) -> dict[str, Any]:
         judge_bytes += path.stat().st_size
     if len(map_counts) != 30 or set(map_counts.values()) != {8}:
         raise RuntimeError("generated assignment map grouping is invalid")
-    if manifest.get("both_completed_count") != sum(
-        item["both_completed"] for item in items
-    ):
-        raise RuntimeError("generated both-completed count is invalid")
     map_ids = sorted(map_counts)
     assignment_counts = {item_id: 0 for item_id in seen}
     for map_index, map_id in enumerate(map_ids):

@@ -1,18 +1,16 @@
 {
   "assignment_rule_id": "latin_rotation_r_plus_map_mod_8_v1",
-  "both_completed_count": 97,
-  "built_utc": "2026-07-26T15:57:41.383445+00:00",
-  "bundle_id": "f5b39d33b436bdd0d30dd61b6612ad0419e150c065f90da57aa249e7e117abf5",
-  "collection_protocol_id": "52c87e87c4e62f89f4036db1d403d160a9a0add9f9e3a9df669002b47f1377f2",
-  "consent_text": "TBAM 匿名路线人工评判：GitHub Pages 内部试运行说明\n\n本次仅用于检查网站、静态路线图渲染、评判说明、保存、恢复与导出流程，不是正式研究招募，试运行结果不会纳入论文分析。\n\n页面将展示两张匿名完整路线图，并请您比较它们对同一自然语言任务说明的符合程度。路线图包含高程、掩体、完整路径以及统一的时间标记。完整测试目录包含 30 个对比项目。网页会在当前浏览器中保存匿名评判、置信度、简短理由、作答时间、化名及恢复进度所需的数据；GitHub Pages 不接收或保存您的评判结果。完成后，您需要主动下载结果 JSON 并交给测试负责人。清除本站浏览器数据可能删除尚未导出的进度。\n\n请使用不包含真实姓名、邮箱、学号、工号或其他直接身份信息的化名。参与试运行完全自愿；您可以随时停止。GitHub 会为安全目的记录 Pages 访问者的 IP 地址；请只在接受这一托管条件时继续。若发现路线图、文字、保存、恢复或导出问题，请记录发生问题的项目编号并反馈给测试负责人。\n\n勾选同意表示您理解这是内部功能试运行，并同意将本次输入仅用于验证和改进评判系统。\n",
-  "consent_text_sha256": "6d3c4ee98a3993029b2d1120b24ae863775eef78387dc9cee4d80bc1c2d82893",
-  "consent_version": "pages-pilot-notice-v2",
+  "built_utc": "2026-07-26T19:15:41.164077+00:00",
+  "bundle_id": "77904d85499cd27f527934ea2bcdc02305571179c2dce2845987e23b1575a2d2",
+  "collection_protocol_id": "6a0df11e93221b31f89b0cfde1a341431cb3702ddd12155bd28b50f243f7b2eb",
+  "consent_text": "TBAM 匿名路线人工评判：GitHub Pages 内部试运行说明\n\n本次仅用于检查网站、静态路线图渲染、评判说明、保存、恢复与导出流程，不是正式研究招募，试运行结果不会纳入论文分析。\n\n页面将展示两张匿名完整路线图。每个项目只要求您根据同一条自然语言任务说明，选择整体更好的路线 A 或路线 B；不区分路线是否完成，不做分项评分，也不提供平局选项。路线图包含高程、掩体、完整路径以及统一的时间标记。完整测试目录包含 30 个对比项目。网页会在当前浏览器中保存 A/B 选择、作答时间、化名及恢复进度所需的数据；GitHub Pages 不接收或保存您的评判结果。完成后，您需要主动下载结果 JSON 并交给测试负责人。清除本站浏览器数据可能删除尚未导出的进度。\n\n请使用不包含真实姓名、邮箱、学号、工号或其他直接身份信息的化名。参与试运行完全自愿；您可以随时停止。GitHub 会为安全目的记录 Pages 访问者的 IP 地址；请只在接受这一托管条件时继续。若发现路线图、文字、保存、恢复或导出问题，请记录发生问题的项目编号并反馈给测试负责人。\n\n勾选同意表示您理解这是内部功能试运行，并同意将本次输入仅用于验证和改进评判系统。\n",
+  "consent_text_sha256": "9e8a77c11a95ad976a44cce45db2c810678f18a48277042beb44bab53c54d35c",
+  "consent_version": "pages-forced-choice-notice-v1",
   "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
   "item_count": 240,
   "items": [
     {
       "blind_map_id": "map_001",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "aec179c56cc46890c90aa380424878d5d40b4cfb4add6f75cb9e21b0d636a02f",
@@ -27,7 +25,6 @@
     },
     {
       "blind_map_id": "map_001",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "9fadda30ff7d76cfbaa96e6a552c5a4134c32932189fe9823c9391e01a6741f6",
@@ -42,7 +39,6 @@
     },
     {
       "blind_map_id": "map_001",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "00e71158ac64ef7cb181a6c9c8a463a26620473d00ffb1ef5e85b192458ec2bb",
@@ -57,7 +53,6 @@
     },
     {
       "blind_map_id": "map_001",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "cb39f75f675477eb58f9a1222dab9303f56072a4db0420721ab26b1b64800284",
@@ -72,7 +67,6 @@
     },
     {
       "blind_map_id": "map_001",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "d7326d59e8d3f1f5ec8b5d57a0e4943d739e9d2620b81b522c3be4a760a23ec4",
@@ -87,7 +81,6 @@
     },
     {
       "blind_map_id": "map_001",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "00e71158ac64ef7cb181a6c9c8a463a26620473d00ffb1ef5e85b192458ec2bb",
@@ -102,7 +95,6 @@
     },
     {
       "blind_map_id": "map_001",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "d7326d59e8d3f1f5ec8b5d57a0e4943d739e9d2620b81b522c3be4a760a23ec4",
@@ -117,7 +109,6 @@
     },
     {
       "blind_map_id": "map_001",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "d7326d59e8d3f1f5ec8b5d57a0e4943d739e9d2620b81b522c3be4a760a23ec4",
@@ -132,7 +123,6 @@
     },
     {
       "blind_map_id": "map_002",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "9de8f7668801936a6369f0055fe9eaae449991c905e206af29b200c3bd546869",
@@ -147,7 +137,6 @@
     },
     {
       "blind_map_id": "map_002",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "7a76eae3e312444c0e6661eb1aad114332db3fc61747e1bc9af0b37c237b3539",
@@ -162,7 +151,6 @@
     },
     {
       "blind_map_id": "map_002",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "4b2a4b5788876c854150ffb8cb39fb248388105f1006b2f3a6bf9042dabd15e3",
@@ -177,7 +165,6 @@
     },
     {
       "blind_map_id": "map_002",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "0f7756cb4680addd264029cdbe129d8efff620670f930ef4cd47db810dd985e3",
@@ -192,7 +179,6 @@
     },
     {
       "blind_map_id": "map_002",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "197d280274d012eec3f8b519b1b47fc626952c16ab7b11577af62e041b0004b9",
@@ -207,7 +193,6 @@
     },
     {
       "blind_map_id": "map_002",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "0f7756cb4680addd264029cdbe129d8efff620670f930ef4cd47db810dd985e3",
@@ -222,7 +207,6 @@
     },
     {
       "blind_map_id": "map_002",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "197d280274d012eec3f8b519b1b47fc626952c16ab7b11577af62e041b0004b9",
@@ -237,7 +221,6 @@
     },
     {
       "blind_map_id": "map_002",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "197d280274d012eec3f8b519b1b47fc626952c16ab7b11577af62e041b0004b9",
@@ -252,7 +235,6 @@
     },
     {
       "blind_map_id": "map_003",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "7c00095c10f40694fd7b627c5ddfde60e03e2bc6e46aef7e0c3533409cfd4886",
@@ -267,7 +249,6 @@
     },
     {
       "blind_map_id": "map_003",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e1bfa469a68779ecf29e8dbb91db957227073cff3c19402e75dfc698a4888455",
@@ -282,7 +263,6 @@
     },
     {
       "blind_map_id": "map_003",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e1bfa469a68779ecf29e8dbb91db957227073cff3c19402e75dfc698a4888455",
@@ -297,7 +277,6 @@
     },
     {
       "blind_map_id": "map_003",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e1bfa469a68779ecf29e8dbb91db957227073cff3c19402e75dfc698a4888455",
@@ -312,7 +291,6 @@
     },
     {
       "blind_map_id": "map_003",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e1bfa469a68779ecf29e8dbb91db957227073cff3c19402e75dfc698a4888455",
@@ -327,7 +305,6 @@
     },
     {
       "blind_map_id": "map_003",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "fec014e236273232b08e046be3cd86c531a4845f3a60952c79c9371d2d30f5f0",
@@ -342,7 +319,6 @@
     },
     {
       "blind_map_id": "map_003",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "2af421c42766c53115fbe6712ce2d2a19de25e39bd7ba5ad9eb7e91dcc940f71",
@@ -357,7 +333,6 @@
     },
     {
       "blind_map_id": "map_003",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "76ca239cc75bc1cb6cc9e0a3a947f7f55aec2fc02f0df5707924c0bef9def8b8",
@@ -372,7 +347,6 @@
     },
     {
       "blind_map_id": "map_004",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a5d0250c8defe0e83e9140d2cb26d1cecfc112ec3f4f088ed8e707a43dff907a",
@@ -387,7 +361,6 @@
     },
     {
       "blind_map_id": "map_004",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "09c7fc080358dc58b3765c8132db2b4793d1be06f4896ab1f11693d4612afdf1",
@@ -402,7 +375,6 @@
     },
     {
       "blind_map_id": "map_004",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "391822f65e2ca86e9631fa45c4df1a6c4a44926cd75a67b1af24778a9b44270f",
@@ -417,7 +389,6 @@
     },
     {
       "blind_map_id": "map_004",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "259357143592fc3b189d447c2c76e4ed808fbc14e8bfff152cb0dbdd912c1ff7",
@@ -432,7 +403,6 @@
     },
     {
       "blind_map_id": "map_004",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "259357143592fc3b189d447c2c76e4ed808fbc14e8bfff152cb0dbdd912c1ff7",
@@ -447,7 +417,6 @@
     },
     {
       "blind_map_id": "map_004",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "391822f65e2ca86e9631fa45c4df1a6c4a44926cd75a67b1af24778a9b44270f",
@@ -462,7 +431,6 @@
     },
     {
       "blind_map_id": "map_004",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "391822f65e2ca86e9631fa45c4df1a6c4a44926cd75a67b1af24778a9b44270f",
@@ -477,7 +445,6 @@
     },
     {
       "blind_map_id": "map_004",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a42b08b9b34f7b5f2b699538fcce63753b5b2ed3ce8b93e1913999b2fe4bfd9d",
@@ -492,7 +459,6 @@
     },
     {
       "blind_map_id": "map_005",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "77e620e864c4c0e99e95664c9af24915fea2925994d1013bdf3d6469c2e98e3a",
@@ -507,7 +473,6 @@
     },
     {
       "blind_map_id": "map_005",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "497b5ff7f7d0cb59e4b9330c514370931be94a83fb0cab4b4fe9aa286b82606f",
@@ -522,7 +487,6 @@
     },
     {
       "blind_map_id": "map_005",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "cbaf69e1ab6e1fe4ba52a54e2ae40049b2e2c87b167bbb1fe55f230ef0575aa0",
@@ -537,7 +501,6 @@
     },
     {
       "blind_map_id": "map_005",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "cbaf69e1ab6e1fe4ba52a54e2ae40049b2e2c87b167bbb1fe55f230ef0575aa0",
@@ -552,7 +515,6 @@
     },
     {
       "blind_map_id": "map_005",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "44feb3a05f4bad6c5cb4b0e4d2eeedc59b8e86c8314be72151b2bfcb3d612180",
@@ -567,7 +529,6 @@
     },
     {
       "blind_map_id": "map_005",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "22aa30afbd76a192d3b6a7b7a31a53732d8c8b26a0c14c4b48a172f916a65e74",
@@ -582,7 +543,6 @@
     },
     {
       "blind_map_id": "map_005",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "44feb3a05f4bad6c5cb4b0e4d2eeedc59b8e86c8314be72151b2bfcb3d612180",
@@ -597,7 +557,6 @@
     },
     {
       "blind_map_id": "map_005",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "22aa30afbd76a192d3b6a7b7a31a53732d8c8b26a0c14c4b48a172f916a65e74",
@@ -612,7 +571,6 @@
     },
     {
       "blind_map_id": "map_006",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a75c3271fa1ed97253a2fbec0e15ea3df229bee7742fc9dc0c99202283507daa",
@@ -627,7 +585,6 @@
     },
     {
       "blind_map_id": "map_006",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "52f8b8c1bc33b5ae44e381cd51f848765770a7292bae507a3f40f848e95b8c24",
@@ -642,7 +599,6 @@
     },
     {
       "blind_map_id": "map_006",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a75c3271fa1ed97253a2fbec0e15ea3df229bee7742fc9dc0c99202283507daa",
@@ -657,7 +613,6 @@
     },
     {
       "blind_map_id": "map_006",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "7b6d6ba1a238fe5629333f7570c415fa6175c9ced22b5d0fdbc47b393ad19b59",
@@ -672,7 +627,6 @@
     },
     {
       "blind_map_id": "map_006",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "fdc89b89c72eed7a4cae9e63f0cdcf43ddb9c3e5a96357fdf0b355043e5da9fd",
@@ -687,7 +641,6 @@
     },
     {
       "blind_map_id": "map_006",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "2db3346f467a9ae796e7f2d8f8d75f4acf902b52f9e281753e80904241016b72",
@@ -702,7 +655,6 @@
     },
     {
       "blind_map_id": "map_006",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "fdc89b89c72eed7a4cae9e63f0cdcf43ddb9c3e5a96357fdf0b355043e5da9fd",
@@ -717,7 +669,6 @@
     },
     {
       "blind_map_id": "map_006",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "2db3346f467a9ae796e7f2d8f8d75f4acf902b52f9e281753e80904241016b72",
@@ -732,7 +683,6 @@
     },
     {
       "blind_map_id": "map_007",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "3173fffd6d4aaf2c4316ebeb981e1c870cd3d8566517f796c0bcb45e18dc9a71",
@@ -747,7 +697,6 @@
     },
     {
       "blind_map_id": "map_007",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c74059e2cd815aeae7379a30488cea5484ec2218a23ad6bf964a13240ec713fc",
@@ -762,7 +711,6 @@
     },
     {
       "blind_map_id": "map_007",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c74059e2cd815aeae7379a30488cea5484ec2218a23ad6bf964a13240ec713fc",
@@ -777,7 +725,6 @@
     },
     {
       "blind_map_id": "map_007",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c74059e2cd815aeae7379a30488cea5484ec2218a23ad6bf964a13240ec713fc",
@@ -792,7 +739,6 @@
     },
     {
       "blind_map_id": "map_007",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c74059e2cd815aeae7379a30488cea5484ec2218a23ad6bf964a13240ec713fc",
@@ -807,7 +753,6 @@
     },
     {
       "blind_map_id": "map_007",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "abbac3dfdc2a62fb6bb6f446c5253fe80a7d1a39e0de8619f15ae2cf3e6cec9f",
@@ -822,7 +767,6 @@
     },
     {
       "blind_map_id": "map_007",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "faa7f982f8fc5fd69f16180235bfb8190aba23127540cb678614ddd64f0247eb",
@@ -837,7 +781,6 @@
     },
     {
       "blind_map_id": "map_007",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "faa7f982f8fc5fd69f16180235bfb8190aba23127540cb678614ddd64f0247eb",
@@ -852,7 +795,6 @@
     },
     {
       "blind_map_id": "map_008",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "cd2bedcad69bc1b03b9ceeadc2567903c6a4ac8bbe8b0ebfc3cf282f54f7bcae",
@@ -867,7 +809,6 @@
     },
     {
       "blind_map_id": "map_008",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a6d997b9bc2ca986a7f3b7689c949319702b2f7899f2e6550fbe3720e1207137",
@@ -882,7 +823,6 @@
     },
     {
       "blind_map_id": "map_008",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "5a10c9a4caeb3402c8425a2437a45e34d3a0a78b99b6431f534020b36d85f08d",
@@ -897,7 +837,6 @@
     },
     {
       "blind_map_id": "map_008",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a6d997b9bc2ca986a7f3b7689c949319702b2f7899f2e6550fbe3720e1207137",
@@ -912,7 +851,6 @@
     },
     {
       "blind_map_id": "map_008",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a6d997b9bc2ca986a7f3b7689c949319702b2f7899f2e6550fbe3720e1207137",
@@ -927,7 +865,6 @@
     },
     {
       "blind_map_id": "map_008",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "da64f0f1760bc9ba6a69d9c72d0383b5ecc26f8aa7996bdb96c3cf094a6c11cb",
@@ -942,7 +879,6 @@
     },
     {
       "blind_map_id": "map_008",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "d0fd809d042498379a349aac641c4497b8594c62c0bc465011ba6fb0865fc1a3",
@@ -957,7 +893,6 @@
     },
     {
       "blind_map_id": "map_008",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "d0fd809d042498379a349aac641c4497b8594c62c0bc465011ba6fb0865fc1a3",
@@ -972,7 +907,6 @@
     },
     {
       "blind_map_id": "map_009",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "8fa3ff139ca5f3f3dd1fab5599052533eda6ba7c43886ceff1ddea496c751d9b",
@@ -987,7 +921,6 @@
     },
     {
       "blind_map_id": "map_009",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "0c27a83f5babbfd0a52acd7d883a874b2c1bb0d7f4ac89bc88c51b1526631e3a",
@@ -1002,7 +935,6 @@
     },
     {
       "blind_map_id": "map_009",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "0c27a83f5babbfd0a52acd7d883a874b2c1bb0d7f4ac89bc88c51b1526631e3a",
@@ -1017,7 +949,6 @@
     },
     {
       "blind_map_id": "map_009",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "0c27a83f5babbfd0a52acd7d883a874b2c1bb0d7f4ac89bc88c51b1526631e3a",
@@ -1032,7 +963,6 @@
     },
     {
       "blind_map_id": "map_009",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "0c27a83f5babbfd0a52acd7d883a874b2c1bb0d7f4ac89bc88c51b1526631e3a",
@@ -1047,7 +977,6 @@
     },
     {
       "blind_map_id": "map_009",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "4ad81974e66df64fef81138c9ce03840fb5c49584e2f19dedf7798c1c4a92b0e",
@@ -1062,7 +991,6 @@
     },
     {
       "blind_map_id": "map_009",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "8fa3ff139ca5f3f3dd1fab5599052533eda6ba7c43886ceff1ddea496c751d9b",
@@ -1077,7 +1005,6 @@
     },
     {
       "blind_map_id": "map_009",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "4ad81974e66df64fef81138c9ce03840fb5c49584e2f19dedf7798c1c4a92b0e",
@@ -1092,7 +1019,6 @@
     },
     {
       "blind_map_id": "map_010",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a6dd93cc0326784b647e8d5df138f3e2f0b50e0a96fdcbac237eb458ea481947",
@@ -1107,7 +1033,6 @@
     },
     {
       "blind_map_id": "map_010",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "313c800435fc4cddca869d2234976ba37c79139a9c6ffe98f008e9886b86b85f",
@@ -1122,7 +1047,6 @@
     },
     {
       "blind_map_id": "map_010",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "313c800435fc4cddca869d2234976ba37c79139a9c6ffe98f008e9886b86b85f",
@@ -1137,7 +1061,6 @@
     },
     {
       "blind_map_id": "map_010",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "63d491201ab62723cee5dd74869dd09188150ab84a8cddc01bbb8d4a6915733f",
@@ -1152,7 +1075,6 @@
     },
     {
       "blind_map_id": "map_010",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "0ed39b20a365e3e04efde1bd4e373383de986d7c27899c1c0fca480c55dda839",
@@ -1167,7 +1089,6 @@
     },
     {
       "blind_map_id": "map_010",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "63d491201ab62723cee5dd74869dd09188150ab84a8cddc01bbb8d4a6915733f",
@@ -1182,7 +1103,6 @@
     },
     {
       "blind_map_id": "map_010",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "0ed39b20a365e3e04efde1bd4e373383de986d7c27899c1c0fca480c55dda839",
@@ -1197,7 +1117,6 @@
     },
     {
       "blind_map_id": "map_010",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "63d491201ab62723cee5dd74869dd09188150ab84a8cddc01bbb8d4a6915733f",
@@ -1212,7 +1131,6 @@
     },
     {
       "blind_map_id": "map_011",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "29065ad5f0a7f75dd9de94a8beb1764ec2ff2ba570306f6cf6494d5f4f0224a8",
@@ -1227,7 +1145,6 @@
     },
     {
       "blind_map_id": "map_011",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "5a586523aa28b40e0a9f4092ea4344e108547dd28bd9e360766179ef010371ba",
@@ -1242,7 +1159,6 @@
     },
     {
       "blind_map_id": "map_011",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f648ad9e79f4ad740766dc6f96b5b84a9da52d6932542e2d90427cad97dc166a",
@@ -1257,7 +1173,6 @@
     },
     {
       "blind_map_id": "map_011",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e329ab0e96538fe98d9b7d237d8d412d1cf26afbee7a611f49f6eaf93436953e",
@@ -1272,7 +1187,6 @@
     },
     {
       "blind_map_id": "map_011",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "5a586523aa28b40e0a9f4092ea4344e108547dd28bd9e360766179ef010371ba",
@@ -1287,7 +1201,6 @@
     },
     {
       "blind_map_id": "map_011",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e329ab0e96538fe98d9b7d237d8d412d1cf26afbee7a611f49f6eaf93436953e",
@@ -1302,7 +1215,6 @@
     },
     {
       "blind_map_id": "map_011",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b4cae6d248ccbbea7756d838fab80a1fe8584fcb75eef5a459a8a8f34cab2b1f",
@@ -1317,7 +1229,6 @@
     },
     {
       "blind_map_id": "map_011",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b4cae6d248ccbbea7756d838fab80a1fe8584fcb75eef5a459a8a8f34cab2b1f",
@@ -1332,7 +1243,6 @@
     },
     {
       "blind_map_id": "map_012",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e918191fe02a2e35242d6b422c2e343fcf7962ef21bb36d5c99d08587a0a42ca",
@@ -1347,7 +1257,6 @@
     },
     {
       "blind_map_id": "map_012",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "81aa240dc5c2edb1b494b99e2d9a7361a6cb16325816c17c4b3006529bfcb8ff",
@@ -1362,7 +1271,6 @@
     },
     {
       "blind_map_id": "map_012",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e918191fe02a2e35242d6b422c2e343fcf7962ef21bb36d5c99d08587a0a42ca",
@@ -1377,7 +1285,6 @@
     },
     {
       "blind_map_id": "map_012",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e8762ebcd948c2f9e5b68e1f352bc9f97e7fa4e2ba2246a6b6ff468fcb674ec1",
@@ -1392,7 +1299,6 @@
     },
     {
       "blind_map_id": "map_012",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e918191fe02a2e35242d6b422c2e343fcf7962ef21bb36d5c99d08587a0a42ca",
@@ -1407,7 +1313,6 @@
     },
     {
       "blind_map_id": "map_012",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e8762ebcd948c2f9e5b68e1f352bc9f97e7fa4e2ba2246a6b6ff468fcb674ec1",
@@ -1422,7 +1327,6 @@
     },
     {
       "blind_map_id": "map_012",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e918191fe02a2e35242d6b422c2e343fcf7962ef21bb36d5c99d08587a0a42ca",
@@ -1437,7 +1341,6 @@
     },
     {
       "blind_map_id": "map_012",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e8762ebcd948c2f9e5b68e1f352bc9f97e7fa4e2ba2246a6b6ff468fcb674ec1",
@@ -1452,7 +1355,6 @@
     },
     {
       "blind_map_id": "map_013",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "80d2b0e9e98a98652c76930795994ad760f0abd8383be6c25333036206a4ceac",
@@ -1467,7 +1369,6 @@
     },
     {
       "blind_map_id": "map_013",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "24d15e810fa4eb0f1049771034435d5a7321f98e77ebef8a5793f243ea621787",
@@ -1482,7 +1383,6 @@
     },
     {
       "blind_map_id": "map_013",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a4ba50fb1c48a3ca68965ca41f26f955fa083cd2626ba33ee7fcde34ec138d46",
@@ -1497,7 +1397,6 @@
     },
     {
       "blind_map_id": "map_013",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a1155f8f9a44ee7f24fd2cca49a841e8c82791644a53072953b8826312e07eb9",
@@ -1512,7 +1411,6 @@
     },
     {
       "blind_map_id": "map_013",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e02e7fbea633df1a8981aa25541a41e73e4ad7383735ccf44e6e97aad9bd2ee5",
@@ -1527,7 +1425,6 @@
     },
     {
       "blind_map_id": "map_013",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "80d2b0e9e98a98652c76930795994ad760f0abd8383be6c25333036206a4ceac",
@@ -1542,7 +1439,6 @@
     },
     {
       "blind_map_id": "map_013",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "80d2b0e9e98a98652c76930795994ad760f0abd8383be6c25333036206a4ceac",
@@ -1557,7 +1453,6 @@
     },
     {
       "blind_map_id": "map_013",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a1155f8f9a44ee7f24fd2cca49a841e8c82791644a53072953b8826312e07eb9",
@@ -1572,7 +1467,6 @@
     },
     {
       "blind_map_id": "map_014",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "febb75bbb405beba63cfa71471663668ca6c74e3ab40cfd5cfa9f32c826bd9a7",
@@ -1587,7 +1481,6 @@
     },
     {
       "blind_map_id": "map_014",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c0106f491a9f30ea00838bf2fb8ae5709ee30170bf90177021cd94796f2596fa",
@@ -1602,7 +1495,6 @@
     },
     {
       "blind_map_id": "map_014",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c0106f491a9f30ea00838bf2fb8ae5709ee30170bf90177021cd94796f2596fa",
@@ -1617,7 +1509,6 @@
     },
     {
       "blind_map_id": "map_014",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c0106f491a9f30ea00838bf2fb8ae5709ee30170bf90177021cd94796f2596fa",
@@ -1632,7 +1523,6 @@
     },
     {
       "blind_map_id": "map_014",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "7679b30cd5e419b936e17904df69b320a0ff4a2c51eb18c2f5d26a6c2977fa44",
@@ -1647,7 +1537,6 @@
     },
     {
       "blind_map_id": "map_014",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ef164978c2babf1860b6134ff49b3ea08d12c9198d9332719247940470150b7b",
@@ -1662,7 +1551,6 @@
     },
     {
       "blind_map_id": "map_014",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "7679b30cd5e419b936e17904df69b320a0ff4a2c51eb18c2f5d26a6c2977fa44",
@@ -1677,7 +1565,6 @@
     },
     {
       "blind_map_id": "map_014",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "7679b30cd5e419b936e17904df69b320a0ff4a2c51eb18c2f5d26a6c2977fa44",
@@ -1692,7 +1579,6 @@
     },
     {
       "blind_map_id": "map_015",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "8f671a7a895d3aa6a216e36f4add5c2c20804b211217f9085e26fb73d35f1da4",
@@ -1707,7 +1593,6 @@
     },
     {
       "blind_map_id": "map_015",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "2446703f7d64210a19a0c4b91cef79d1a0b492c88c0e57375173b8f5d225df4d",
@@ -1722,7 +1607,6 @@
     },
     {
       "blind_map_id": "map_015",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e0ccd903159f42dd33965bc1c89118dc1a018551154ad26a2d26ac7024234ef1",
@@ -1737,7 +1621,6 @@
     },
     {
       "blind_map_id": "map_015",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "2446703f7d64210a19a0c4b91cef79d1a0b492c88c0e57375173b8f5d225df4d",
@@ -1752,7 +1635,6 @@
     },
     {
       "blind_map_id": "map_015",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "2446703f7d64210a19a0c4b91cef79d1a0b492c88c0e57375173b8f5d225df4d",
@@ -1767,7 +1649,6 @@
     },
     {
       "blind_map_id": "map_015",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e0ccd903159f42dd33965bc1c89118dc1a018551154ad26a2d26ac7024234ef1",
@@ -1782,7 +1663,6 @@
     },
     {
       "blind_map_id": "map_015",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "6e523b47a59a5db23aee7f6963eb5e9d66b83588fc837db00b46bb8b44d732dc",
@@ -1797,7 +1677,6 @@
     },
     {
       "blind_map_id": "map_015",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "6e523b47a59a5db23aee7f6963eb5e9d66b83588fc837db00b46bb8b44d732dc",
@@ -1812,7 +1691,6 @@
     },
     {
       "blind_map_id": "map_016",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "278da7ec3b292d1e755cb218d277441978862f7375b9d2e8efc269ec7117de73",
@@ -1827,7 +1705,6 @@
     },
     {
       "blind_map_id": "map_016",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f9c2dc3c9a227a5220f46ed9121c29d3bc6f58b865c0600a230028a78a31d19b",
@@ -1842,7 +1719,6 @@
     },
     {
       "blind_map_id": "map_016",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "78367d44402292117934efd0e46a303d0770c877eba53ff17d7f7f9050f30bdb",
@@ -1857,7 +1733,6 @@
     },
     {
       "blind_map_id": "map_016",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "32c7142edd992dc2f80207a35893ceb902fc179ea369a097666399750606b6b3",
@@ -1872,7 +1747,6 @@
     },
     {
       "blind_map_id": "map_016",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b38fae498f6d6105f0af015b010dde15a4d9e2a1976cdec43308b5c768192bb2",
@@ -1887,7 +1761,6 @@
     },
     {
       "blind_map_id": "map_016",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "eabc1f547e333fd392a687f421d7601cd049e3ccb400e3edc3b0aa59a925203d",
@@ -1902,7 +1775,6 @@
     },
     {
       "blind_map_id": "map_016",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "eabc1f547e333fd392a687f421d7601cd049e3ccb400e3edc3b0aa59a925203d",
@@ -1917,7 +1789,6 @@
     },
     {
       "blind_map_id": "map_016",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "32c7142edd992dc2f80207a35893ceb902fc179ea369a097666399750606b6b3",
@@ -1932,7 +1803,6 @@
     },
     {
       "blind_map_id": "map_017",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "024dcf8fea09aa744bef1077d3878ff1b22569d0423e19cf1369f92c8e6bafac",
@@ -1947,7 +1817,6 @@
     },
     {
       "blind_map_id": "map_017",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "606fc73bb19f7e10f4ceb03cf5605ef4f2f9f2280ca9bf9ea8260d903b904659",
@@ -1962,7 +1831,6 @@
     },
     {
       "blind_map_id": "map_017",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "024dcf8fea09aa744bef1077d3878ff1b22569d0423e19cf1369f92c8e6bafac",
@@ -1977,7 +1845,6 @@
     },
     {
       "blind_map_id": "map_017",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "273aac0a676e970e2170d808b9c9dfcf00c4479a7331431e04b549cfc37db3ce",
@@ -1992,7 +1859,6 @@
     },
     {
       "blind_map_id": "map_017",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b1655e2bc1f22737f643ab4fa553449d356916939fda3cf945f032eb7dfdc347",
@@ -2007,7 +1873,6 @@
     },
     {
       "blind_map_id": "map_017",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "024dcf8fea09aa744bef1077d3878ff1b22569d0423e19cf1369f92c8e6bafac",
@@ -2022,7 +1887,6 @@
     },
     {
       "blind_map_id": "map_017",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b1655e2bc1f22737f643ab4fa553449d356916939fda3cf945f032eb7dfdc347",
@@ -2037,7 +1901,6 @@
     },
     {
       "blind_map_id": "map_017",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "273aac0a676e970e2170d808b9c9dfcf00c4479a7331431e04b549cfc37db3ce",
@@ -2052,7 +1915,6 @@
     },
     {
       "blind_map_id": "map_018",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "9b6d327cda3ac3c5447bbcd7993f1e16670fe1f745270a9d83de49df484da73c",
@@ -2067,7 +1929,6 @@
     },
     {
       "blind_map_id": "map_018",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "e515071e01b0b42011fc6d6c68d3706d7e668e87a055db9109f8611852cb33c9",
@@ -2082,7 +1943,6 @@
     },
     {
       "blind_map_id": "map_018",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f2378417118e66c6b6b3083fdcd7db4394c31d4e04d424ca513a53582b57a469",
@@ -2097,7 +1957,6 @@
     },
     {
       "blind_map_id": "map_018",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "cc8aa435b0baa641866a003557f6c6bc7e8ecc22569b9dd6317295364600f202",
@@ -2112,7 +1971,6 @@
     },
     {
       "blind_map_id": "map_018",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "de58bead3062066526f06bdb191d03a4a0a96deebf5bb5056606df627a759d64",
@@ -2127,7 +1985,6 @@
     },
     {
       "blind_map_id": "map_018",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f2378417118e66c6b6b3083fdcd7db4394c31d4e04d424ca513a53582b57a469",
@@ -2142,7 +1999,6 @@
     },
     {
       "blind_map_id": "map_018",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f2378417118e66c6b6b3083fdcd7db4394c31d4e04d424ca513a53582b57a469",
@@ -2157,7 +2013,6 @@
     },
     {
       "blind_map_id": "map_018",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "6b9cc1716359081e54faf7a817a443be7f4ef4114f87d79d51d44036aa09a350",
@@ -2172,7 +2027,6 @@
     },
     {
       "blind_map_id": "map_019",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "dc35fb88a530df0ca596585dd4c480bdb9b363c3b32e90d5fac050c827458f2e",
@@ -2187,7 +2041,6 @@
     },
     {
       "blind_map_id": "map_019",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "4237eca971e0283b2cdfb67c5bdc98378b457a0fea40a1c65e6387b84f9b35fd",
@@ -2202,7 +2055,6 @@
     },
     {
       "blind_map_id": "map_019",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "7b76b4980000589819d466c27941f66fc3daa23ee6f260eb3ade98f2dbb7ae25",
@@ -2217,7 +2069,6 @@
     },
     {
       "blind_map_id": "map_019",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "7b76b4980000589819d466c27941f66fc3daa23ee6f260eb3ade98f2dbb7ae25",
@@ -2232,7 +2083,6 @@
     },
     {
       "blind_map_id": "map_019",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "4ebb56f65fb3aae26dd55ab86179fb5a1e9b0e5e0cb8dac6af8b08a80f6dbdfb",
@@ -2247,7 +2097,6 @@
     },
     {
       "blind_map_id": "map_019",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "dc35fb88a530df0ca596585dd4c480bdb9b363c3b32e90d5fac050c827458f2e",
@@ -2262,7 +2111,6 @@
     },
     {
       "blind_map_id": "map_019",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "dc35fb88a530df0ca596585dd4c480bdb9b363c3b32e90d5fac050c827458f2e",
@@ -2277,7 +2125,6 @@
     },
     {
       "blind_map_id": "map_019",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "4ebb56f65fb3aae26dd55ab86179fb5a1e9b0e5e0cb8dac6af8b08a80f6dbdfb",
@@ -2292,7 +2139,6 @@
     },
     {
       "blind_map_id": "map_020",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b6c6a920eafe2c613c3b6f67a8e2d2edbcf54dab7d54568ea52cf51107a17113",
@@ -2307,7 +2153,6 @@
     },
     {
       "blind_map_id": "map_020",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c6d76ea02aa79ff8527ad8bbc941e59986d9a13ac0160c284edc9b398e2c8b03",
@@ -2322,7 +2167,6 @@
     },
     {
       "blind_map_id": "map_020",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b6c6a920eafe2c613c3b6f67a8e2d2edbcf54dab7d54568ea52cf51107a17113",
@@ -2337,7 +2181,6 @@
     },
     {
       "blind_map_id": "map_020",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "34fbe28c73bb4cc58874259b6caec50e5e957604e55dbe2d0ff1c31ca575c995",
@@ -2352,7 +2195,6 @@
     },
     {
       "blind_map_id": "map_020",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "bd2db00b25b100cd84cb68ea3cf7b1c96bd4a6ddace22b0ea660cac659f87ba2",
@@ -2367,7 +2209,6 @@
     },
     {
       "blind_map_id": "map_020",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b6c6a920eafe2c613c3b6f67a8e2d2edbcf54dab7d54568ea52cf51107a17113",
@@ -2382,7 +2223,6 @@
     },
     {
       "blind_map_id": "map_020",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "bd2db00b25b100cd84cb68ea3cf7b1c96bd4a6ddace22b0ea660cac659f87ba2",
@@ -2397,7 +2237,6 @@
     },
     {
       "blind_map_id": "map_020",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "bd2db00b25b100cd84cb68ea3cf7b1c96bd4a6ddace22b0ea660cac659f87ba2",
@@ -2412,7 +2251,6 @@
     },
     {
       "blind_map_id": "map_021",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "3fb804d9ddcab7a4a7b08b3cbca137ac18f005755eb15fa413654883f3c6b3e8",
@@ -2427,7 +2265,6 @@
     },
     {
       "blind_map_id": "map_021",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c6cf1175219767cb9239956dddfee5201421eb342c35f0cd1a161be36bc65e12",
@@ -2442,7 +2279,6 @@
     },
     {
       "blind_map_id": "map_021",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "638bcdada5f2325ba4b1da7da1c28cb2bdb5faca1968a21e10839ea9c2229d65",
@@ -2457,7 +2293,6 @@
     },
     {
       "blind_map_id": "map_021",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f971322983cedac56094074e6067bb5a82de8285b56da00a219f9c8f47e05c5a",
@@ -2472,7 +2307,6 @@
     },
     {
       "blind_map_id": "map_021",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "638bcdada5f2325ba4b1da7da1c28cb2bdb5faca1968a21e10839ea9c2229d65",
@@ -2487,7 +2321,6 @@
     },
     {
       "blind_map_id": "map_021",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f971322983cedac56094074e6067bb5a82de8285b56da00a219f9c8f47e05c5a",
@@ -2502,7 +2335,6 @@
     },
     {
       "blind_map_id": "map_021",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ffbf9c2c36a2719e6066bf9abab280d1bc7b3a23f396fb2eb5060462f0b9031d",
@@ -2517,7 +2349,6 @@
     },
     {
       "blind_map_id": "map_021",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ffbf9c2c36a2719e6066bf9abab280d1bc7b3a23f396fb2eb5060462f0b9031d",
@@ -2532,7 +2363,6 @@
     },
     {
       "blind_map_id": "map_022",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a0dac5c776159e533b3f4b7f17c4b21d88a5cc3179e86363dfb4909a1980aca4",
@@ -2547,7 +2377,6 @@
     },
     {
       "blind_map_id": "map_022",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "759009d0412ed4c9bebbf97db54b22fb75e2cd497ea23b69975345ca3dbf4c0a",
@@ -2562,7 +2391,6 @@
     },
     {
       "blind_map_id": "map_022",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a0dac5c776159e533b3f4b7f17c4b21d88a5cc3179e86363dfb4909a1980aca4",
@@ -2577,7 +2405,6 @@
     },
     {
       "blind_map_id": "map_022",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "759009d0412ed4c9bebbf97db54b22fb75e2cd497ea23b69975345ca3dbf4c0a",
@@ -2592,7 +2419,6 @@
     },
     {
       "blind_map_id": "map_022",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c78649aa239be2a20efee86865a60b75be49b3b07c55ad2ed00a02aad42c2957",
@@ -2607,7 +2433,6 @@
     },
     {
       "blind_map_id": "map_022",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a0dac5c776159e533b3f4b7f17c4b21d88a5cc3179e86363dfb4909a1980aca4",
@@ -2622,7 +2447,6 @@
     },
     {
       "blind_map_id": "map_022",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "c78649aa239be2a20efee86865a60b75be49b3b07c55ad2ed00a02aad42c2957",
@@ -2637,7 +2461,6 @@
     },
     {
       "blind_map_id": "map_022",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "60735a596eaa3a4980f900bdf92067defad5fce593fe9834f1b8758e6f3f9a2e",
@@ -2652,7 +2475,6 @@
     },
     {
       "blind_map_id": "map_023",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ef4e86cb8aafd4e98f9b8065527121d766af50dfd6d59bc58b51480f7e5232ca",
@@ -2667,7 +2489,6 @@
     },
     {
       "blind_map_id": "map_023",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ba8514026508f1d9b3a981a24ca9d33762b3f6305258e80732ddd741d6d5d4b4",
@@ -2682,7 +2503,6 @@
     },
     {
       "blind_map_id": "map_023",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ba8514026508f1d9b3a981a24ca9d33762b3f6305258e80732ddd741d6d5d4b4",
@@ -2697,7 +2517,6 @@
     },
     {
       "blind_map_id": "map_023",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a7027b7715110968aab122cfeea186e8006f1d6846b9d8f1ee5aa2213e253319",
@@ -2712,7 +2531,6 @@
     },
     {
       "blind_map_id": "map_023",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ba8514026508f1d9b3a981a24ca9d33762b3f6305258e80732ddd741d6d5d4b4",
@@ -2727,7 +2545,6 @@
     },
     {
       "blind_map_id": "map_023",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a7027b7715110968aab122cfeea186e8006f1d6846b9d8f1ee5aa2213e253319",
@@ -2742,7 +2559,6 @@
     },
     {
       "blind_map_id": "map_023",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ef4e86cb8aafd4e98f9b8065527121d766af50dfd6d59bc58b51480f7e5232ca",
@@ -2757,7 +2573,6 @@
     },
     {
       "blind_map_id": "map_023",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "a7027b7715110968aab122cfeea186e8006f1d6846b9d8f1ee5aa2213e253319",
@@ -2772,7 +2587,6 @@
     },
     {
       "blind_map_id": "map_024",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "8676b73ca86a94f83cc6f18ea0409b61b5255796deec71c95ef1c33eeb2c3483",
@@ -2787,7 +2601,6 @@
     },
     {
       "blind_map_id": "map_024",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "6eb129a7c4efac241618b4972e514488a80c6daa34617f6eb256df0416171267",
@@ -2802,7 +2615,6 @@
     },
     {
       "blind_map_id": "map_024",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ebcb9132ae0d1607cfbe2e1859e9441426e94d8937c6970ccda80801fef6e728",
@@ -2817,7 +2629,6 @@
     },
     {
       "blind_map_id": "map_024",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "59ff407f8326f55d289f2f6adb203a63a06cb16bb60fe9f2f78f2edce3f3c731",
@@ -2832,7 +2643,6 @@
     },
     {
       "blind_map_id": "map_024",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ebcb9132ae0d1607cfbe2e1859e9441426e94d8937c6970ccda80801fef6e728",
@@ -2847,7 +2657,6 @@
     },
     {
       "blind_map_id": "map_024",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "85ef7ae5c1d742a480377ffc5af9a6a6c23ce19123f10a6a2de9ad88fe9a685c",
@@ -2862,7 +2671,6 @@
     },
     {
       "blind_map_id": "map_024",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "85ef7ae5c1d742a480377ffc5af9a6a6c23ce19123f10a6a2de9ad88fe9a685c",
@@ -2877,7 +2685,6 @@
     },
     {
       "blind_map_id": "map_024",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "59ff407f8326f55d289f2f6adb203a63a06cb16bb60fe9f2f78f2edce3f3c731",
@@ -2892,7 +2699,6 @@
     },
     {
       "blind_map_id": "map_025",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b347f2a9c67c64068774a51600c71f455a4659ad50c0524f9c6289fbef5f042d",
@@ -2907,7 +2713,6 @@
     },
     {
       "blind_map_id": "map_025",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b4d0daa013f51ddc74db35183e14a97ba148db4e45e4c87b490ce18c3375a444",
@@ -2922,7 +2727,6 @@
     },
     {
       "blind_map_id": "map_025",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b4d0daa013f51ddc74db35183e14a97ba148db4e45e4c87b490ce18c3375a444",
@@ -2937,7 +2741,6 @@
     },
     {
       "blind_map_id": "map_025",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b4d0daa013f51ddc74db35183e14a97ba148db4e45e4c87b490ce18c3375a444",
@@ -2952,7 +2755,6 @@
     },
     {
       "blind_map_id": "map_025",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b4d0daa013f51ddc74db35183e14a97ba148db4e45e4c87b490ce18c3375a444",
@@ -2967,7 +2769,6 @@
     },
     {
       "blind_map_id": "map_025",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b347f2a9c67c64068774a51600c71f455a4659ad50c0524f9c6289fbef5f042d",
@@ -2982,7 +2783,6 @@
     },
     {
       "blind_map_id": "map_025",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b347f2a9c67c64068774a51600c71f455a4659ad50c0524f9c6289fbef5f042d",
@@ -2997,7 +2797,6 @@
     },
     {
       "blind_map_id": "map_025",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "27b79cfeaf8297a268b6bc44a074f0696b85c973f58716573cee8ab9ddfca93b",
@@ -3012,7 +2811,6 @@
     },
     {
       "blind_map_id": "map_026",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "153e6c578baab0ba0416e8ad474e69ce7dda0692ea311037ace539be3f6e0800",
@@ -3027,7 +2825,6 @@
     },
     {
       "blind_map_id": "map_026",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "525894fac00964993c8551412a5d6df0f03aadb0e366954fdaf595a4cdaa6055",
@@ -3042,7 +2839,6 @@
     },
     {
       "blind_map_id": "map_026",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "153e6c578baab0ba0416e8ad474e69ce7dda0692ea311037ace539be3f6e0800",
@@ -3057,7 +2853,6 @@
     },
     {
       "blind_map_id": "map_026",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "525894fac00964993c8551412a5d6df0f03aadb0e366954fdaf595a4cdaa6055",
@@ -3072,7 +2867,6 @@
     },
     {
       "blind_map_id": "map_026",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "525894fac00964993c8551412a5d6df0f03aadb0e366954fdaf595a4cdaa6055",
@@ -3087,7 +2881,6 @@
     },
     {
       "blind_map_id": "map_026",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "1ffb9f270b99c2dd8b8531a1928f37e90038fc6ba6273e77fefef8a780232d22",
@@ -3102,7 +2895,6 @@
     },
     {
       "blind_map_id": "map_026",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "904ba0327d5f11344e3e93379cb7163356c9ce8b9cbfedf8644ef1b2ca019c6a",
@@ -3117,7 +2909,6 @@
     },
     {
       "blind_map_id": "map_026",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "904ba0327d5f11344e3e93379cb7163356c9ce8b9cbfedf8644ef1b2ca019c6a",
@@ -3132,7 +2923,6 @@
     },
     {
       "blind_map_id": "map_027",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "6bf65c0e6293f7672dd9ae168d52035d418238ef64cd4b517040e32685d4b5bb",
@@ -3147,7 +2937,6 @@
     },
     {
       "blind_map_id": "map_027",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "805c37912ada50893352d6e5244740d41f7e397bc6c98609b943adf0b0cc27c2",
@@ -3162,7 +2951,6 @@
     },
     {
       "blind_map_id": "map_027",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "800c616b78ace82bc511665b28bea2e26edb4e308f02688adcab0feacd934831",
@@ -3177,7 +2965,6 @@
     },
     {
       "blind_map_id": "map_027",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "3e2f48f2e05b366d63d0dcd8a213c54351fb92954ff4817603f73c72318a90e5",
@@ -3192,7 +2979,6 @@
     },
     {
       "blind_map_id": "map_027",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "97abce1fc37e21e886442e3ad3ca3fb48170519cca28b36c6f33648158fd09bc",
@@ -3207,7 +2993,6 @@
     },
     {
       "blind_map_id": "map_027",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "3e2f48f2e05b366d63d0dcd8a213c54351fb92954ff4817603f73c72318a90e5",
@@ -3222,7 +3007,6 @@
     },
     {
       "blind_map_id": "map_027",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "800c616b78ace82bc511665b28bea2e26edb4e308f02688adcab0feacd934831",
@@ -3237,7 +3021,6 @@
     },
     {
       "blind_map_id": "map_027",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "97abce1fc37e21e886442e3ad3ca3fb48170519cca28b36c6f33648158fd09bc",
@@ -3252,7 +3035,6 @@
     },
     {
       "blind_map_id": "map_028",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "bf1624515a083bff8d153800ea8bcf5dd8945ae8ccbfd58a9edbaae15e51d8f1",
@@ -3267,7 +3049,6 @@
     },
     {
       "blind_map_id": "map_028",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f89c07f8cff6ecbc9d2ecbe4a5569776498bbed964be0962b2c98b4fd92b99f9",
@@ -3282,7 +3063,6 @@
     },
     {
       "blind_map_id": "map_028",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b75c86f22d90eca5dc3ca25457f2b7e550510198e7ef7c57d76cc1d9f6714869",
@@ -3297,7 +3077,6 @@
     },
     {
       "blind_map_id": "map_028",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "ef033d4c92c732a8fafc26d345400816b40c1ea8e46eb208747cfb83f08e1b42",
@@ -3312,7 +3091,6 @@
     },
     {
       "blind_map_id": "map_028",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b75c86f22d90eca5dc3ca25457f2b7e550510198e7ef7c57d76cc1d9f6714869",
@@ -3327,7 +3105,6 @@
     },
     {
       "blind_map_id": "map_028",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "cad9d75be72943c1b4f7d7ba917fd2838dd3df40065484bd428a3ee335a55eba",
@@ -3342,7 +3119,6 @@
     },
     {
       "blind_map_id": "map_028",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "cad9d75be72943c1b4f7d7ba917fd2838dd3df40065484bd428a3ee335a55eba",
@@ -3357,7 +3133,6 @@
     },
     {
       "blind_map_id": "map_028",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "5fc753fce8270790acdd0e588246afd72232a97034a3bb213be52cc083f2065d",
@@ -3372,7 +3147,6 @@
     },
     {
       "blind_map_id": "map_029",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "3b1799c226b3d5b87b728cb2a8813340d8f99af5ef9bc7da2ab91af9ca86c14b",
@@ -3387,7 +3161,6 @@
     },
     {
       "blind_map_id": "map_029",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "dae9287e429bd563d1a76a67deb332930b33da95e3b7f9c241c507511d8b2e51",
@@ -3402,7 +3175,6 @@
     },
     {
       "blind_map_id": "map_029",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "1c8558d8efb2a2e8d3486703fd4edd1fd73f9200980d9f4d6e4bfa9cd097d3e6",
@@ -3417,7 +3189,6 @@
     },
     {
       "blind_map_id": "map_029",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f168868f5593b218f144178fcb5c5b06c14ca7642225d139911411d174ebcc79",
@@ -3432,7 +3203,6 @@
     },
     {
       "blind_map_id": "map_029",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "f168868f5593b218f144178fcb5c5b06c14ca7642225d139911411d174ebcc79",
@@ -3447,7 +3217,6 @@
     },
     {
       "blind_map_id": "map_029",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b43c3f7b24cafa5c0707735a9618252abcb4529ea6f15964f0f7a9893b4768f7",
@@ -3462,7 +3231,6 @@
     },
     {
       "blind_map_id": "map_029",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "1c8558d8efb2a2e8d3486703fd4edd1fd73f9200980d9f4d6e4bfa9cd097d3e6",
@@ -3477,7 +3245,6 @@
     },
     {
       "blind_map_id": "map_029",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "b43c3f7b24cafa5c0707735a9618252abcb4529ea6f15964f0f7a9893b4768f7",
@@ -3492,7 +3259,6 @@
     },
     {
       "blind_map_id": "map_030",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "49bbce08251877f7067c1594531113b23822836cca5a12bee295bd3c5e1da212",
@@ -3507,7 +3273,6 @@
     },
     {
       "blind_map_id": "map_030",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "1dd2c1c50ade6d5d887554326b579d31918f0349ecc8deb20ce1e0ccd0bb8bb3",
@@ -3522,7 +3287,6 @@
     },
     {
       "blind_map_id": "map_030",
-      "both_completed": true,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "1dd2c1c50ade6d5d887554326b579d31918f0349ecc8deb20ce1e0ccd0bb8bb3",
@@ -3537,7 +3301,6 @@
     },
     {
       "blind_map_id": "map_030",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "262376a0ad53f10c0abcd509c2bf47a8de4f7e61c24350ba160ea07797e10a99",
@@ -3552,7 +3315,6 @@
     },
     {
       "blind_map_id": "map_030",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "04417561a5bec5709e6eec85cea4f2870fd6f357961060bdf6aa31f56cdd54ae",
@@ -3567,7 +3329,6 @@
     },
     {
       "blind_map_id": "map_030",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "49bbce08251877f7067c1594531113b23822836cca5a12bee295bd3c5e1da212",
@@ -3582,7 +3343,6 @@
     },
     {
       "blind_map_id": "map_030",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "49bbce08251877f7067c1594531113b23822836cca5a12bee295bd3c5e1da212",
@@ -3597,7 +3357,6 @@
     },
     {
       "blind_map_id": "map_030",
-      "both_completed": false,
       "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "input_artifact_sha256": {
         "A_video": "262376a0ad53f10c0abcd509c2bf47a8de4f7e61c24350ba160ea07797e10a99",
@@ -3620,13 +3379,13 @@
   "rater_slot_max": 39,
   "rater_slot_min": 0,
   "runtime_sha256": {
-    "app.js": "3050a62835ce1f54bd4f62f790c1021d4e1875e866a92a8086ababcb4cba6f84",
-    "index.html": "4fb83af08f33f25ef7dac108998b47b547eaeae395076f78a24dd4cbce01f83c",
+    "app.js": "49f7c7be49e2aebae4177badbca24cf87d10a764479763ce55b06b5e0521b1e8",
+    "index.html": "3cd7226b53760b94d3fcc716fc97e977c764542cf5a40f23fb5b59d90bde9726",
     "results.css": "3527dd30a55e9f143cf09e8ec4bc252da4db05015e9e3d3e61a99d15cd640052",
-    "results.html": "b8cf0c0ac0c92340a963213aa4eaf7e6482637ce96c37587de85d7bacd188681",
-    "results.js": "4ab220fee97029f635ee11d164cf550f6875b6885bab09f69e902bc6491b5b12",
-    "static_api.js": "fc27e97b39c35fab4dc62c8df197cc7bf9adbe0466427f6c378cf64141661f72",
-    "styles.css": "25c28f3e0dd02bef53e35d75ec3d1e217dd79e0267677ade12b1d9ae272ae956"
+    "results.html": "23465e1eacac089dbf46349fd49f04e96aef85f6823ce9218ab7d7d50f1cb4e3",
+    "results.js": "a43af157ca8302baf3969461a4b8e6580914f3fb36b36aefd16b1fee9a3efdfa",
+    "static_api.js": "8258fc7d62c6d958f5ced3b3e20774f1aad49bf9e17cda6ec393374b24d431d2",
+    "styles.css": "ae46b0992e42f221c4b2e5889323714ff5c7c23eb93a15264be20960a03a270f"
   },
   "schema_version": "tbam.github_pages_bundle.v1",
   "source_design_id": "s6_design_v1",
@@ -3634,6 +3393,6 @@
   "source_public_manifest_sha256": "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c",
   "status": "complete_browser_local_pilot",
   "storage_mode": "browser_local",
-  "study_id": "tbam_s6_human_pages_pilot_v1",
+  "study_id": "tbam_s6_human_forced_choice_pages_v1",
   "study_mode": "pilot"
 }

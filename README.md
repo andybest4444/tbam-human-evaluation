@@ -4,6 +4,9 @@ This repository is a Pages-ready, browser-local pilot for the blinded TBAM
 route study. It displays two static A/B full-route maps per item. It contains
 only the frozen public `judge_input.json` files; videos, contact sheets, private
 A/B mappings, databases, usernames, PINs, tokens, and result files are excluded.
+Each item asks one forced-choice question only: which route is better overall,
+A or B. There are no completion-condition branches, dimension ratings, ties,
+confidence ratings, evidence fields, or written rationales.
 
 ## Important limitation
 
@@ -39,6 +42,7 @@ recruitment.
 - Public blinded items: 240
 - Items per participant: 30
 - Assignment: `j = (r + m) mod 8`
+- Response: one required `A` or `B` choice per item
 - Source public-manifest SHA-256:
   `318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c`
 - Presentation: `static_route_maps_pages_v1`
@@ -120,6 +124,7 @@ The participant:
 1. opens only their assigned slot link;
 2. chooses a pseudonymous username and PIN;
 3. completes the 30-item catalog in the same browser;
+   each item requires only one A/B selection;
 4. clicks **下载结果与进度 JSON**;
 5. sends that JSON file to the researcher.
 
@@ -142,7 +147,7 @@ monotonic superset for each rater; rejects conflicts and branches; and provides:
 - provenance-preserving merged `results.json`;
 - merged `judgments.jsonl`;
 - `rater_progress.csv`;
-- `item_summary.csv`.
+- `item_summary.csv` with A/B counts per blinded item.
 
 All aggregation happens locally in the browser.
 

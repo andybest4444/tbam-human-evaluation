@@ -11,10 +11,6 @@ const state = {
   saveTimer: null,
   saving: false,
   saveQueued: false,
-  evidence: {
-    all_sample: [],
-    conditional_semantic: [],
-  },
   adminToken: "",
   adminSummary: null,
   adminTab: "items",
@@ -324,128 +320,27 @@ async function loadDashboard() {
   }
 }
 
-function ratingSection(endpoint, index, conditional = false) {
-  const prefix = endpoint;
-  const title = conditional ? "共同完成条件下的路线语义" : "完整指令判断";
-  const description = conditional
-    ? "两条路线都已完成任务。只比较可见的路线行为，哪条更符合地形、掩体、协同与效率要求？"
-    : "综合是否完成任务与路线行为，哪条路线更符合完整自然语言指令？";
-  const questions = [
-    {
-      key: "overall",
-      title: "总体 Overall",
-      description: "请直接回答这一终点；不要机械地把下面四项相加。",
-      choices: ["A", "B", "tie"],
-    },
-    {
-      key: "terrain",
-      title: "地形 Terrain",
-      description: "更少不必要的上升或下降。",
-      choices: ["A", "B", "tie", "unclear"],
-    },
-    {
-      key: "cover",
-      title: "掩体 Cover",
-      description: "更合理地利用隐蔽区域。",
-      choices: ["A", "B", "tie", "unclear"],
-    },
-    {
-      key: "coordination",
-      title: "协同 Coordination",
-      description: "比较同编号时间标记：暴露时分散，隐蔽时聚集。",
-      choices: ["A", "B", "tie", "unclear"],
-    },
-    {
-      key: "efficiency",
-      title: "效率 Efficiency",
-      description: "在满足要求时路径更直接、少绕行。",
-      choices: ["A", "B", "tie", "unclear"],
-    },
-  ];
-  const choiceText = {
-    A: "路线 A",
-    B: "路线 B",
-    tie: "平局",
-    unclear: "不清楚",
-  };
+
+function ratingSection() {
   return `
-    <section class="rating-section ${conditional ? "conditional-section" : ""}" data-endpoint="${endpoint}">
+    <section class="rating-section" data-choice-section>
       <header class="rating-heading">
-        <span class="endpoint-number">${String(index).padStart(2, "0")}</span>
+        <span class="endpoint-number">选择</span>
         <div>
-          <h2>${title}</h2>
-          <p>${description}</p>
+          <h2>路线 A 和路线 B，哪条整体更好？</h2>
+          <p>结合任务指令和两张匿名路线图，必须选择一条；不区分是否完成，不做分项评分。</p>
         </div>
-        <span class="endpoint-tag">${conditional ? "仅共同完成项目" : "所有项目"}</span>
+        <span class="endpoint-tag">A/B 二选一</span>
       </header>
-      <div class="rating-body">
-        ${questions
-          .map(
-            (question) => `
-              <div class="question-row">
-                <div class="question-copy">
-                  <strong>${question.title}</strong>
-                  <span>${question.description}</span>
-                </div>
-                <div class="choice-group ${question.choices.length === 3 ? "three" : ""}">
-                  ${question.choices
-                    .map(
-                      (choice) => `
-                        <label class="choice-pill">
-                          <input
-                            type="radio"
-                            name="${prefix}-${question.key}"
-                            value="${choice}"
-                            data-rating-field
-                          >
-                          <span>${choiceText[choice]}</span>
-                        </label>
-                      `,
-                    )
-                    .join("")}
-                </div>
-              </div>
-            `,
-          )
-          .join("")}
-        <div class="question-row">
-          <div class="question-copy">
-            <strong>置信度 Confidence</strong>
-            <span>1 表示很不确定，5 表示非常确定；不会作为票数权重。</span>
-          </div>
-          <div class="confidence-group">
-            ${[1, 2, 3, 4, 5]
-              .map(
-                (value) => `
-                  <label class="choice-pill">
-                    <input
-                      type="radio"
-                      name="${prefix}-confidence"
-                      value="${value}"
-                      data-rating-field
-                    >
-                    <span>${value}</span>
-                  </label>
-                `,
-              )
-              .join("")}
-          </div>
-        </div>
-        <div class="question-row rationale-row">
-          <div class="question-copy">
-            <strong>简短理由 Rationale</strong>
-            <span>可留空；若填写，请只引用两张匿名路线图中可见的证据。</span>
-          </div>
-          <div class="rationale-box">
-            <textarea
-              maxlength="500"
-              name="${prefix}-rationale"
-              data-rating-field
-              placeholder="例如：路线 A 在暴露区域的同编号时刻更分散，同时没有明显绕行。"
-            ></textarea>
-            <span class="character-count" data-count-for="${prefix}">0 / 500</span>
-          </div>
-        </div>
+      <div class="pairwise-choice-group" role="radiogroup" aria-label="选择整体更好的路线">
+        <label class="pairwise-choice-card">
+          <input type="radio" name="pairwise-choice" value="A" data-rating-field>
+          <span><strong>A</strong>选择路线 A</span>
+        </label>
+        <label class="pairwise-choice-card">
+          <input type="radio" name="pairwise-choice" value="B" data-rating-field>
+          <span><strong>B</strong>选择路线 B</span>
+        </label>
       </div>
     </section>
   `;
@@ -460,129 +355,35 @@ function localDraftKey(itemId) {
   ].join(":");
 }
 
+
 function applyDraft(draft) {
-  const payload = draft?.payload || {};
+  const choice = draft?.payload?.choice;
   state.activeSeconds = Number(draft?.active_seconds || 0);
   state.draftRevision = Number(draft?.revision || 0);
-  for (const endpoint of ["all_sample", "conditional_semantic"]) {
-    const rating = payload?.endpoints?.[endpoint];
-    state.evidence[endpoint] = Array.isArray(rating?.evidence_time_steps)
-      ? [...rating.evidence_time_steps]
-      : [];
-    if (!rating) continue;
-    for (const key of [
-      "overall",
-      "terrain",
-      "cover",
-      "coordination",
-      "efficiency",
-      "confidence",
-    ]) {
-      const input = $(
-        `input[name="${endpoint}-${key}"][value="${CSS.escape(String(rating[key] ?? ""))}"]`,
-      );
-      if (input) input.checked = true;
-    }
-    const rationale = $(`[name="${endpoint}-rationale"]`);
-    if (rationale) rationale.value = rating.rationale || "";
+  if (choice === "A" || choice === "B") {
+    const input = document.querySelector(
+      `input[name="pairwise-choice"][value="${choice}"]`,
+    );
+    if (input) input.checked = true;
   }
-  renderEvidenceTags();
-  updateCharacterCounts();
-}
-
-function renderEvidenceTags() {
-  for (const endpoint of ["all_sample", "conditional_semantic"]) {
-    const container = $(`[data-evidence-tags="${endpoint}"]`);
-    if (!container) continue;
-    container.innerHTML = state.evidence[endpoint]
-      .map(
-        (step) => `
-          <span class="evidence-tag">
-            t=${step}
-            <button type="button" data-remove-evidence="${endpoint}" data-step="${step}" aria-label="删除 t=${step}">×</button>
-          </span>
-        `,
-      )
-      .join("");
-  }
-}
-
-function addEvidence(endpoint, rawValue) {
-  const value = Number(rawValue);
-  const max = Math.min(96, state.activeItem.max_evidence_step ?? 96);
-  if (!Number.isInteger(value) || value < 0 || value > max) {
-    toast(`证据时刻必须是 0–${max} 的整数。`, "error");
-    return;
-  }
-  if (state.evidence[endpoint].includes(value)) return;
-  if (state.evidence[endpoint].length >= 8) {
-    toast("每个终点最多记录 8 个证据时刻。", "error");
-    return;
-  }
-  state.evidence[endpoint].push(value);
-  state.evidence[endpoint].sort((a, b) => a - b);
-  renderEvidenceTags();
-  scheduleDraftSave();
-}
-
-function partialRating(endpoint) {
-  const result = {};
-  for (const key of [
-    "overall",
-    "terrain",
-    "cover",
-    "coordination",
-    "efficiency",
-    "confidence",
-  ]) {
-    const checked = $(`input[name="${endpoint}-${key}"]:checked`);
-    if (checked) {
-      result[key] = key === "confidence" ? Number(checked.value) : checked.value;
-    }
-  }
-  result.evidence_time_steps = [...state.evidence[endpoint]];
-  result.rationale = $(`[name="${endpoint}-rationale"]`)?.value || "";
-  return result;
 }
 
 function draftPayload() {
-  return {
-    endpoints: {
-      all_sample: partialRating("all_sample"),
-      conditional_semantic: state.activeItem?.both_completed
-        ? partialRating("conditional_semantic")
-        : null,
-    },
-  };
+  const selected = document.querySelector(
+    'input[name="pairwise-choice"]:checked',
+  );
+  return { choice: selected?.value || null };
 }
 
-function completedRating(endpoint) {
-  const rating = partialRating(endpoint);
-  const missing = [
-    "overall",
-    "terrain",
-    "cover",
-    "coordination",
-    "efficiency",
-    "confidence",
-  ].filter((key) => rating[key] === undefined);
-  if (missing.length) {
-    const section = $(`[data-endpoint="${endpoint}"]`);
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
-    throw new Error(
-      `${endpoint === "all_sample" ? "完整指令" : "共同完成"}部分还有 ${missing.length} 项必答选择未完成。`,
-    );
+function finalChoice() {
+  const choice = draftPayload().choice;
+  if (choice !== "A" && choice !== "B") {
+    document
+      .querySelector("[data-choice-section]")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    throw new Error("请选择路线 A 或路线 B。");
   }
-  return rating;
-}
-
-function finalEndpoints() {
-  return {
-    all_sample: completedRating("all_sample"),
-    conditional_semantic: state.activeItem.both_completed
-      ? completedRating("conditional_semantic")
-      : null,
-  };
+  return choice;
 }
 
 function setSaveState(label, saved = false) {
@@ -653,49 +454,19 @@ async function saveDraft(showConfirmation = false) {
   }
 }
 
-function updateCharacterCounts() {
-  for (const endpoint of ["all_sample", "conditional_semantic"]) {
-    const textarea = $(`[name="${endpoint}-rationale"]`);
-    const count = $(`[data-count-for="${endpoint}"]`);
-    if (textarea && count) count.textContent = `${textarea.value.length} / 500`;
-  }
-}
+
+function updateCharacterCounts() {}
 
 function bindRatingEvents() {
-  const form = $("#rating-form");
+  const form = document.querySelector("#rating-form");
   form.oninput = (event) => {
     if (event.target.matches("[data-rating-field]")) {
-      updateCharacterCounts();
       scheduleDraftSave();
     }
   };
-  form.onclick = (event) => {
-    const removeButton = event.target.closest("[data-remove-evidence]");
-    if (removeButton) {
-      const endpoint = removeButton.dataset.removeEvidence;
-      const step = Number(removeButton.dataset.step);
-      state.evidence[endpoint] = state.evidence[endpoint].filter(
-        (value) => value !== step,
-      );
-      renderEvidenceTags();
-      scheduleDraftSave();
-    }
-  };
-  form.onkeydown = (event) => {
-    const input = event.target.closest("[data-evidence-input]");
-    if (input && event.key === "Enter") {
-      event.preventDefault();
-      addEvidence(input.dataset.evidenceInput, input.value);
-      input.value = "";
-    }
-  };
-  form.onchange = (event) => {
-    const input = event.target.closest("[data-evidence-input]");
-    if (input && input.value !== "") {
-      addEvidence(input.dataset.evidenceInput, input.value);
-      input.value = "";
-    }
-  };
+  form.onclick = null;
+  form.onkeydown = null;
+  form.onchange = null;
 }
 
 function startActiveTimer() {
@@ -1032,16 +803,12 @@ async function openItem(itemId) {
     state.activeItem = { ...item, catalog_number: catalogItem.catalog_number };
     state.draftRevision = 0;
     state.activeSeconds = 0;
-    state.evidence = { all_sample: [], conditional_semantic: [] };
     $("#judge-map-label").textContent = item.blind_map_id.replace("_", " ");
     $("#judge-count-label").textContent =
       `项目 ${catalogItem.catalog_number} / ${state.catalog.length}`;
     $("#judge-directive").textContent = item.directive;
     $("#endpoint-forms").innerHTML =
-      ratingSection("all_sample", 1, false) +
-      (item.both_completed
-        ? ratingSection("conditional_semantic", 2, true)
-        : "");
+      ratingSection();
     bindRatingEvents();
     await configureRouteMaps();
 
@@ -1092,11 +859,12 @@ function confirmFinalSubmission() {
   });
 }
 
+
 async function submitRating(event) {
   event.preventDefault();
-  let endpoints;
+  let choice;
   try {
-    endpoints = finalEndpoints();
+    choice = finalChoice();
   } catch (error) {
     toast(error.message, "error");
     return;
@@ -1108,7 +876,7 @@ async function submitRating(event) {
     const result = await api(`/api/item/${state.activeItem.item_id}/submit`, {
       method: "POST",
       body: JSON.stringify({
-        endpoints,
+        choice,
         active_seconds: Math.max(0.001, state.activeSeconds),
       }),
     });
@@ -1193,8 +961,7 @@ function renderAdminTable() {
     $("#admin-table-head").innerHTML = `
       <tr>
         <th>地图</th><th>匿名项目</th><th>覆盖</th><th>已分配</th>
-        <th>Overall A</th><th>Overall B</th><th>平局</th>
-        <th>条件 A</th><th>条件 B</th><th>条件平局</th>
+        <th>选择 A</th><th>选择 B</th>
       </tr>`;
     $("#admin-table-body").innerHTML = filtered
       .map(
@@ -1207,8 +974,7 @@ function renderAdminTable() {
               ${row.submitted}/${row.target}
             </td>
             <td>${row.assigned}/${row.target}</td>
-            <td>${row.all_A ?? "封存"}</td><td>${row.all_B ?? "封存"}</td><td>${row.all_tie ?? "封存"}</td>
-            <td>${row.conditional_A ?? "封存"}</td><td>${row.conditional_B ?? "封存"}</td><td>${row.conditional_tie ?? "封存"}</td>
+            <td>${row.choice_A ?? "封存"}</td><td>${row.choice_B ?? "封存"}</td>
           </tr>`,
       )
       .join("");
