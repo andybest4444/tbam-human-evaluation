@@ -33,10 +33,10 @@ EXPECTED_PUBLIC_MANIFEST_SHA256 = (
     "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c"
 )
 EXPECTED_COLLECTION_PROTOCOL_ID = (
-    "abe36e619e865a98c9f159baa394125e31a4d385ae33a95dc46444e5682425c2"
+    "52c87e87c4e62f89f4036db1d403d160a9a0add9f9e3a9df669002b47f1377f2"
 )
 EXPECTED_BUNDLE_ID = (
-    "cb8be3a788b709eed367bb06f81c7e2894d2cc8fba1c3c7740d181dafa30ba45"
+    "f5b39d33b436bdd0d30dd61b6612ad0419e150c065f90da57aa249e7e117abf5"
 )
 STUDY_ID = "tbam_s6_human_pages_pilot_v1"
 PRESENTATION_MEDIUM = "static_route_maps_pages_v1"
@@ -63,6 +63,200 @@ SOURCE_MIRROR_FILES = (
     "results.js",
     "results.css",
 )
+START_RUBRIC_HTML = """
+            <section class="start-rubric" aria-labelledby="start-rubric-title">
+              <header class="start-rubric-heading">
+                <p class="kicker">统一尺度 · 所有项目适用</p>
+                <h2 id="start-rubric-title">评判标准</h2>
+                <p>
+                  总体请直接回答完整指令，不要机械地把四个解释维度相加；
+                  四维仅用于解释。
+                </p>
+              </header>
+              <article class="start-rubric-item overall">
+                <div>
+                  <p class="start-rubric-primary-label">主要终点</p>
+                  <h3>总体 Overall</h3>
+                  <p>综合任务完成情况与可见路线行为，判断哪条路线更符合完整指令。</p>
+                </div>
+              </article>
+              <ol class="start-rubric-grid" aria-label="四个解释维度">
+                <li class="start-rubric-item">
+                  <span aria-hidden="true">01</span>
+                  <div>
+                    <h3>地形 Terrain</h3>
+                    <p>哪条路线更少出现与到达目标无关的不必要升降？</p>
+                  </div>
+                </li>
+                <li class="start-rubric-item">
+                  <span aria-hidden="true">02</span>
+                  <div>
+                    <h3>掩体 Cover</h3>
+                    <p>哪条路线更合理地利用隐蔽区域，而非无理由暴露？</p>
+                  </div>
+                </li>
+                <li class="start-rubric-item">
+                  <span aria-hidden="true">03</span>
+                  <div>
+                    <h3>协同 Coordination</h3>
+                    <p>比较同编号时间标记：暴露时是否分散、隐蔽时是否聚集？</p>
+                  </div>
+                </li>
+                <li class="start-rubric-item">
+                  <span aria-hidden="true">04</span>
+                  <div>
+                    <h3>效率 Efficiency</h3>
+                    <p>在不牺牲上述要求时，哪条路线更直接、少停留或绕行？</p>
+                  </div>
+                </li>
+              </ol>
+              <p class="start-rubric-note">
+                <strong>作答原则：</strong>
+                两条路线相当时可选“平局”；单个解释维度证据不足时可选“不清楚”。
+                只依据匿名路线图中的可见证据，不猜测生成方法。
+              </p>
+            </section>
+"""
+START_RUBRIC_CSS = """
+
+/* GitHub Pages start-page evaluation criteria. */
+.start-rubric {
+  max-width: 690px;
+  margin-top: 26px;
+  padding: 22px;
+  border: 1px solid rgba(18, 60, 59, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: 0 14px 38px rgba(31, 50, 47, 0.08);
+}
+
+.start-rubric-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 18px;
+  align-items: end;
+}
+
+.start-rubric-heading .kicker {
+  grid-column: 1 / -1;
+  margin-bottom: 7px;
+}
+
+.start-rubric-heading h2 {
+  margin: 0;
+  color: var(--forest);
+  font-size: 25px;
+  letter-spacing: -0.025em;
+}
+
+.start-rubric-heading > p:last-child {
+  max-width: 450px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: right;
+}
+
+.start-rubric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 9px;
+  margin: 9px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.start-rubric-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  min-height: 94px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(250, 250, 246, 0.86);
+}
+
+.start-rubric-item.overall {
+  display: block;
+  min-height: 0;
+  margin-top: 17px;
+  border-color: rgba(27, 87, 83, 0.2);
+  background: var(--mint-light);
+}
+
+.start-rubric-item > span {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: white;
+  color: var(--forest-2);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.start-rubric-item h3 {
+  margin: 3px 0 5px;
+  color: var(--forest);
+  font-size: 14px;
+}
+
+.start-rubric-primary-label {
+  margin: 0 0 4px;
+  color: var(--forest-2);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.start-rubric-item p {
+  margin: 0;
+  color: #59645f;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.start-rubric-item .start-rubric-primary-label {
+  margin: 0 0 4px;
+  color: var(--forest-2);
+  font-size: 11px;
+}
+
+.start-rubric-note {
+  margin: 14px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+  color: #56615d;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.start-rubric-note strong {
+  color: var(--forest);
+}
+
+@media (max-width: 760px) {
+  .start-rubric {
+    padding: 18px;
+  }
+
+  .start-rubric-heading {
+    display: block;
+  }
+
+  .start-rubric-heading > p:last-child {
+    margin-top: 8px;
+    text-align: left;
+  }
+
+  .start-rubric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+"""
 
 
 def parse_args() -> argparse.Namespace:
@@ -245,9 +439,24 @@ def transformed_index(portal: Path) -> str:
         "<title>TBAM 匿名路线人工评判</title>",
         "<title>TBAM 匿名路线人工评判 · Pages Pilot</title>",
     )
+    rubric_marker = "          <div class=\"auth-panel\">"
+    rubric_replacement = (
+        START_RUBRIC_HTML
+        + "          </div>\n\n"
+        + rubric_marker
+    )
+    auth_hero_close = "          </div>\n\n" + rubric_marker
+    if source.count(auth_hero_close) != 1:
+        raise RuntimeError("portal auth hero changed unexpectedly")
+    source = source.replace(auth_hero_close, rubric_replacement, 1)
     if 'href="/' in source or 'src="/' in source:
         raise RuntimeError("generated Pages index still contains a root URL")
     return source
+
+
+def transformed_styles(portal: Path) -> str:
+    source = (portal / "web" / "styles.css").read_text(encoding="utf-8")
+    return source.rstrip() + START_RUBRIC_CSS.rstrip() + "\n"
 
 
 def transformed_app(portal: Path) -> str:
@@ -406,7 +615,9 @@ def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
     (staging / "app.js").write_text(
         transformed_app(portal), encoding="utf-8"
     )
-    shutil.copy2(portal / "web" / "styles.css", staging / "styles.css")
+    (staging / "styles.css").write_text(
+        transformed_styles(portal), encoding="utf-8"
+    )
     for name in (
         ".nojekyll",
         "static_api.js",

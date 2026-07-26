@@ -2220,3 +2220,141 @@ dialog p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* GitHub Pages start-page evaluation criteria. */
+.start-rubric {
+  max-width: 690px;
+  margin-top: 26px;
+  padding: 22px;
+  border: 1px solid rgba(18, 60, 59, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: 0 14px 38px rgba(31, 50, 47, 0.08);
+}
+
+.start-rubric-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 18px;
+  align-items: end;
+}
+
+.start-rubric-heading .kicker {
+  grid-column: 1 / -1;
+  margin-bottom: 7px;
+}
+
+.start-rubric-heading h2 {
+  margin: 0;
+  color: var(--forest);
+  font-size: 25px;
+  letter-spacing: -0.025em;
+}
+
+.start-rubric-heading > p:last-child {
+  max-width: 450px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: right;
+}
+
+.start-rubric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 9px;
+  margin: 9px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.start-rubric-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  min-height: 94px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: rgba(250, 250, 246, 0.86);
+}
+
+.start-rubric-item.overall {
+  display: block;
+  min-height: 0;
+  margin-top: 17px;
+  border-color: rgba(27, 87, 83, 0.2);
+  background: var(--mint-light);
+}
+
+.start-rubric-item > span {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: white;
+  color: var(--forest-2);
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.start-rubric-item h3 {
+  margin: 3px 0 5px;
+  color: var(--forest);
+  font-size: 14px;
+}
+
+.start-rubric-primary-label {
+  margin: 0 0 4px;
+  color: var(--forest-2);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.14em;
+}
+
+.start-rubric-item p {
+  margin: 0;
+  color: #59645f;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.start-rubric-item .start-rubric-primary-label {
+  margin: 0 0 4px;
+  color: var(--forest-2);
+  font-size: 11px;
+}
+
+.start-rubric-note {
+  margin: 14px 0 0;
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
+  color: #56615d;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.start-rubric-note strong {
+  color: var(--forest);
+}
+
+@media (max-width: 760px) {
+  .start-rubric {
+    padding: 18px;
+  }
+
+  .start-rubric-heading {
+    display: block;
+  }
+
+  .start-rubric-heading > p:last-child {
+    margin-top: 8px;
+    text-align: left;
+  }
+
+  .start-rubric-grid {
+    grid-template-columns: 1fr;
+  }
+}

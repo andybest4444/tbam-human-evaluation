@@ -1,9 +1,9 @@
 {
   "assignment_rule_id": "latin_rotation_r_plus_map_mod_8_v1",
   "both_completed_count": 97,
-  "built_utc": "2026-07-26T14:32:51.776035+00:00",
-  "bundle_id": "cb8be3a788b709eed367bb06f81c7e2894d2cc8fba1c3c7740d181dafa30ba45",
-  "collection_protocol_id": "abe36e619e865a98c9f159baa394125e31a4d385ae33a95dc46444e5682425c2",
+  "built_utc": "2026-07-26T15:57:41.383445+00:00",
+  "bundle_id": "f5b39d33b436bdd0d30dd61b6612ad0419e150c065f90da57aa249e7e117abf5",
+  "collection_protocol_id": "52c87e87c4e62f89f4036db1d403d160a9a0add9f9e3a9df669002b47f1377f2",
   "consent_text": "TBAM 匿名路线人工评判：GitHub Pages 内部试运行说明\n\n本次仅用于检查网站、静态路线图渲染、评判说明、保存、恢复与导出流程，不是正式研究招募，试运行结果不会纳入论文分析。\n\n页面将展示两张匿名完整路线图，并请您比较它们对同一自然语言任务说明的符合程度。路线图包含高程、掩体、完整路径以及统一的时间标记。完整测试目录包含 30 个对比项目。网页会在当前浏览器中保存匿名评判、置信度、简短理由、作答时间、化名及恢复进度所需的数据；GitHub Pages 不接收或保存您的评判结果。完成后，您需要主动下载结果 JSON 并交给测试负责人。清除本站浏览器数据可能删除尚未导出的进度。\n\n请使用不包含真实姓名、邮箱、学号、工号或其他直接身份信息的化名。参与试运行完全自愿；您可以随时停止。GitHub 会为安全目的记录 Pages 访问者的 IP 地址；请只在接受这一托管条件时继续。若发现路线图、文字、保存、恢复或导出问题，请记录发生问题的项目编号并反馈给测试负责人。\n\n勾选同意表示您理解这是内部功能试运行，并同意将本次输入仅用于验证和改进评判系统。\n",
   "consent_text_sha256": "6d3c4ee98a3993029b2d1120b24ae863775eef78387dc9cee4d80bc1c2d82893",
   "consent_version": "pages-pilot-notice-v2",
@@ -3621,12 +3621,12 @@
   "rater_slot_min": 0,
   "runtime_sha256": {
     "app.js": "3050a62835ce1f54bd4f62f790c1021d4e1875e866a92a8086ababcb4cba6f84",
-    "index.html": "3a11b9907832c9582a5fdc2e0cc36c9d8f1f6008e70c99605447992f04e20771",
+    "index.html": "4fb83af08f33f25ef7dac108998b47b547eaeae395076f78a24dd4cbce01f83c",
     "results.css": "3527dd30a55e9f143cf09e8ec4bc252da4db05015e9e3d3e61a99d15cd640052",
     "results.html": "b8cf0c0ac0c92340a963213aa4eaf7e6482637ce96c37587de85d7bacd188681",
     "results.js": "4ab220fee97029f635ee11d164cf550f6875b6885bab09f69e902bc6491b5b12",
     "static_api.js": "fc27e97b39c35fab4dc62c8df197cc7bf9adbe0466427f6c378cf64141661f72",
-    "styles.css": "996c229b0dce35b22161df21dd34686dca1dc775dc0d4bd0c4606281aa06c7e5"
+    "styles.css": "25c28f3e0dd02bef53e35d75ec3d1e217dd79e0267677ade12b1d9ae272ae956"
   },
   "schema_version": "tbam.github_pages_bundle.v1",
   "source_design_id": "s6_design_v1",
