@@ -1,8 +1,8 @@
 {
   "assignment_rule_id": "complete_catalog_round_robin_v1",
-  "built_utc": "2026-07-26T20:24:42.055698+00:00",
-  "bundle_id": "801d770177c1d14b8e1f8e7c3531de78af5ad8cb0e55f573691a68ecf40a4b1e",
-  "collection_protocol_id": "2630e8344a3697208ba01c2eea96c6c950f68d9078ade170d09d496c8fc3f9fe",
+  "built_utc": "2026-07-26T20:56:43.769691+00:00",
+  "bundle_id": "ec71dedd8af43dcb21df43734efa37c00e24b68a22a5ea09d42d046183a36ebe",
+  "collection_protocol_id": "ed1693ccd7b4bb750c2e677378d5f0db27b454f745fadd9e0dde879367a3a338",
   "consent_text": "TBAM 匿名路线人工评判：GitHub Pages 内部试运行说明\n\n本次仅用于检查网站、静态路线图渲染、评判说明、保存、恢复与导出流程，不是正式研究招募，试运行结果不会纳入论文分析。\n\n页面将展示两张匿名完整路线图。每个项目只要求您根据同一条自然语言任务说明，选择整体更好的路线 A 或路线 B；不区分路线是否完成，不做分项评分，也不提供平局选项。路线图包含高程、掩体、完整路径以及统一的时间标记。每位评判者的完整目录包含 240 个对比项目，可分多次完成。提交后仍可重新打开项目并覆盖原选择，结果导出只保留每个项目最后一次提交的选择。网页会在当前浏览器中保存 A/B 选择、作答时间、化名及恢复进度所需的数据；GitHub Pages 不接收或保存您的评判结果。完成后，您需要主动下载结果 JSON 并交给测试负责人。清除本站浏览器数据可能删除尚未导出的进度。\n\n请使用不包含真实姓名、邮箱、学号、工号或其他直接身份信息的化名。参与试运行完全自愿；您可以随时停止。GitHub 会为安全目的记录 Pages 访问者的 IP 地址；请只在接受这一托管条件时继续。若发现路线图、文字、保存、恢复或导出问题，请记录发生问题的项目编号并反馈给测试负责人。\n\n勾选同意表示您理解这是内部功能试运行，并同意将本次输入仅用于验证和改进评判系统。\n",
   "consent_text_en": "TBAM Anonymous Route Human Evaluation: GitHub Pages Internal Pilot Notice\n\nThis pilot is used only to verify the website, static route rendering, evaluation instructions, progress saving and recovery, and result export. It is not formal research recruitment, and pilot responses will not be included in the paper analysis.\n\nEach item shows two anonymous complete route maps. Based on the same natural-language task instruction, you only need to choose which route is better overall, Route A or Route B. Do not separately judge whether a route completed the task, do not assign dimension scores, and do not use a tie option. The maps show elevation, cover, complete paths, and standardized time markers. Your complete catalog contains 240 comparisons and may be completed over multiple sessions. You may reopen an item after submitting and replace your earlier choice; the result export retains only your latest submitted choice for each item. The page stores your A/B choices, response times, pseudonym, and recovery data in this browser. GitHub Pages does not receive or store your evaluation results. When finished, you must download the result JSON and send it to the study coordinator. Clearing this site's browser data may delete progress that has not been exported.\n\nUse a pseudonym that does not contain your real name, email address, student ID, employee ID, or any other direct identifier. Participation in this pilot is voluntary, and you may stop at any time. GitHub records Pages visitors' IP addresses for security purposes; continue only if you accept this hosting condition. If you encounter a problem with the route maps, text, saving, recovery, or export, record the affected item number and report it to the study coordinator.\n\nBy checking the consent box, you confirm that you understand this is an internal functionality pilot and agree that your input may be used only to verify and improve the evaluation system.\n",
   "consent_text_en_sha256": "20ed7497dbb45f0f8878ee8d143f7a2812606646832def2cf2e612e4a69fd40d",
@@ -3382,8 +3382,8 @@
   "rater_slot_max": 4,
   "rater_slot_min": 0,
   "runtime_sha256": {
-    "app-en.js": "64894d48b6a0f689aa809350c01242e051c3aab3b03efb9c10e8a3ee2b86d528",
-    "app.js": "2362274f1256aee0b1806d85b0830b339a6740a80cfd4eb8c858a8f23f9f1a27",
+    "app-en.js": "f70df1af1e885b96e3f611e52e62f8314df46552dd187dad1c1c57ff96834ddf",
+    "app.js": "05551de00134b38c252a3d2976fa29bb7d1d513f77c14c1b7a4f50ec8de5eea7",
     "index-en.html": "b20134fd342b656e79f6d528f5b95526383effa769422e1c7e17c663f49cd0d1",
     "index.html": "ebdb8af3697dff9b9bccc9f934e6cae85946ee20ce76da30fe5df08088d14a0b",
     "results.css": "3527dd30a55e9f143cf09e8ec4bc252da4db05015e9e3d3e61a99d15cd640052",

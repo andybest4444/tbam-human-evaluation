@@ -34,10 +34,10 @@ EXPECTED_PUBLIC_MANIFEST_SHA256 = (
     "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c"
 )
 EXPECTED_COLLECTION_PROTOCOL_ID = (
-    "2630e8344a3697208ba01c2eea96c6c950f68d9078ade170d09d496c8fc3f9fe"
+    "ed1693ccd7b4bb750c2e677378d5f0db27b454f745fadd9e0dde879367a3a338"
 )
 EXPECTED_BUNDLE_ID = (
-    "801d770177c1d14b8e1f8e7c3531de78af5ad8cb0e55f573691a68ecf40a4b1e"
+    "ec71dedd8af43dcb21df43734efa37c00e24b68a22a5ea09d42d046183a36ebe"
 )
 STUDY_ID = "tbam_s6_human_forced_choice_full_catalog_pages_v1"
 PRESENTATION_MEDIUM = "static_route_maps_bilingual_pages_v1"
@@ -800,13 +800,30 @@ async function submitRating(event) {
     localStorage.removeItem(localDraftKey(activeItem.item_id));
     toast(`项目 ${activeItem.catalog_number} 已提交；仍可重新打开修改。`);
     const currentId = activeItem.item_id;
+    const currentIndex = state.catalog.findIndex(
+      (row) => row.item_id === currentId,
+    );
     state.activeItem = null;
     const item = state.catalog.find((row) => row.item_id === currentId);
     if (item) {
       item.status = "submitted";
       item.submitted_utc = result.record.completed_utc;
     }
-    await loadDashboard();
+    const nextCandidates =
+      currentIndex >= 0
+        ? [
+            ...state.catalog.slice(currentIndex + 1),
+            ...state.catalog.slice(0, currentIndex),
+          ]
+        : state.catalog;
+    const nextItem = nextCandidates.find(
+      (row) => row.status !== "submitted",
+    );
+    if (nextItem) {
+      await openItem(nextItem.item_id);
+    } else {
+      await loadDashboard();
+    }
   } catch (error) {
     toast(error.message, "error");
   } finally {

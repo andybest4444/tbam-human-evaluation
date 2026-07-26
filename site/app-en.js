@@ -874,13 +874,30 @@ async function submitRating(event) {
     localStorage.removeItem(localDraftKey(activeItem.item_id));
     toast(`Item ${activeItem.catalog_number} submitted; you may reopen it and change the choice.`);
     const currentId = activeItem.item_id;
+    const currentIndex = state.catalog.findIndex(
+      (row) => row.item_id === currentId,
+    );
     state.activeItem = null;
     const item = state.catalog.find((row) => row.item_id === currentId);
     if (item) {
       item.status = "submitted";
       item.submitted_utc = result.record.completed_utc;
     }
-    await loadDashboard();
+    const nextCandidates =
+      currentIndex >= 0
+        ? [
+            ...state.catalog.slice(currentIndex + 1),
+            ...state.catalog.slice(0, currentIndex),
+          ]
+        : state.catalog;
+    const nextItem = nextCandidates.find(
+      (row) => row.status !== "submitted",
+    );
+    if (nextItem) {
+      await openItem(nextItem.item_id);
+    } else {
+      await loadDashboard();
+    }
   } catch (error) {
     toast(error.message, "error");
   } finally {
