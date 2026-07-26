@@ -2226,6 +2226,29 @@ dialog p {
   pointer-events: none;
 }
 
+.language-switch {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 1px solid rgba(18, 60, 59, 0.22);
+  border-radius: 999px;
+  background: var(--forest);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  box-shadow: 0 8px 24px rgba(18, 60, 59, 0.2);
+}
+
+.language-switch:hover,
+.language-switch:focus-visible {
+  background: #1b5753;
+  outline: 3px solid rgba(229, 167, 70, 0.45);
+  outline-offset: 2px;
+}
+
 .start-rubric {
   max-width: 690px;
   margin-top: 26px;
@@ -2306,6 +2329,11 @@ dialog p {
 }
 
 @media (max-width: 600px) {
+  .language-switch {
+    min-height: 36px;
+    padding: 7px 12px;
+  }
+
   .start-rubric {
     padding: 18px;
   }

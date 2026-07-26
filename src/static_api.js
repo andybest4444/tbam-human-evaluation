@@ -69,18 +69,21 @@
               manifest?.consent_text_sha256 || "",
             ) ||
             manifest?.consent_version !==
-              "pages-forced-choice-notice-v1" ||
+              "pages-forced-choice-full-catalog-notice-v1" ||
             manifest?.presentation_medium !==
-              "static_route_maps_pages_v1" ||
+              "static_route_maps_bilingual_pages_v1" ||
             manifest?.assignment_rule_id !==
-              "latin_rotation_r_plus_map_mod_8_v1" ||
+              "complete_catalog_round_robin_v1" ||
             manifest?.rater_slot_min !== 0 ||
-            manifest?.rater_slot_max !== 39 ||
-            manifest?.items_per_rater !== 30 ||
+            manifest?.rater_slot_max !== 4 ||
+            manifest?.items_per_rater !== 240 ||
             !Array.isArray(manifest?.items) ||
             manifest.items.length !== 240
           ) {
             throw new Error("Pages manifest 不完整或与冻结语料不一致。");
+          }
+          for (let slot = 0; slot <= 4; slot += 1) {
+            assignedItems(manifest, { rater_slot: slot });
           }
           return manifest;
         });
@@ -231,12 +234,12 @@
     if (raw === undefined || raw === null || String(raw).trim() === "") {
       throw new LocalApiError(
         400,
-        "首次参加需要研究者分配的席位编号（0–39）。",
+        "首次参加需要研究者分配的席位编号（0–4）。",
       );
     }
     const slot = Number(raw);
-    if (!Number.isInteger(slot) || slot < 0 || slot > 39) {
-      throw new LocalApiError(400, "席位编号必须是 0–39 的整数。");
+    if (!Number.isInteger(slot) || slot < 0 || slot > 4) {
+      throw new LocalApiError(400, "席位编号必须是 0–4 的整数。");
     }
     return slot;
   }
@@ -263,20 +266,26 @@
   }
 
   function assignedItems(manifest, profile) {
-    const mapIds = [...new Set(manifest.items.map((item) => item.blind_map_id))]
-      .sort();
-    if (mapIds.length !== 30) {
-      throw new LocalApiError(500, "Pages 目录的地图数量无效。");
+    const ids = manifest.slot_assignments?.[String(profile.rater_slot)];
+    if (
+      !Array.isArray(ids) ||
+      ids.length !== 240 ||
+      new Set(ids).size !== 240
+    ) {
+      throw new LocalApiError(500, "Pages 完整目录分配无效。");
     }
-    return mapIds.map((mapId, mapIndex) => {
-      const candidates = manifest.items.filter(
-        (item) => item.blind_map_id === mapId,
-      );
-      if (candidates.length !== 8) {
-        throw new LocalApiError(500, "Pages 目录的每图项目数量无效。");
-      }
-      return candidates[(profile.rater_slot + mapIndex) % 8];
-    });
+    const byId = new Map(
+      manifest.items.map((item) => [item.item_id, item]),
+    );
+    const assigned = ids.map((itemId) => byId.get(itemId));
+    if (
+      assigned.some((item) => !item) ||
+      new Set(assigned.map((item) => item.item_id)).size !==
+        manifest.items.length
+    ) {
+      throw new LocalApiError(500, "Pages 完整目录与冻结项目不一致。");
+    }
+    return assigned;
   }
 
   function itemState(profile, itemId) {
@@ -300,7 +309,7 @@
       tutorial_completed: Boolean(profile.tutorial_completed_utc),
       completed: states.filter((state) => state.judgment).length,
       started: states.filter((state) => state.started_utc).length,
-      total: 30,
+      total: assigned.length,
       study_id: manifest.study_id,
       study_mode: "pilot",
     };
@@ -309,10 +318,10 @@
   function catalogPayload(manifest, profile) {
     return assignedItems(manifest, profile).map((item, index) => {
       const local = itemState(profile, item.item_id);
-      const status = local.judgment
-        ? "submitted"
-        : local.draft
-          ? "draft"
+      const status = local.draft
+        ? "draft"
+        : local.judgment
+          ? "submitted"
           : local.started_utc
             ? "in_progress"
             : "not_started";
@@ -592,7 +601,7 @@
       normalized.norm !== profile.username_norm ||
       !Number.isInteger(profile.rater_slot) ||
       profile.rater_slot < 0 ||
-      profile.rater_slot > 39 ||
+      profile.rater_slot > 4 ||
       profile.rater_id !==
         `human_pages_${String(profile.rater_slot + 1).padStart(2, "0")}` ||
       typeof profile.pin_salt !== "string" ||
@@ -660,9 +669,6 @@
           throw new Error(`备份中的草稿无效：${itemId}`);
         }
         validateDraftPayload(local.draft.payload);
-        if (local.judgment !== null) {
-          throw new Error(`已提交项目不能同时带草稿：${itemId}`);
-        }
       }
     }
     return profile;
@@ -729,27 +735,43 @@
         draft: null,
         judgment: null,
       };
-      if (existing.judgment && restored.judgment) {
-        if (
-          stableStringify(existing.judgment) !==
-          stableStringify(restored.judgment)
-        ) {
-          throw new Error(
-            `备份与本地已有最终判断冲突，拒绝覆盖：${item.item_id}`,
-          );
-        }
-        state.judgment = existing.judgment;
-      } else {
-        state.judgment = existing.judgment || restored.judgment || null;
-      }
-      if (!state.judgment) {
-        const drafts = [existing.draft, restored.draft].filter(Boolean);
-        drafts.sort(
-          (left, right) =>
-            right.revision - left.revision ||
-            Date.parse(right.updated_utc) - Date.parse(left.updated_utc),
+      const judgments = [
+        existing.judgment,
+        restored.judgment,
+      ].filter(Boolean);
+      judgments.sort(
+        (left, right) =>
+          Date.parse(right.completed_utc) -
+          Date.parse(left.completed_utc),
+      );
+      if (
+        judgments.length === 2 &&
+        judgments[0].completed_utc === judgments[1].completed_utc &&
+        stableStringify(judgments[0]) !==
+          stableStringify(judgments[1])
+      ) {
+        throw new Error(
+          `备份与本地判断具有相同时间但内容冲突：${item.item_id}`,
         );
-        state.draft = drafts[0] || null;
+      }
+      state.judgment = judgments[0] || null;
+      const drafts = [existing.draft, restored.draft].filter(Boolean);
+      drafts.sort(
+        (left, right) =>
+          Date.parse(right.updated_utc) -
+            Date.parse(left.updated_utc) ||
+          right.revision - left.revision,
+      );
+      const newestDraft = drafts[0] || null;
+      if (
+        newestDraft &&
+        (
+          !state.judgment ||
+          Date.parse(newestDraft.updated_utc) >
+            Date.parse(state.judgment.completed_utc)
+        )
+      ) {
+        state.draft = newestDraft;
       }
       merged.items[item.item_id] = state;
     }
@@ -828,6 +850,16 @@
     if (method === "GET" && itemMatch) {
       const item = requireAssigned(manifest, profile, itemMatch[1]);
       const local = itemState(profile, item.item_id);
+      const editableState =
+        local.draft ||
+        (local.judgment
+          ? {
+              payload: { choice: local.judgment.choice },
+              active_seconds: local.judgment.duration_seconds,
+              revision: 0,
+              updated_utc: local.judgment.completed_utc,
+            }
+          : null);
       return jsonResponse({
         item_id: item.item_id,
         blind_map_id: item.blind_map_id,
@@ -837,7 +869,7 @@
         media: {
           judge_input: item.judge_input_path,
         },
-        draft: local.draft,
+        draft: editableState,
       });
     }
 
@@ -861,9 +893,6 @@
     if (method === "PUT" && draftMatch) {
       const item = requireAssigned(manifest, profile, draftMatch[1]);
       const local = itemState(profile, item.item_id);
-      if (local.judgment) {
-        throw new LocalApiError(409, "该项目已经最终提交。");
-      }
       const currentRevision = Number(local.draft?.revision || 0);
       if (
         !Number.isInteger(body.expected_revision) ||
@@ -905,11 +934,8 @@
     if (method === "POST" && submitMatch) {
       const item = requireAssigned(manifest, profile, submitMatch[1]);
       const local = itemState(profile, item.item_id);
-      if (local.judgment) {
-        return jsonResponse({ record: local.judgment }, 201);
-      }
       if (!local.started_utc) {
-        throw new LocalApiError(400, "最终提交前必须先打开项目。");
+        throw new LocalApiError(400, "提交前必须先打开项目。");
       }
       local.judgment = buildRecord(
         manifest,
@@ -1107,12 +1133,27 @@
   }
 
   function installStaticInterface() {
+    const languageSwitch = document.querySelector("[data-language-switch]");
+    if (languageSwitch) {
+      const target = new URL(
+        languageSwitch.getAttribute("href"),
+        window.location.href,
+      );
+      const slot = new URL(window.location.href).searchParams.get("slot");
+      target.search = "";
+      if (/^[0-4]$/.test(slot || "")) {
+        target.searchParams.set("slot", slot);
+      }
+      target.hash = "";
+      languageSwitch.href = target.href;
+    }
     const style = document.createElement("style");
     style.textContent = `
       .pages-export-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
       #pages-storage-warning { padding: 10px 12px; border: 1px solid rgba(205,139,44,.28);
         border-radius: 10px; background: rgba(255,248,230,.72); }
       @media (max-width: 760px) {
+        .dashboard-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
         .pages-export-actions { width: 100%; justify-content: stretch; }
         .pages-export-actions .secondary-button { flex: 1 1 100%; }
       }
@@ -1127,8 +1168,8 @@
       field.id = "pages-slot-field";
       field.innerHTML = `
         <span>研究者分配的席位编号</span>
-        <input id="pages-slot-input" type="number" min="0" max="39"
-          inputmode="numeric" placeholder="0–39" required>
+        <input id="pages-slot-input" type="number" min="0" max="4"
+          inputmode="numeric" placeholder="0–4" required>
         <small>请使用研究者发送给您的唯一编号，不要与他人共用。</small>
       `;
       pinField.after(field);

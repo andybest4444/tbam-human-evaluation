@@ -5,10 +5,11 @@ const MANIFEST_SCHEMA = "tbam.github_pages_bundle.v1";
 const PAGES_EXPORT_SCHEMA = "tbam.pages_human_rater_export.v2";
 const JUDGMENT_SCHEMA = "tbam.blind_pairwise_choice.v1";
 const MERGED_EXPORT_SCHEMA = "tbam.merged_pairwise_choices.v1";
-const ASSIGNMENT_SIZE = 30;
+const MAP_COUNT = 30;
+const ASSIGNMENT_SIZE = 240;
 const ITEMS_PER_MAP = 8;
 const RATER_SLOT_MIN = 0;
-const RATER_SLOT_MAX = 39;
+const RATER_SLOT_MAX = 4;
 const MAX_DURATION_SECONDS = 43200;
 const PAGES_EXPORT_FIELDS = [
   "schema_version",
@@ -201,19 +202,21 @@ function validateManifest(manifest) {
   );
   if (
     manifest.items_per_rater !== ASSIGNMENT_SIZE ||
-    manifest.map_count !== ASSIGNMENT_SIZE ||
+    manifest.map_count !== MAP_COUNT ||
     manifest.items_per_map !== ITEMS_PER_MAP ||
+    manifest.judgments_per_item_if_all_slots_complete !== 5 ||
+    manifest.assignment_rule_id !== "complete_catalog_round_robin_v1" ||
     manifest.rater_slot_min !== RATER_SLOT_MIN ||
     manifest.rater_slot_max !== RATER_SLOT_MAX
   ) {
     throw new Error(
-      "manifest 的 Pages 分配参数必须为 30 张地图、每图 8 项和席位 0–39",
+      "manifest 的 Pages 分配参数必须为完整240项目录和席位0–4",
     );
   }
   if (!Array.isArray(manifest.items) || manifest.items.length === 0) {
     throw new Error("manifest.items 必须是非空数组");
   }
-  if (manifest.items.length !== ASSIGNMENT_SIZE * ITEMS_PER_MAP) {
+  if (manifest.items.length !== ASSIGNMENT_SIZE) {
     throw new Error("manifest.items 必须精确包含 240 个项目");
   }
 
@@ -240,7 +243,7 @@ function inferExpectedPerRater(manifest) {
 
 function validateAssignmentCatalog(manifest) {
   const mapIds = sortedMapIds(manifest);
-  if (mapIds.length !== ASSIGNMENT_SIZE) {
+  if (mapIds.length !== MAP_COUNT) {
     throw new Error("manifest 必须精确包含 30 个盲化地图");
   }
   for (const [mapIndex, mapId] of mapIds.entries()) {
@@ -258,19 +261,41 @@ function validateAssignmentCatalog(manifest) {
       }
     }
   }
+  const expectedIds = new Set(manifest.items.map((item) => item.item_id));
+  const expectedSlots = new Set(["0", "1", "2", "3", "4"]);
+  if (
+    !manifest.slot_assignments ||
+    typeof manifest.slot_assignments !== "object" ||
+    Array.isArray(manifest.slot_assignments) ||
+    !sameSet(new Set(Object.keys(manifest.slot_assignments)), expectedSlots)
+  ) {
+    throw new Error("manifest.slot_assignments 必须精确包含席位0–4");
+  }
+  for (let slot = RATER_SLOT_MIN; slot <= RATER_SLOT_MAX; slot += 1) {
+    const assigned = manifest.slot_assignments[String(slot)];
+    if (
+      !Array.isArray(assigned) ||
+      assigned.length !== ASSIGNMENT_SIZE ||
+      !sameSet(new Set(assigned), expectedIds)
+    ) {
+      throw new Error(`席位 ${slot} 未完整覆盖240个项目`);
+    }
+  }
 }
 
 function sortedMapIds(manifest) {
   return [...new Set(manifest.items.map((item) => item.blind_map_id))].sort();
 }
 
+function sameSet(left, right) {
+  return (
+    left.size === right.size &&
+    [...left].every((value) => right.has(value))
+  );
+}
+
 function deriveAssignmentItemIds(manifest, raterSlot) {
-  return sortedMapIds(manifest).map((mapId, mapIndex) => {
-    const candidates = manifest.items.filter(
-      (item) => item.blind_map_id === mapId,
-    );
-    return candidates[(raterSlot + mapIndex) % ITEMS_PER_MAP].item_id;
-  });
+  return [...manifest.slot_assignments[String(raterSlot)]];
 }
 
 async function importFiles(files) {
@@ -321,13 +346,13 @@ async function importFiles(files) {
       level: "info",
       text:
         `已验证并接受 ${state.validExports.length} 个文件，保留 ` +
-        `${state.latestExports.length} 位评判者的最大超集导出。`,
+        `${state.latestExports.length} 位评判者覆盖项目最多且时间最新的导出。`,
     });
   }
   if (replaced > 0) {
     messages.push({
       level: "warning",
-      text: `${replaced} 个被最大超集覆盖的重复导出未进入汇总。`,
+      text: `${replaced} 个较早的重复导出未进入汇总。`,
     });
   }
   if (state.validExports.length === 0 && messages.length === 0) {
@@ -376,7 +401,7 @@ function validateAndNormalizeExport(payload, file, inputIndex) {
     payload.rater_slot < RATER_SLOT_MIN ||
     payload.rater_slot > RATER_SLOT_MAX
   ) {
-    throw new Error("rater_slot 必须是 0–39 的整数");
+    throw new Error("rater_slot 必须是 0–4 的整数");
   }
   const expectedRaterId =
     `human_pages_${String(payload.rater_slot + 1).padStart(2, "0")}`;
@@ -448,7 +473,7 @@ function validateAssignmentItemIds(actual, expected) {
     throw new Error("assignment_item_ids 必须是数组");
   }
   if (actual.length !== ASSIGNMENT_SIZE) {
-    throw new Error("assignment_item_ids 必须精确包含 30 个项目");
+    throw new Error("assignment_item_ids 必须精确包含 240 个项目");
   }
   for (const [index, expectedItemId] of expected.entries()) {
     assertSafeId(actual[index], `assignment_item_ids[${index}]`);
@@ -582,11 +607,8 @@ function validateMonotonicHistory(entries) {
   }
   const histories = entries.map((entry) => ({
     entry,
-    judgments: new Map(
-      entry.judgments.map((judgment) => [
-        judgment.item_id,
-        canonicalJson(judgment),
-      ]),
+    itemIds: new Set(
+      entry.judgments.map((judgment) => judgment.item_id),
     ),
   }));
 
@@ -598,23 +620,13 @@ function validateMonotonicHistory(entries) {
     ) {
       const left = histories[leftIndex];
       const right = histories[rightIndex];
-      const conflictItem = firstConflictingItem(
-        left.judgments,
-        right.judgments,
+      const leftIsSubset = isItemSetSubset(
+        left.itemIds,
+        right.itemIds,
       );
-      if (conflictItem !== null) {
-        throw new Error(
-          `检测到判断冲突（${conflictItem} 在 ` +
-          `${left.entry.fileName} 与 ${right.entry.fileName} 中不同）`,
-        );
-      }
-      const leftIsSubset = isCanonicalSubset(
-        left.judgments,
-        right.judgments,
-      );
-      const rightIsSubset = isCanonicalSubset(
-        right.judgments,
-        left.judgments,
+      const rightIsSubset = isItemSetSubset(
+        right.itemIds,
+        left.itemIds,
       );
       if (!leftIsSubset && !rightIsSubset) {
         throw new Error(
@@ -640,22 +652,8 @@ function compareExportHistory(left, right) {
   );
 }
 
-function firstConflictingItem(left, right) {
-  for (const [itemId, canonical] of left) {
-    if (right.has(itemId) && right.get(itemId) !== canonical) {
-      return itemId;
-    }
-  }
-  return null;
-}
-
-function isCanonicalSubset(subset, superset) {
-  for (const [itemId, canonical] of subset) {
-    if (!superset.has(itemId) || superset.get(itemId) !== canonical) {
-      return false;
-    }
-  }
-  return true;
+function isItemSetSubset(subset, superset) {
+  return [...subset].every((itemId) => superset.has(itemId));
 }
 
 function compareJudgments(left, right) {
@@ -725,12 +723,20 @@ function renderMetrics() {
   const validFileCount = state.validExports.length;
   const judgmentCount = state.judgments.length;
   const completeCount = state.raterRows.filter((row) => row.complete).length;
-  const coveredItems = new Set(
-    state.judgments.map((judgment) => judgment.item_id),
-  ).size;
-  const catalogSize = state.manifest?.items.length || 0;
-  const coveragePercent =
-    catalogSize === 0 ? 0 : (coveredItems / catalogSize) * 100;
+  const depths = state.itemRows
+    .map((row) => row.total)
+    .sort((left, right) => left - right);
+  const minimumDepth = depths[0] || 0;
+  const maximumDepth = depths[depths.length - 1] || 0;
+  const middle = Math.floor(depths.length / 2);
+  const medianDepth =
+    depths.length === 0
+      ? 0
+      : depths.length % 2 === 1
+        ? depths[middle]
+        : (depths[middle - 1] + depths[middle]) / 2;
+  const atLeastFour = state.itemRows.filter((row) => row.total >= 4).length;
+  const atLeastFive = state.itemRows.filter((row) => row.total >= 5).length;
 
   elements["metric-files"].textContent = validFileCount.toLocaleString();
   elements["metric-files-detail"].textContent =
@@ -744,9 +750,9 @@ function renderMetrics() {
   elements["metric-complete-detail"].textContent =
     `每人目标 ${state.expectedPerRater.toLocaleString()} 项`;
   elements["metric-coverage"].textContent =
-    `${coveredItems.toLocaleString()} / ${catalogSize.toLocaleString()}`;
+    `${minimumDepth} / ${medianDepth} / ${maximumDepth}`;
   elements["metric-coverage-detail"].textContent =
-    `${formatPercent(coveragePercent)} 的公开项目`;
+    `${atLeastFour} 项达到4票 · ${atLeastFive} 项达到5票`;
 }
 
 function renderRaters() {

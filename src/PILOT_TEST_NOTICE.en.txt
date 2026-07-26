@@ -1,0 +1,9 @@
+TBAM Anonymous Route Human Evaluation: GitHub Pages Internal Pilot Notice
+
+This pilot is used only to verify the website, static route rendering, evaluation instructions, progress saving and recovery, and result export. It is not formal research recruitment, and pilot responses will not be included in the paper analysis.
+
+Each item shows two anonymous complete route maps. Based on the same natural-language task instruction, you only need to choose which route is better overall, Route A or Route B. Do not separately judge whether a route completed the task, do not assign dimension scores, and do not use a tie option. The maps show elevation, cover, complete paths, and standardized time markers. Your complete catalog contains 240 comparisons and may be completed over multiple sessions. You may reopen an item after submitting and replace your earlier choice; the result export retains only your latest submitted choice for each item. The page stores your A/B choices, response times, pseudonym, and recovery data in this browser. GitHub Pages does not receive or store your evaluation results. When finished, you must download the result JSON and send it to the study coordinator. Clearing this site's browser data may delete progress that has not been exported.
+
+Use a pseudonym that does not contain your real name, email address, student ID, employee ID, or any other direct identifier. Participation in this pilot is voluntary, and you may stop at any time. GitHub records Pages visitors' IP addresses for security purposes; continue only if you accept this hosting condition. If you encounter a problem with the route maps, text, saving, recovery, or export, record the affected item number and report it to the study coordinator.
+
+By checking the consent box, you confirm that you understand this is an internal functionality pilot and agree that your input may be used only to verify and improve the evaluation system.

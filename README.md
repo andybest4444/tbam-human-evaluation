@@ -26,7 +26,7 @@ browser storage. The local PIN is a recovery gate, not cryptographic isolation
 from other pages on the same origin.
 
 Every participant must download their
-`tbam.pages_human_rater_export.v1` JSON after finishing and return it to the
+`tbam.pages_human_rater_export.v2` JSON after finishing and return it to the
 researcher. `results.html` combines those files locally in the researcher's
 browser and exports JSON/JSONL/CSV tables; it does not upload results anywhere.
 
@@ -40,12 +40,13 @@ recruitment.
 - Design: `s6_design_v1`
 - Maps: 30
 - Public blinded items: 240
-- Items per participant: 30
-- Assignment: `j = (r + m) mod 8`
+- Items per participant: all 240
+- Participant slots: 5 (`0` through `4`)
+- Assignment: five frozen round-robin orderings of the complete catalog
 - Response: one required `A` or `B` choice per item
 - Source public-manifest SHA-256:
   `318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c`
-- Presentation: `static_route_maps_pages_v1`
+- Presentation: `static_route_maps_bilingual_pages_v1`
 
 The generated `site/` contains 240 byte-identical public judge inputs, totaling
 19,465,583 bytes. No MP4 files are published.
@@ -75,6 +76,10 @@ python3 -m http.server 8000 --directory site
 ```
 
 Then open `http://127.0.0.1:8000/?slot=0`.
+Use the **English / 中文** button in the header to switch languages. Both
+versions share the same assigned slot, browser session, drafts, submissions,
+and exported result. The direct English URL is
+`http://127.0.0.1:8000/index-en.html?slot=0`.
 
 ## Publish with GitHub Pages
 
@@ -107,12 +112,13 @@ participant a different slot link:
 https://YOUR_ACCOUNT.github.io/tbam-human-evaluation/?slot=0
 https://YOUR_ACCOUNT.github.io/tbam-human-evaluation/?slot=1
 ...
-https://YOUR_ACCOUNT.github.io/tbam-human-evaluation/?slot=39
+https://YOUR_ACCOUNT.github.io/tbam-human-evaluation/?slot=4
 ```
 
-Slots are zero-based and must not be reused. With all 40 slots completed, every
-item receives exactly five judgments. For an eight-person interface pilot,
-assign slots `0` through `7`; together they cover all 240 items once.
+Slots are zero-based and must not be reused. Every slot contains every one of
+the 240 items exactly once, in a different frozen order. Four completed slots
+give every item four judgments; all five completed slots give every item five
+judgments.
 
 Freeze the deployed collection bundle before sending links. Do not rebuild or
 redeploy the collection UI, consent text, assignment, or stimuli while a round
@@ -123,9 +129,11 @@ The participant:
 
 1. opens only their assigned slot link;
 2. chooses a pseudonymous username and PIN;
-3. completes the 30-item catalog in the same browser;
-   each item requires only one A/B selection;
-4. clicks **下载结果与进度 JSON**;
+3. completes the 240-item catalog, over as many sessions as needed;
+   each item requires only one A/B selection and can be reopened to replace
+   that selection;
+4. clicks **下载结果与进度 JSON** or
+   **Download results and progress JSON**;
 5. sends that JSON file to the researcher.
 
 To resume on another browser, the participant must first export the full
@@ -141,8 +149,9 @@ https://YOUR_ACCOUNT.github.io/tbam-human-evaluation/results.html
 ```
 
 Select all returned participant JSON files. The tool validates the study,
-manifest, item IDs, rater IDs, and artifact hashes; keeps the unique maximum
-monotonic superset for each rater; rejects conflicts and branches; and provides:
+manifest, item IDs, rater IDs, and artifact hashes; keeps the export with the
+largest judgment set and latest export time for each rater; allows an answer to
+be replaced by that rater's later submission; and provides:
 
 - provenance-preserving merged `results.json`;
 - merged `judgments.jsonl`;

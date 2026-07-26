@@ -36,7 +36,7 @@
     const status = error instanceof LocalApiError ? error.status : 500;
     const payload = {
       error: status === 401 ? "authentication_required" : "local_pages_error",
-      message: error?.message || "浏览器本地存储操作失败。",
+      message: error?.message || "Browser-local storage operation failed.",
     };
     if (error instanceof LocalApiError && error.detail !== undefined) {
       payload.detail = error.detail;
@@ -52,7 +52,7 @@
       )
         .then((response) => {
           if (!response.ok) {
-            throw new Error(`Pages manifest 请求失败（${response.status}）`);
+            throw new Error(`Pages manifest request failed (${response.status})`);
           }
           return response.json();
         })
@@ -80,7 +80,7 @@
             !Array.isArray(manifest?.items) ||
             manifest.items.length !== 240
           ) {
-            throw new Error("Pages manifest 不完整或与冻结语料不一致。");
+            throw new Error("The Pages manifest is incomplete or differs from the frozen corpus.");
           }
           for (let slot = 0; slot <= 4; slot += 1) {
             assignedItems(manifest, { rater_slot: slot });
@@ -126,7 +126,7 @@
     try {
       store = JSON.parse(raw);
     } catch {
-      throw new LocalApiError(500, "此浏览器中的进度文件已损坏。");
+      throw new LocalApiError(500, "The progress file in this browser is corrupted.");
     }
     if (
       store?.schema_version !== "tbam.pages_local_store.v2" ||
@@ -140,7 +140,7 @@
       !store.profiles ||
       typeof store.profiles !== "object"
     ) {
-      throw new LocalApiError(500, "此浏览器中的进度属于另一实验版本。");
+      throw new LocalApiError(500, "The progress in this browser belongs to another study version.");
     }
     const profiles = Object.create(null);
     for (const [key, value] of Object.entries(store.profiles)) {
@@ -156,35 +156,35 @@
     } catch {
       throw new LocalApiError(
         507,
-        "浏览器无法保存进度；请检查隐私模式或站点存储设置。",
+        "The browser cannot save progress; check private-browsing and site-storage settings.",
       );
     }
   }
 
   function normalizeUsername(raw) {
     if (typeof raw !== "string") {
-      throw new LocalApiError(400, "化名必须是文本。");
+      throw new LocalApiError(400, "The pseudonym must be text.");
     }
     const display = raw.normalize("NFKC").trim();
     if (display.length < 3 || display.length > 32) {
-      throw new LocalApiError(400, "化名必须包含 3–32 个字符。");
+      throw new LocalApiError(400, "The pseudonym must contain 3–32 characters.");
     }
     if (!/^[\p{L}\p{N}._-]+$/u.test(display)) {
       throw new LocalApiError(
         400,
-        "化名只能包含字母、数字、点、下划线和连字符。",
+        "The pseudonym may contain only letters, numbers, periods, underscores, and hyphens.",
       );
     }
     const norm = display.toLowerCase();
     if (["__proto__", "prototype", "constructor"].includes(norm)) {
-      throw new LocalApiError(400, "该化名属于保留名称，请更换。");
+      throw new LocalApiError(400, "That pseudonym is reserved; choose another.");
     }
     return { norm, display };
   }
 
   function validatePin(pin) {
     if (typeof pin !== "string" || pin.length < 6 || pin.length > 64) {
-      throw new LocalApiError(400, "PIN 必须包含 6–64 个字符。");
+      throw new LocalApiError(400, "The PIN must contain 6–64 characters.");
     }
     return pin;
   }
@@ -234,12 +234,12 @@
     if (raw === undefined || raw === null || String(raw).trim() === "") {
       throw new LocalApiError(
         400,
-        "首次参加需要研究者分配的席位编号（0–4）。",
+        "First-time registration requires a researcher-assigned slot (0–4).",
       );
     }
     const slot = Number(raw);
     if (!Number.isInteger(slot) || slot < 0 || slot > 4) {
-      throw new LocalApiError(400, "席位编号必须是 0–4 的整数。");
+      throw new LocalApiError(400, "The slot must be an integer from 0 to 4.");
     }
     return slot;
   }
@@ -260,7 +260,7 @@
         ? store.profiles[norm]
         : null;
     if (!profile && required) {
-      throw new LocalApiError(401, "请先读取此浏览器中的进度。");
+      throw new LocalApiError(401, "Load progress from this browser first.");
     }
     return profile || null;
   }
@@ -272,7 +272,7 @@
       ids.length !== 240 ||
       new Set(ids).size !== 240
     ) {
-      throw new LocalApiError(500, "Pages 完整目录分配无效。");
+      throw new LocalApiError(500, "Invalid complete-catalog assignment.");
     }
     const byId = new Map(
       manifest.items.map((item) => [item.item_id, item]),
@@ -283,7 +283,7 @@
       new Set(assigned.map((item) => item.item_id)).size !==
         manifest.items.length
     ) {
-      throw new LocalApiError(500, "Pages 完整目录与冻结项目不一致。");
+      throw new LocalApiError(500, "The complete catalog differs from the frozen items.");
     }
     return assigned;
   }
@@ -342,7 +342,7 @@
       (candidate) => candidate.item_id === itemId,
     );
     if (!item) {
-      throw new LocalApiError(403, "该项目不属于此席位的目录。");
+      throw new LocalApiError(403, "This item is not assigned to this slot.");
     }
     return item;
   }
@@ -356,13 +356,13 @@
       }
       return value;
     } catch {
-      throw new LocalApiError(400, "请求数据不是有效 JSON。");
+      throw new LocalApiError(400, "The request body is not valid JSON.");
     }
   }
 
   function validateChoice(choice) {
     if (choice !== "A" && choice !== "B") {
-      throw new LocalApiError(400, "必须选择路线 A 或路线 B。");
+      throw new LocalApiError(400, "You must choose Route A or Route B.");
     }
     return choice;
   }
@@ -375,14 +375,14 @@
       Object.keys(payload).join(",") !== "choice" ||
       ![null, "A", "B"].includes(payload.choice)
     ) {
-      throw new LocalApiError(400, "草稿选择无效。");
+      throw new LocalApiError(400, "Invalid draft choice.");
     }
     return { choice: payload.choice };
   }
 
   async function register(manifest, body) {
     if (body.consented !== true) {
-      throw new LocalApiError(400, "请先确认内部试运行说明。");
+      throw new LocalApiError(400, "Accept the internal pilot notice before continuing.");
     }
     const { norm, display } = normalizeUsername(body.username);
     const pin = validatePin(body.pin);
@@ -392,7 +392,7 @@
       if (initialStore.profiles[norm].rater_slot !== slot) {
         throw new LocalApiError(
           409,
-          "该化名已属于另一席位；请使用原席位链接读取进度。",
+          "This pseudonym belongs to another slot; use its original slot link.",
         );
       }
       return login(manifest, body);
@@ -405,7 +405,7 @@
       if (store.profiles[norm].rater_slot !== slot) {
         throw new LocalApiError(
           409,
-          "该化名已属于另一席位；请使用原席位链接读取进度。",
+          "This pseudonym belongs to another slot; use its original slot link.",
         );
       }
       return login(manifest, body);
@@ -417,7 +417,7 @@
     ) {
       throw new LocalApiError(
         409,
-        "此浏览器中该席位已经注册；请读取已有进度。",
+        "This slot is already registered in this browser; load its progress.",
       );
     }
     const created = now();
@@ -455,12 +455,12 @@
     if (!profile) {
       throw new LocalApiError(
         401,
-        "此浏览器中没有该化名；请检查设备或导入完整备份。",
+        "This pseudonym is not stored in this browser; check the device or import a complete backup.",
       );
     }
     const derived = await derivePin(pin, profile.pin_salt);
     if (derived !== profile.pin_hash) {
-      throw new LocalApiError(401, "化名或 PIN 不正确。");
+      throw new LocalApiError(401, "Incorrect pseudonym or PIN.");
     }
     setSession(manifest, norm);
     return participantPayload(manifest, profile);
@@ -476,7 +476,7 @@
   ) {
     const duration = Number(activeSeconds);
     if (!Number.isFinite(duration) || duration <= 0 || duration > 43200) {
-      throw new LocalApiError(400, "有效作答时间无效。");
+      throw new LocalApiError(400, "Invalid active response time.");
     }
     const completed = now();
     return {
@@ -560,13 +560,13 @@
       record.control_item !== false ||
       record.attention_check_passed !== null
     ) {
-      throw new Error(`备份中的判断记录无效：${item.item_id}`);
+      throw new Error(`Invalid judgment record in backup: ${item.item_id}`);
     }
     if (
       stableStringify(record.input_artifact_sha256) !==
       stableStringify(item.input_artifact_sha256)
     ) {
-      throw new Error(`备份中的制品哈希不匹配：${item.item_id}`);
+      throw new Error(`Artifact hash mismatch in backup: ${item.item_id}`);
     }
     validateChoice(record.choice);
     if (
@@ -578,7 +578,7 @@
       record.duration_seconds <= 0 ||
       record.duration_seconds > 43200
     ) {
-      throw new Error(`备份中的时间记录无效：${item.item_id}`);
+      throw new Error(`Invalid timestamp record in backup: ${item.item_id}`);
     }
   }
 
@@ -594,7 +594,7 @@
       profile.source_public_manifest_sha256 !==
         manifest.source_public_manifest_sha256
     ) {
-      throw new Error("备份中的参与者版本绑定无效。");
+      throw new Error("Invalid participant version binding in backup.");
     }
     const normalized = normalizeUsername(profile.username);
     if (
@@ -611,23 +611,23 @@
       typeof profile.items !== "object" ||
       Array.isArray(profile.items)
     ) {
-      throw new Error("备份中的参与者身份字段无效。");
+      throw new Error("Invalid participant identity fields in backup.");
     }
     try {
       if (base64ToBytes(profile.pin_salt).length !== 16) throw new Error();
     } catch {
-      throw new Error("备份中的 PIN 盐值无效。");
+      throw new Error("Invalid PIN salt in backup.");
     }
     for (const field of ["consented_utc", "created_utc", "last_login_utc"]) {
       if (!validTimestamp(profile[field])) {
-        throw new Error(`备份中的 ${field} 无效。`);
+        throw new Error(`Invalid ${field} in backup.`);
       }
     }
     if (
       profile.tutorial_completed_utc !== null &&
       !validTimestamp(profile.tutorial_completed_utc)
     ) {
-      throw new Error("备份中的教程完成时间无效。");
+      throw new Error("Invalid instruction-completion time in backup.");
     }
 
     const assigned = assignedItems(manifest, profile);
@@ -643,13 +643,13 @@
         !("draft" in local) ||
         !("judgment" in local)
       ) {
-        throw new Error(`备份中的项目状态无效：${itemId}`);
+        throw new Error(`Invalid item state in backup: ${itemId}`);
       }
       if (
         local.started_utc !== null &&
         !validTimestamp(local.started_utc)
       ) {
-        throw new Error(`备份中的开始时间无效：${itemId}`);
+        throw new Error(`Invalid start time in backup: ${itemId}`);
       }
       if (local.judgment !== null) {
         validateStoredJudgment(manifest, profile, item, local.judgment);
@@ -666,7 +666,7 @@
           !local.draft.payload ||
           typeof local.draft.payload !== "object"
         ) {
-          throw new Error(`备份中的草稿无效：${itemId}`);
+          throw new Error(`Invalid draft in backup: ${itemId}`);
         }
         validateDraftPayload(local.draft.payload);
       }
@@ -696,7 +696,7 @@
       current.pin_salt !== incoming.pin_salt ||
       current.pin_hash !== incoming.pin_hash
     ) {
-      throw new Error("同名本地进度与备份的身份或 PIN 绑定冲突。");
+      throw new Error("The local profile and backup have conflicting identity or PIN bindings.");
     }
     const merged = structuredClone(current);
     merged.consented_utc = earlierTimestamp(
@@ -751,7 +751,7 @@
           stableStringify(judgments[1])
       ) {
         throw new Error(
-          `备份与本地判断具有相同时间但内容冲突：${item.item_id}`,
+          `Backup and local judgment conflict at the same timestamp: ${item.item_id}`,
         );
       }
       state.judgment = judgments[0] || null;
@@ -786,7 +786,7 @@
 
     if (method === "GET" && path === "/api/config") {
       return jsonResponse({
-        title: "TBAM 匿名路线人工评判",
+        title: "TBAM Anonymous Route Evaluation",
         study_id: manifest.study_id,
         storage_namespace_id:
           `${manifest.study_id}:${manifest.collection_protocol_id}`,
@@ -794,7 +794,7 @@
         storage_mode: "browser_local",
         registration_open: true,
         consent_version: manifest.consent_version,
-        consent_text: manifest.consent_text,
+        consent_text: manifest.consent_text_en,
         item_count: manifest.item_count,
         map_count: manifest.map_count,
         items_per_rater: manifest.items_per_rater,
@@ -865,7 +865,7 @@
         blind_map_id: item.blind_map_id,
         map_index: item.map_index,
         item_index: item.item_index,
-        directive: item.directive,
+        directive: manifest.directive_en,
         media: {
           judge_input: item.judge_input_path,
         },
@@ -878,7 +878,7 @@
     );
     if (method === "POST" && startMatch) {
       if (!profile.tutorial_completed_utc) {
-        throw new LocalApiError(403, "请先完成教程。");
+        throw new LocalApiError(403, "Complete the instructions first.");
       }
       const item = requireAssigned(manifest, profile, startMatch[1]);
       const local = itemState(profile, item.item_id);
@@ -900,7 +900,7 @@
       ) {
         throw new LocalApiError(
           409,
-          "另一标签页已经修改了草稿。",
+          "Another browser tab has changed the draft.",
           local.draft,
         );
       }
@@ -910,7 +910,7 @@
         activeSeconds < 0 ||
         activeSeconds > 43200
       ) {
-        throw new LocalApiError(400, "草稿数据无效。");
+        throw new LocalApiError(400, "Invalid draft data.");
       }
       const payload = validateDraftPayload(body.payload);
       local.started_utc ||= now();
@@ -935,7 +935,7 @@
       const item = requireAssigned(manifest, profile, submitMatch[1]);
       const local = itemState(profile, item.item_id);
       if (!local.started_utc) {
-        throw new LocalApiError(400, "提交前必须先打开项目。");
+        throw new LocalApiError(400, "Open the item before submitting.");
       }
       local.judgment = buildRecord(
         manifest,
@@ -950,7 +950,7 @@
       return jsonResponse({ record: local.judgment }, 201);
     }
 
-    throw new LocalApiError(404, "Pages 静态版不支持该请求。");
+    throw new LocalApiError(404, "The static Pages version does not support this request.");
   }
 
   async function withWriteLock(operation) {
@@ -1071,7 +1071,7 @@
     try {
       payload = JSON.parse(await file.text());
     } catch {
-      throw new Error("备份文件不是有效 JSON。");
+      throw new Error("The backup file is not valid JSON.");
     }
     if (
       payload?.schema_version !== "tbam.pages_browser_backup.v2" ||
@@ -1083,7 +1083,7 @@
         manifest.collection_protocol_id ||
       !/^[0-9a-f]{64}$/.test(payload?.bundle_id || "")
     ) {
-      throw new Error("备份文件与当前 Pages 实验版本不兼容。");
+      throw new Error("The backup is incompatible with the current Pages study version.");
     }
     const incoming = validateImportedProfile(manifest, payload.profile);
     await withWriteLock(async () => {
@@ -1094,7 +1094,7 @@
           otherNorm !== norm &&
           profile.rater_slot === incoming.rater_slot
         ) {
-          throw new Error("此浏览器中该席位已属于另一化名，拒绝导入。");
+          throw new Error("This slot belongs to another pseudonym in this browser; import refused.");
         }
       }
       const current = Object.hasOwn(store.profiles, norm)
@@ -1104,33 +1104,11 @@
       writeStore(manifest, store);
       setSession(manifest, norm);
     });
-    window.alert("完整浏览器备份已导入。页面将重新载入。");
+    window.alert("Complete browser backup imported. The page will reload.");
     window.location.reload();
   }
 
-  function replaceTextNode(node) {
-    const replacements = [
-      ["任意浏览器恢复服务器中的进度", "同一浏览器恢复本地进度"],
-      ["服务器自动保存草稿", "此浏览器自动保存草稿"],
-      ["进度已保存在服务器", "进度已保存在此浏览器"],
-      ["已恢复服务器进度", "已恢复此浏览器中的进度"],
-      ["草稿已同步", "草稿已保存在浏览器"],
-      ["正在同步草稿", "正在保存浏览器草稿"],
-      ["服务器同步失败", "浏览器保存失败"],
-      ["尚无服务器草稿", "尚无浏览器草稿"],
-      ["草稿已保存到服务器", "草稿已保存到此浏览器"],
-      ["已读取服务器最新草稿", "已读取浏览器最新草稿"],
-    ];
-    if (node.nodeType === Node.TEXT_NODE) {
-      let value = node.nodeValue;
-      for (const [before, after] of replacements) {
-        value = value.replaceAll(before, after);
-      }
-      if (value !== node.nodeValue) node.nodeValue = value;
-      return;
-    }
-    for (const child of node.childNodes || []) replaceTextNode(child);
-  }
+  function replaceTextNode() {}
 
   function installStaticInterface() {
     const languageSwitch = document.querySelector("[data-language-switch]");
@@ -1167,10 +1145,10 @@
       field.className = "field hidden";
       field.id = "pages-slot-field";
       field.innerHTML = `
-        <span>研究者分配的席位编号</span>
+        <span>Researcher-assigned slot</span>
         <input id="pages-slot-input" type="number" min="0" max="4"
           inputmode="numeric" placeholder="0–4" required>
-        <small>请使用研究者发送给您的唯一编号，不要与他人共用。</small>
+        <small>Use the unique slot sent by the researcher; do not share it.</small>
       `;
       pinField.after(field);
       const input = field.querySelector("input");
@@ -1199,14 +1177,14 @@
       warning.id = "pages-storage-warning";
       warning.className = "registration-note";
       warning.textContent =
-        "GitHub Pages 试运行：进度只保存在当前浏览器。完成后必须下载结果 JSON 并交回研究者。";
+        "GitHub Pages pilot: progress is stored only in this browser. Download the result JSON and return it to the researcher when done.";
       heading.append(warning);
     }
     document.querySelector("#open-admin-login")?.classList.add("hidden");
 
     const exportButton = document.querySelector("#export-mine");
     if (exportButton) {
-      exportButton.textContent = "下载结果与进度 JSON";
+      exportButton.textContent = "Download results and progress JSON";
       exportButton.addEventListener(
         "click",
         (event) => {
@@ -1220,7 +1198,7 @@
       backupButton.className = "secondary-button";
       backupButton.id = "pages-backup-button";
       backupButton.type = "button";
-      backupButton.textContent = "下载跨浏览器备份";
+      backupButton.textContent = "Download cross-browser backup";
       backupButton.addEventListener("click", downloadBrowserBackup);
       const actions = document.createElement("div");
       actions.className = "pages-export-actions";
@@ -1249,7 +1227,7 @@
     const importButton = document.createElement("button");
     importButton.type = "button";
     importButton.className = "admin-link";
-    importButton.textContent = "从完整浏览器备份恢复";
+    importButton.textContent = "Restore from complete browser backup";
     importButton.addEventListener("click", () => fileInput.click());
     document.querySelector("#auth-form")?.after(importButton);
 

@@ -19,8 +19,8 @@
       content="TBAM 人工评判结果的本地校验、合并与汇总工具"
     />
     <title>TBAM · 结果汇总</title>
-    <link rel="stylesheet" href="./results.css" />
-    <script src="./results.js" defer></script>
+    <link rel="stylesheet" href="./results.css?v=full-catalog-v1" />
+    <script src="./results.js?v=full-catalog-v1" defer></script>
   </head>
   <body>
     <header class="site-header">
@@ -63,7 +63,7 @@
           <span class="drop-icon" aria-hidden="true">↓</span>
           <span class="drop-title">选择多个 JSON 文件</span>
           <span class="drop-copy">
-            也可以把文件拖放到这里；同一评判者仅在判断集合单调时保留最大超集
+            也可以把文件拖放到这里；同一评判者保留覆盖项目最多且时间最新的导出
           </span>
           <span class="button button-primary" aria-hidden="true">选择文件</span>
           <input
@@ -100,7 +100,7 @@
           <article class="metric">
             <span class="metric-label">有效判断</span>
             <strong id="metric-judgments">0</strong>
-            <small>来自每位评判者的最大单调导出</small>
+            <small>来自每位评判者的最新有效导出</small>
           </article>
           <article class="metric">
             <span class="metric-label">已完成评判者</span>
@@ -108,7 +108,7 @@
             <small id="metric-complete-detail">目标尚未加载</small>
           </article>
           <article class="metric">
-            <span class="metric-label">项目覆盖</span>
+            <span class="metric-label">每项票数（最少/中位/最多）</span>
             <strong id="metric-coverage">0 / 0</strong>
             <small id="metric-coverage-detail">0%</small>
           </article>

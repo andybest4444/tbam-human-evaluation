@@ -54,7 +54,7 @@ async function api(path, options = {}) {
     : await response.text();
   if (!response.ok) {
     throw new ApiError(
-      payload?.message || `请求失败（${response.status}）`,
+      payload?.message || `Request failed (${response.status})`,
       response.status,
       payload,
     );
@@ -75,7 +75,7 @@ function formatDate(value) {
   if (!value) return "—";
   const date = new Date(value);
   if (Number.isNaN(date.valueOf())) return value;
-  return new Intl.DateTimeFormat("zh-CN", {
+  return new Intl.DateTimeFormat("en-US", {
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
@@ -116,10 +116,10 @@ function setIntegrity(config) {
   const complete = config.artifact_status === "complete_frozen_artifacts";
   chip.classList.toggle("verified", complete);
   chip.innerHTML = complete
-    ? '<span class="status-dot"></span>公开制品已冻结并验证'
-    : '<span class="status-dot"></span>界面预览 · 未连接收集服务';
+    ? '<span class="status-dot"></span>Public artifacts frozen and verified'
+    : '<span class="status-dot"></span>Interface preview · collection service unavailable';
   $("#manifest-footer").textContent =
-    `Manifest ${config.public_manifest_sha256.slice(0, 12)}…`;
+    `Manifest ${config.public_manifest_sha256.slice(0, 12)}...`;
 }
 
 function renderConfig() {
@@ -134,7 +134,7 @@ function renderConfig() {
   $("#register-tab").disabled = !config.registration_open;
   $("#register-tab").title = config.registration_open
     ? ""
-    : "新用户注册尚未开放";
+    : "New participant registration is not open";
   setIntegrity(config);
 }
 
@@ -148,7 +148,7 @@ function updateProfile() {
 
 function setAuthMode(mode) {
   if (mode === "register" && !state.config.registration_open) {
-    toast("当前尚未开放新用户注册。", "error");
+    toast("New participant registration is not open.", "error");
     return;
   }
   state.authMode = mode;
@@ -159,8 +159,8 @@ function setAuthMode(mode) {
   $("#consent-box").classList.toggle("hidden", mode !== "register");
   $("#auth-submit").innerHTML =
     mode === "register"
-      ? '创建匿名席位 <span aria-hidden="true">→</span>'
-      : '读取已有进度 <span aria-hidden="true">→</span>';
+      ? 'Create anonymous slot <span aria-hidden="true">→</span>'
+      : 'Load existing progress <span aria-hidden="true">→</span>';
   $("#pin-input").autocomplete =
     mode === "register" ? "new-password" : "current-password";
   $("#auth-error").classList.add("hidden");
@@ -188,8 +188,8 @@ async function submitAuth(event) {
     updateProfile();
     toast(
       state.authMode === "register"
-        ? `已分配匿名编号 ${state.participant.rater_id}`
-        : "已恢复服务器进度。",
+        ? `Assigned anonymous ID ${state.participant.rater_id}`
+        : "Restored progress from this browser.",
     );
     if (state.participant.tutorial_completed) {
       await loadDashboard();
@@ -213,7 +213,7 @@ async function finishTutorial() {
       body: JSON.stringify({ completed: true }),
     });
     state.participant.tutorial_completed = true;
-    toast("教程已完成，个人目录已解锁。");
+    toast("Instructions completed; your catalog is unlocked.");
     await loadDashboard();
   } catch (error) {
     toast(error.message, "error");
@@ -223,10 +223,10 @@ async function finishTutorial() {
 
 function statusLabel(status) {
   return {
-    not_started: "未开始",
-    in_progress: "进行中",
-    draft: "已有草稿",
-    submitted: "已提交",
+    not_started: "Not started",
+    in_progress: "In progress",
+    draft: "Draft",
+    submitted: "Submitted",
   }[status] || status;
 }
 
@@ -257,7 +257,7 @@ function renderCatalog() {
     .join("");
   if (!filtered.length) {
     list.innerHTML =
-      '<p class="empty-state">这个筛选条件下没有项目。</p>';
+      '<p class="empty-state">No items match this filter.</p>';
   }
   $$("[data-item-id]", list).forEach((button) => {
     button.addEventListener("click", () => openItem(button.dataset.itemId));
@@ -272,27 +272,27 @@ function updateDashboardStats() {
   $("#progress-value").textContent = completed;
   $("#progress-ring").style.setProperty("--progress", percent);
   $("#progress-bar-fill").style.width = `${percent}%`;
-  $("#welcome-name").textContent = `欢迎，${state.participant.username}`;
+  $("#welcome-name").textContent = `Welcome, ${state.participant.username}`;
   $("#rater-id-label").textContent =
-    `${state.participant.rater_id} · ${state.config.study_mode === "formal" ? "正式评判" : "试点评判"}`;
+    `${state.participant.rater_id} · ${state.config.study_mode === "formal" ? "Formal evaluation" : "Pilot evaluation"}`;
   $("#catalog-summary").textContent =
-    `已提交 ${completed} 项，剩余 ${total - completed} 项；已提交项目仍可重新修改。`;
+    `Submitted ${completed} items; ${total - completed} remaining. Submitted choices may still be revised.`;
   const next = state.catalog.find((item) => item.status !== "submitted");
   const button = $("#resume-button");
   if (next) {
     button.disabled = false;
     button.innerHTML =
-      `${next.status === "not_started" ? "开始" : "继续"}第 ${next.catalog_number} 项 <span aria-hidden="true">→</span>`;
+      `${next.status === "not_started" ? "Start" : "Continue"} item ${next.catalog_number} <span aria-hidden="true">→</span>`;
     button.onclick = () => openItem(next.item_id);
     $("#progress-message").textContent =
       completed === 0
-        ? "建议分多次完成；使用同一化名与 PIN 可随时恢复。"
-        : "进度已保存在服务器，您可以继续下一项或稍后回来。";
+        ? "You may split the catalog across sessions; use the same pseudonym and PIN to resume."
+        : "Progress is saved; continue now or return later.";
   } else {
     button.disabled = true;
-    button.textContent = `${total} 项全部完成`;
+    button.textContent = `${total} items complete`;
     $("#progress-message").textContent =
-      "感谢完成完整目录。您仍可导出自己的匿名备份。";
+      "Thank you for completing the catalog. You may still export your anonymous backup.";
   }
 }
 
@@ -324,21 +324,21 @@ function ratingSection() {
   return `
     <section class="rating-section" data-choice-section>
       <header class="rating-heading">
-        <span class="endpoint-number">选择</span>
+        <span class="endpoint-number">Choice</span>
         <div>
-          <h2>路线 A 和路线 B，哪条整体更好？</h2>
-          <p>结合任务指令和两张匿名路线图，必须选择一条；不区分是否完成，不做分项评分。</p>
+          <h2>Which route is better overall, Route A or Route B?</h2>
+          <p>Using the task instruction and the two anonymous route maps, choose one route overall. Do not separately judge completion or assign dimension scores.</p>
         </div>
-        <span class="endpoint-tag">A/B 二选一</span>
+        <span class="endpoint-tag">A/B forced choice</span>
       </header>
-      <div class="pairwise-choice-group" role="radiogroup" aria-label="选择整体更好的路线">
+      <div class="pairwise-choice-group" role="radiogroup" aria-label="Choose the better route overall">
         <label class="pairwise-choice-card">
           <input type="radio" name="pairwise-choice" value="A" data-rating-field>
-          <span><strong>A</strong>选择路线 A</span>
+          <span><strong>A</strong>Choose Route A</span>
         </label>
         <label class="pairwise-choice-card">
           <input type="radio" name="pairwise-choice" value="B" data-rating-field>
-          <span><strong>B</strong>选择路线 B</span>
+          <span><strong>B</strong>Choose Route B</span>
         </label>
       </div>
     </section>
@@ -380,7 +380,7 @@ function finalChoice() {
     document
       .querySelector("[data-choice-section]")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    throw new Error("请选择路线 A 或路线 B。");
+    throw new Error("Please choose Route A or Route B.");
   }
   return choice;
 }
@@ -410,7 +410,7 @@ function saveLocalDraft() {
 function scheduleDraftSave() {
   if (!state.activeItem) return;
   saveLocalDraft();
-  setSaveState("有尚未同步的修改", false);
+  setSaveState("Unsaved changes", false);
   window.clearTimeout(state.saveTimer);
   state.saveTimer = window.setTimeout(() => saveDraft(false), 900);
 }
@@ -422,7 +422,7 @@ async function saveDraft(showConfirmation = false) {
     return;
   }
   state.saving = true;
-  setSaveState("正在同步草稿…", false);
+  setSaveState("Saving draft...", false);
   try {
     const result = await api(`/api/item/${state.activeItem.item_id}/draft`, {
       method: "PUT",
@@ -433,15 +433,15 @@ async function saveDraft(showConfirmation = false) {
       }),
     });
     state.draftRevision = result.revision;
-    setSaveState(`草稿已同步 · v${result.revision}`, true);
-    if (showConfirmation) toast("草稿已保存到服务器。");
+    setSaveState(`Draft saved · v${result.revision}`, true);
+    if (showConfirmation) toast("Draft saved in this browser.");
   } catch (error) {
     if (error.status === 409 && error.payload?.detail) {
       applyDraft(error.payload.detail);
-      setSaveState("已读取另一标签页的版本", true);
-      toast("检测到另一标签页的更新，已读取服务器最新草稿。", "error");
+      setSaveState("Loaded the version from another tab", true);
+      toast("Another tab changed this item; its latest draft was loaded.", "error");
     } else {
-      setSaveState("服务器同步失败，本地草稿已保留", false);
+      setSaveState("Browser save failed; the local draft was retained", false);
       if (showConfirmation) toast(error.message, "error");
     }
   } finally {
@@ -726,7 +726,7 @@ function validateRouteInput(payload) {
     !Array.isArray(payload?.map?.height) ||
     !Array.isArray(payload?.map?.cover)
   ) {
-    throw new Error("匿名路线数据格式无效。");
+    throw new Error("Invalid anonymous route data format.");
   }
   for (const arm of ["A", "B"]) {
     const trajectory = payload?.routes?.[arm]?.trajectory;
@@ -735,14 +735,14 @@ function validateRouteInput(payload) {
       trajectory.length === 0 ||
       !Array.isArray(trajectory[0]?.positions)
     ) {
-      throw new Error(`路线 ${arm} 的轨迹数据不完整。`);
+      throw new Error(`Route ${arm} trajectory data is incomplete.`);
     }
   }
 }
 
 function renderRouteCanvas(canvas, routeInput, arm) {
   const context = canvas.getContext("2d");
-  if (!context) throw new Error("浏览器不支持路线图画布。");
+  if (!context) throw new Error("This browser does not support the route-map canvas.");
   const trajectory = routeInput.routes[arm].trajectory;
   canvas.width = ROUTE_CANVAS.width;
   canvas.height = ROUTE_CANVAS.height;
@@ -777,7 +777,7 @@ async function configureRouteMaps() {
   const routeInput = await api(state.activeItem.media.judge_input);
   validateRouteInput(routeInput);
   if (routeInput.item_id !== state.activeItem.item_id) {
-    throw new Error("匿名路线数据与当前项目不一致。");
+    throw new Error("Anonymous route data does not match the current item.");
   }
   renderRouteCanvas($("#route-map-a"), routeInput, "A");
   renderRouteCanvas($("#route-map-b"), routeInput, "B");
@@ -788,10 +788,10 @@ async function openItem(itemId) {
   const catalogItem = state.catalog.find((item) => item.item_id === itemId);
   if (!catalogItem) return;
   $("#submit-rating").disabled = false;
-  setSaveState("正在读取服务器草稿…", false);
+  setSaveState("Loading saved draft...", false);
   showView("judge");
   $("#endpoint-forms").innerHTML =
-    '<div class="loading-inline">正在载入匿名路线制品…</div>';
+    '<div class="loading-inline">Loading anonymous route artifact...</div>';
   try {
     const [item] = await Promise.all([
       api(`/api/item/${itemId}`),
@@ -805,7 +805,7 @@ async function openItem(itemId) {
     state.activeSeconds = 0;
     $("#judge-map-label").textContent = item.blind_map_id.replace("_", " ");
     $("#judge-count-label").textContent =
-      `项目 ${catalogItem.catalog_number} / ${state.catalog.length}`;
+      `Item ${catalogItem.catalog_number} / ${state.catalog.length}`;
     $("#judge-directive").textContent = item.directive;
     $("#endpoint-forms").innerHTML =
       ratingSection();
@@ -824,18 +824,18 @@ async function openItem(itemId) {
           revision: Number(draft?.revision || 0),
         };
         recoveredLocalDraft = true;
-        toast("已恢复此浏览器中更新的未同步草稿。");
+        toast("Restored a newer unsaved draft from this browser.");
       }
     } catch {
       // Ignore malformed recovery data.
     }
     applyDraft(draft);
     if (recoveredLocalDraft) {
-      setSaveState("正在保存恢复的浏览器草稿…", false);
+      setSaveState("Saving the restored browser draft...", false);
       window.setTimeout(() => saveDraft(false), 0);
     } else {
       setSaveState(
-        draft?.revision ? `草稿已同步 · v${draft.revision}` : "尚无浏览器草稿",
+        draft?.revision ? `Draft saved · v${draft.revision}` : "No browser draft",
         Boolean(draft?.revision),
       );
     }
@@ -872,7 +872,7 @@ async function submitRating(event) {
       }),
     });
     localStorage.removeItem(localDraftKey(activeItem.item_id));
-    toast(`项目 ${activeItem.catalog_number} 已提交；仍可重新打开修改。`);
+    toast(`Item ${activeItem.catalog_number} submitted; you may reopen it and change the choice.`);
     const currentId = activeItem.item_id;
     state.activeItem = null;
     const item = state.catalog.find((row) => row.item_id === currentId);
@@ -933,7 +933,7 @@ function renderAdminSummary() {
   ).length;
   $("#admin-covered-target").textContent = `/ ${summary.target_item_count}`;
   $("#admin-generated").textContent =
-    `服务器汇总于 ${formatDate(summary.generated_utc)} · ${summary.study_id}`;
+    `Summary generated ${formatDate(summary.generated_utc)} · ${summary.study_id}`;
   renderAdminTable();
 }
 
@@ -948,12 +948,12 @@ function renderAdminTable() {
       String(value ?? "").toLowerCase().includes(query),
     ),
   );
-  $("#admin-table-count").textContent = `${filtered.length} 行`;
+  $("#admin-table-count").textContent = `${filtered.length} rows`;
   if (isItems) {
     $("#admin-table-head").innerHTML = `
       <tr>
-        <th>地图</th><th>匿名项目</th><th>覆盖</th><th>已分配</th>
-        <th>选择 A</th><th>选择 B</th>
+        <th>Map</th><th>Anonymous item</th><th>Coverage</th><th>Assigned</th>
+        <th>Choice A</th><th>Choice B</th>
       </tr>`;
     $("#admin-table-body").innerHTML = filtered
       .map(
@@ -966,15 +966,15 @@ function renderAdminTable() {
               ${row.submitted}/${row.target}
             </td>
             <td>${row.assigned}/${row.target}</td>
-            <td>${row.choice_A ?? "封存"}</td><td>${row.choice_B ?? "封存"}</td>
+            <td>${row.choice_A ?? "sealed"}</td><td>${row.choice_B ?? "sealed"}</td>
           </tr>`,
       )
       .join("");
   } else {
     $("#admin-table-head").innerHTML = `
       <tr>
-        <th>匿名编号</th><th>运营化名</th><th>进度</th><th>教程</th>
-        <th>注册时间</th><th>最近登录</th>
+        <th>Anonymous ID</th><th>Operational pseudonym</th><th>Progress</th><th>Instructions</th>
+        <th>Registered</th><th>Last sign-in</th>
       </tr>`;
     $("#admin-table-body").innerHTML = filtered
       .map(
@@ -986,7 +986,7 @@ function renderAdminTable() {
               <span class="coverage-track"><span style="width:${Math.min(100, (row.completed / row.total) * 100)}%"></span></span>
               ${row.completed}/${row.total}
             </td>
-            <td>${row.tutorial_completed ? "已完成" : "未完成"}</td>
+            <td>${row.tutorial_completed ? "Complete" : "Incomplete"}</td>
             <td>${formatDate(row.created_utc)}</td>
             <td>${formatDate(row.last_login_utc)}</td>
           </tr>`,
@@ -1003,7 +1003,7 @@ async function downloadAdminExport(name) {
     });
     if (!response.ok) {
       const payload = await response.json();
-      throw new Error(payload.message || "导出失败");
+      throw new Error(payload.message || "Export failed");
     }
     const blob = await response.blob();
     const link = document.createElement("a");
@@ -1030,7 +1030,7 @@ async function logout() {
   state.activeItem = null;
   $("#profile-popover").classList.add("hidden");
   showView("auth");
-  toast("已退出当前用户。");
+  toast("Signed out.");
 }
 
 function bindGlobalEvents() {
@@ -1135,7 +1135,7 @@ async function boot() {
     }
   } catch (error) {
     $("#loading-view p").textContent =
-      `页面无法连接评判服务：${error.message}`;
+      `The page could not connect to the evaluation service: ${error.message}`;
     toast(error.message, "error");
   }
 }
