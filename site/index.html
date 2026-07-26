@@ -9,10 +9,10 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'">
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="#123c3b">
-    <title>TBAM 匿名路线人工评判 · Pages Pilot</title>
-    <link rel="stylesheet" href="styles.css?v=full-catalog-bilingual-v2">
-    <script src="static_api.js?v=full-catalog-bilingual-v2" defer></script>
-    <script src="app.js?v=full-catalog-bilingual-v2" defer></script>
+    <title>TBAM 匿名路线人工评判 · Internal Evaluation</title>
+    <link rel="stylesheet" href="styles.css?v=e9-fixed-budget-bilingual-formal-v2">
+    <script src="static_api.js?v=e9-fixed-budget-bilingual-formal-v2" defer></script>
+    <script src="app.js?v=e9-fixed-budget-bilingual-formal-v2" defer></script>
   </head>
   <body>
     <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -62,15 +62,15 @@
 
             <div class="study-numbers" aria-label="研究规模">
               <div>
-                <strong id="metric-maps">30</strong>
+                <strong id="metric-maps">—</strong>
                 <span>张冻结地图</span>
               </div>
               <div>
-                <strong id="metric-personal">30</strong>
+                <strong id="metric-personal">—</strong>
                 <span>项个人目录</span>
               </div>
               <div>
-                <strong id="metric-votes">5</strong>
+                <strong id="metric-votes">—</strong>
                 <span>次独立判断 / 项</span>
               </div>
             </div>
@@ -95,9 +95,9 @@
 
           <div class="auth-panel">
             <div class="auth-panel-heading">
-              <p class="kicker" id="study-mode-label">PILOT STUDY</p>
+              <p class="kicker" id="study-mode-label">INTERNAL EVALUATION</p>
               <h2>继续您的评判</h2>
-              <p>使用同一化名与 PIN，可在任意浏览器恢复服务器中的进度。</p>
+              <p>使用同一化名与 PIN，可在当前浏览器恢复本地进度。</p>
             </div>
 
             <div class="tab-list" role="tablist" aria-label="登录方式">
@@ -191,7 +191,7 @@
                 </span>
               </label>
               <button class="primary-button wide" id="finish-tutorial" type="button" disabled>
-                解锁我的 240 项完整目录
+                <span id="tutorial-unlock-label">解锁我的评判目录</span>
                 <span aria-hidden="true">→</span>
               </button>
             </aside>
@@ -203,7 +203,7 @@
             <div>
               <p class="kicker">PERSONAL BLIND CATALOG</p>
               <h1>您的完整评判目录</h1>
-              <p>完整目录包含 240 项；可以分多次完成，已提交项目仍可重新修改。</p>
+              <p id="catalog-description">目录与顺序已冻结；可以分多次完成。</p>
             </div>
             <button class="secondary-button" id="export-mine" type="button">
               导出个人备份
@@ -215,7 +215,7 @@
               <div class="progress-ring" id="progress-ring" style="--progress: 0">
                 <div>
                   <strong id="progress-value">0</strong>
-                  <span>/ 240</span>
+                  <span id="progress-total">/ —</span>
                 </div>
               </div>
               <h2 id="welcome-name">欢迎回来</h2>
@@ -238,7 +238,7 @@
             <div class="catalog-panel">
               <div class="catalog-toolbar">
                 <div>
-                  <h2>240 项 · 30 张地图 · 8 组比较</h2>
+                  <h2 id="catalog-size-label">正在读取目录规模…</h2>
                   <p id="catalog-summary">正在读取目录…</p>
                 </div>
                 <div class="filter-pills" role="group" aria-label="目录筛选">
@@ -259,7 +259,7 @@
             </button>
             <div class="item-position">
               <span id="judge-map-label">地图 01</span>
-              <strong id="judge-count-label">项目 1 / 240</strong>
+              <strong id="judge-count-label">项目 1 / —</strong>
             </div>
             <div class="save-state" id="save-state">
               <span class="status-dot"></span>
@@ -316,9 +316,8 @@
 
           <div class="route-map-note">
             <strong>静态完整路线</strong>
-            <span>
-              左侧显示高程，右侧显示掩体；数字 0–5 分别对应
-              t=0、19、38、58、77、96，同编号标记表示同一时刻。
+            <span id="route-time-note">
+              左侧显示高程，右侧显示掩体；数字 0–5 对应六个等比例仿真时刻。
             </span>
           </div>
 
@@ -383,7 +382,7 @@
               <article>
                 <span>覆盖完整项目</span>
                 <strong id="admin-covered">0</strong>
-                <small id="admin-covered-target">/ 240</small>
+                <small id="admin-covered-target">/ —</small>
               </article>
             </div>
 
@@ -401,7 +400,7 @@
             </div>
 
             <div class="admin-tabs">
-              <button class="active" data-admin-tab="items" type="button">240 项覆盖表</button>
+              <button class="active" data-admin-tab="items" id="admin-items-tab" type="button">项目覆盖表</button>
               <button data-admin-tab="raters" type="button">评判者进度</button>
             </div>
 
@@ -422,7 +421,7 @@
       </main>
 
       <footer>
-        <span>TBAM · S6 Blinded Trajectory Preference Study</span>
+        <span>TBAM · Internal Anonymous Route Evaluation Collection</span>
         <span id="manifest-footer">Manifest pending</span>
       </footer>
     </div>

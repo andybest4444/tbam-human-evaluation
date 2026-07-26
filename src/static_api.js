@@ -6,9 +6,59 @@
   const nativeFetch = window.fetch.bind(window);
   const namespace = "tbam.pages.local.v2";
   const expectedManifestSha =
-    "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c";
+    "__E9_PUBLIC_MANIFEST_SHA256__";
+  const expectedStudyId =
+    "tbam_e9_fixed_budget_human_pairwise_pages_v2";
+  const expectedDesignId = "e9_human_pairwise_v1";
+  const expectedPresentationMedium =
+    "static_route_maps_bilingual_variable_scale_pages_v1";
+  const expectedAssignmentRule = "complete_catalog_round_robin_v2";
+  const expectedConsentVersion =
+    "pages-e9-internal-formal-collection-notice-v2";
+  const retiredVersions = [
+    {
+      studyId: "tbam_s6_human_forced_choice_full_catalog_pages_v1",
+      protocolId:
+        "fb40f2bd42dff9e6e1e1b108a9f53bb90c56cc39b06f50ae664f9c8a435d32d3",
+    },
+    {
+      studyId: "tbam_e9_fixed_budget_human_pairwise_pages_v1",
+      protocolId:
+        "d44029836227f788c6cf35a1ae68a8392092e52b00fa22a99f868bd4843cf60a",
+    },
+  ];
+  const retiredPurgeMarker =
+    `${namespace}:formal-v2-retired-progress-purged:v1`;
   const encoder = new TextEncoder();
   let manifestPromise;
+
+  function purgeRetiredProgress() {
+    try {
+      const localKeys = Array.from(
+        { length: localStorage.length },
+        (_, index) => localStorage.key(index),
+      ).filter(Boolean);
+      for (const key of localKeys) {
+        const isRetired = retiredVersions.some(({ studyId, protocolId }) =>
+          key === `${namespace}:${studyId}:${protocolId}:store` ||
+          key.startsWith(`tbam-draft:${studyId}:${protocolId}:`),
+        );
+        if (isRetired) {
+          localStorage.removeItem(key);
+        }
+      }
+      for (const { studyId, protocolId } of retiredVersions) {
+        sessionStorage.removeItem(
+          `${namespace}:${studyId}:${protocolId}:session`,
+        );
+      }
+      localStorage.setItem(retiredPurgeMarker, "1");
+    } catch {
+      // The regular storage checks will report an actionable browser error.
+    }
+  }
+
+  purgeRetiredProgress();
 
   class LocalApiError extends Error {
     constructor(status, message, detail = undefined) {
@@ -59,8 +109,11 @@
         .then((manifest) => {
           if (
             manifest?.schema_version !== "tbam.github_pages_bundle.v1" ||
-            manifest?.status !== "complete_browser_local_pilot" ||
+            manifest?.status !== "complete_browser_local_collection" ||
             manifest?.source_public_manifest_sha256 !== expectedManifestSha ||
+            manifest?.study_id !== expectedStudyId ||
+            manifest?.study_mode !== "formal_collection" ||
+            manifest?.source_design_id !== expectedDesignId ||
             !/^[0-9a-f]{64}$/.test(manifest?.bundle_id || "") ||
             !/^[0-9a-f]{64}$/.test(
               manifest?.collection_protocol_id || "",
@@ -68,21 +121,30 @@
             !/^[0-9a-f]{64}$/.test(
               manifest?.consent_text_sha256 || "",
             ) ||
-            manifest?.consent_version !==
-              "pages-forced-choice-full-catalog-notice-v1" ||
-            manifest?.presentation_medium !==
-              "static_route_maps_bilingual_pages_v1" ||
-            manifest?.assignment_rule_id !==
-              "complete_catalog_round_robin_v1" ||
+            manifest?.consent_version !== expectedConsentVersion ||
+            manifest?.presentation_medium !== expectedPresentationMedium ||
+            manifest?.assignment_rule_id !== expectedAssignmentRule ||
             manifest?.rater_slot_min !== 0 ||
             manifest?.rater_slot_max !== 4 ||
-            manifest?.items_per_rater !== 240 ||
+            !Number.isInteger(manifest?.item_count) ||
+            manifest.item_count <= 0 ||
+            !Number.isInteger(manifest?.map_count) ||
+            manifest.map_count <= 0 ||
+            !Number.isInteger(manifest?.items_per_map) ||
+            manifest.items_per_map <= 0 ||
+            manifest.map_count * manifest.items_per_map !==
+              manifest.item_count ||
+            manifest?.items_per_rater !== manifest.item_count ||
             !Array.isArray(manifest?.items) ||
-            manifest.items.length !== 240
+            manifest.items.length !== manifest.item_count
           ) {
             throw new Error("Pages manifest 不完整或与冻结语料不一致。");
           }
-          for (let slot = 0; slot <= 4; slot += 1) {
+          for (
+            let slot = manifest.rater_slot_min;
+            slot <= manifest.rater_slot_max;
+            slot += 1
+          ) {
             assignedItems(manifest, { rater_slot: slot });
           }
           return manifest;
@@ -227,19 +289,26 @@
     return bytesToHex(new Uint8Array(bits));
   }
 
-  function requestedSlot() {
+  function requestedSlot(manifest) {
     const query = new URL(window.location.href).searchParams.get("slot");
     const input = document.querySelector("#pages-slot-input");
     const raw = query !== null ? query : input?.value;
     if (raw === undefined || raw === null || String(raw).trim() === "") {
       throw new LocalApiError(
         400,
-        "首次参加需要研究者分配的席位编号（0–4）。",
+        `首次参加需要研究者分配的席位编号（${manifest.rater_slot_min}–${manifest.rater_slot_max}）。`,
       );
     }
     const slot = Number(raw);
-    if (!Number.isInteger(slot) || slot < 0 || slot > 4) {
-      throw new LocalApiError(400, "席位编号必须是 0–4 的整数。");
+    if (
+      !Number.isInteger(slot) ||
+      slot < manifest.rater_slot_min ||
+      slot > manifest.rater_slot_max
+    ) {
+      throw new LocalApiError(
+        400,
+        `席位编号必须是 ${manifest.rater_slot_min}–${manifest.rater_slot_max} 的整数。`,
+      );
     }
     return slot;
   }
@@ -269,8 +338,8 @@
     const ids = manifest.slot_assignments?.[String(profile.rater_slot)];
     if (
       !Array.isArray(ids) ||
-      ids.length !== 240 ||
-      new Set(ids).size !== 240
+      ids.length !== manifest.items_per_rater ||
+      new Set(ids).size !== manifest.items_per_rater
     ) {
       throw new LocalApiError(500, "Pages 完整目录分配无效。");
     }
@@ -311,7 +380,7 @@
       started: states.filter((state) => state.started_utc).length,
       total: assigned.length,
       study_id: manifest.study_id,
-      study_mode: "pilot",
+      study_mode: manifest.study_mode,
     };
   }
 
@@ -382,11 +451,14 @@
 
   async function register(manifest, body) {
     if (body.consented !== true) {
-      throw new LocalApiError(400, "请先确认内部试运行说明。");
+      throw new LocalApiError(
+        400,
+        "请先确认内部评判说明与参与同意。",
+      );
     }
     const { norm, display } = normalizeUsername(body.username);
     const pin = validatePin(body.pin);
-    const slot = requestedSlot();
+    const slot = requestedSlot(manifest);
     const initialStore = readStore(manifest);
     if (Object.hasOwn(initialStore.profiles, norm)) {
       if (initialStore.profiles[norm].rater_slot !== slot) {
@@ -600,8 +672,8 @@
     if (
       normalized.norm !== profile.username_norm ||
       !Number.isInteger(profile.rater_slot) ||
-      profile.rater_slot < 0 ||
-      profile.rater_slot > 4 ||
+      profile.rater_slot < manifest.rater_slot_min ||
+      profile.rater_slot > manifest.rater_slot_max ||
       profile.rater_id !==
         `human_pages_${String(profile.rater_slot + 1).padStart(2, "0")}` ||
       typeof profile.pin_salt !== "string" ||
@@ -790,13 +862,14 @@
         study_id: manifest.study_id,
         storage_namespace_id:
           `${manifest.study_id}:${manifest.collection_protocol_id}`,
-        study_mode: "pilot",
+        study_mode: manifest.study_mode,
         storage_mode: "browser_local",
         registration_open: true,
         consent_version: manifest.consent_version,
         consent_text: manifest.consent_text,
         item_count: manifest.item_count,
         map_count: manifest.map_count,
+        items_per_map: manifest.items_per_map,
         items_per_rater: manifest.items_per_rater,
         judgments_per_item:
           manifest.judgments_per_item_if_all_slots_complete,
@@ -1108,29 +1181,7 @@
     window.location.reload();
   }
 
-  function replaceTextNode(node) {
-    const replacements = [
-      ["任意浏览器恢复服务器中的进度", "同一浏览器恢复本地进度"],
-      ["服务器自动保存草稿", "此浏览器自动保存草稿"],
-      ["进度已保存在服务器", "进度已保存在此浏览器"],
-      ["已恢复服务器进度", "已恢复此浏览器中的进度"],
-      ["草稿已同步", "草稿已保存在浏览器"],
-      ["正在同步草稿", "正在保存浏览器草稿"],
-      ["服务器同步失败", "浏览器保存失败"],
-      ["尚无服务器草稿", "尚无浏览器草稿"],
-      ["草稿已保存到服务器", "草稿已保存到此浏览器"],
-      ["已读取服务器最新草稿", "已读取浏览器最新草稿"],
-    ];
-    if (node.nodeType === Node.TEXT_NODE) {
-      let value = node.nodeValue;
-      for (const [before, after] of replacements) {
-        value = value.replaceAll(before, after);
-      }
-      if (value !== node.nodeValue) node.nodeValue = value;
-      return;
-    }
-    for (const child of node.childNodes || []) replaceTextNode(child);
-  }
+  function replaceTextNode() {}
 
   function installStaticInterface() {
     const languageSwitch = document.querySelector("[data-language-switch]");
@@ -1199,7 +1250,7 @@
       warning.id = "pages-storage-warning";
       warning.className = "registration-note";
       warning.textContent =
-        "GitHub Pages 试运行：进度只保存在当前浏览器。完成后必须下载结果 JSON 并交回研究者。";
+        "GitHub Pages 内部评判：进度只保存在当前浏览器。完成后必须下载结果 JSON 并交回研究者。";
       heading.append(warning);
     }
     document.querySelector("#open-admin-login")?.classList.add("hidden");
@@ -1253,18 +1304,6 @@
     importButton.addEventListener("click", () => fileInput.click());
     document.querySelector("#auth-form")?.after(importButton);
 
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (mutation.type === "characterData") replaceTextNode(mutation.target);
-        for (const node of mutation.addedNodes) replaceTextNode(node);
-      }
-    });
-    observer.observe(document.body, {
-      subtree: true,
-      childList: true,
-      characterData: true,
-    });
-    replaceTextNode(document.body);
   }
 
   window.fetch = interceptedFetch;

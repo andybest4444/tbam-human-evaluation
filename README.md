@@ -1,11 +1,12 @@
-# TBAM GitHub Pages Human-Evaluation Pilot
+# TBAM E9 GitHub Pages Human-Evaluation Collection
 
-This repository is a Pages-ready, browser-local pilot for the blinded TBAM
-route study. It displays two static A/B full-route maps per item. It contains
-only the frozen public `judge_input.json` files; videos, contact sheets, private
-A/B mappings, databases, usernames, PINs, tokens, and result files are excluded.
-Each item asks one forced-choice question only: which route is better overall,
-A or B. There are no completion-condition branches, dimension ratings, ties,
+This repository is a Pages-ready, sealed browser-local collection interface for
+the internal blinded TBAM E9 route evaluation. It displays two static A/B
+full-route maps per item. It contains only the frozen public
+`judge_input.json` files; videos, contact sheets, private A/B mappings,
+databases, usernames, PINs, tokens, and result files are excluded. Each item
+asks one forced-choice question only: which route is better overall, A or B.
+There are no completion-condition branches, dimension ratings, ties,
 confidence ratings, evidence fields, or written rationales.
 
 ## Important limitation
@@ -16,7 +17,8 @@ in that browser, but cannot recover it on another device. Clearing site data or
 using private-browsing mode can erase progress.
 
 GitHub records a Pages visitor's IP address for security purposes. The bundled
-pilot notice discloses that hosting behavior and the browser-local data model.
+evaluation notice discloses that hosting behavior, the browser-local data
+model, voluntary participation, and anonymous aggregate research use.
 
 GitHub Project Pages under the same account share one browser origin. For
 collection, publish this repository from a dedicated GitHub account or use a
@@ -30,31 +32,40 @@ Every participant must download their
 researcher. `results.html` combines those files locally in the researcher's
 browser and exports JSON/JSONL/CSV tables; it does not upload results anywhere.
 
-This distribution is a pilot presentation, not the sealed formal collection
-service. Do not mix its judgments with judgments collected under the earlier
-video presentation. Freeze a new static-presentation protocol before formal
-recruitment.
+This distribution is the internal static-route collection presentation. Do not
+mix its judgments with judgments collected under an earlier presentation or
+protocol. Freeze and verify the static-presentation bundle before assigning
+participant links, and do not change it during a collection round.
 
 ## Frozen source
 
-- Design: `s6_design_v1`
-- Maps: 30
-- Public blinded items: 240
-- Items per participant: all 240
+- Design: `e9_human_pairwise_v1`
+- Maps: 36 balanced E9 evaluation instances
+- Public blinded items: 216
+- Items per map: all six pairwise comparisons among AZ, UCT, JointPPO, and
+  MAPPO+AgentID; method identities remain private
+- Items per participant: all 216
 - Participant slots: 5 (`0` through `4`)
 - Assignment: five frozen round-robin orderings of the complete catalog
 - Response: one required `A` or `B` choice per item
+- Map sizes: 8, 16, 24, and 32
+- Agent counts: 2, 3, and 4
+- Horizons: 48, 96, 144, and 192
 - Source public-manifest SHA-256:
-  `318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c`
-- Presentation: `static_route_maps_bilingual_pages_v1`
+  `9441c978a4552b234d725ad1a8a87df76969d426e1a2dc99c22f3e5f8f95fad4`
+- Collection protocol ID:
+  `9dcbcf36e3a192e8f34569e8ccf0cc7575c89a2f0d1c0416a3d8330f7c864bae`
+- Deployment bundle ID:
+  `9108225b043c091ca87fbcca1f95d2b9962c2b70071a83d0948bacdf92040f0f`
+- Presentation: `static_route_maps_bilingual_variable_scale_pages_v1`
 
-The generated `site/` contains 240 byte-identical public judge inputs, totaling
-19,465,583 bytes. No MP4 files are published.
+The generated `site/` contains only byte-identical public `judge_input.json`
+files. No MP4 files are required or published.
 
 ## Build and verify
 
 Rebuilding requires the sibling `human_evaluation_portal/` source and frozen
-`paper_experiments/blind_artifacts/s6_v1/public/` corpus in this TBAM
+`paper_experiments/blind_artifacts/e9_human_pairwise_v1/public/` corpus in this TBAM
 workspace (or explicit `--portal` and `--artifact-root` paths). A standalone
 clone can still verify and deploy the already generated, sealed `site/`.
 
@@ -67,7 +78,17 @@ python3 build_site.py --verify-only
 
 The builder verifies every frozen source hash before copying anything. It
 refuses an incomplete or changed corpus and scans the generated site for video,
-database, key, token, and private-mapping files.
+database, key, token, and private-mapping files. A deliberate corpus or
+protocol migration must first use an explicit local candidate build:
+
+```bash
+python3 build_site.py --allow-unsealed-identifiers --site .site-e9-candidate
+python3 build_site.py --allow-unsealed-identifiers \
+  --verify-only --site .site-e9-candidate
+```
+
+The GitHub Pages workflow never uses this exception and therefore refuses an
+unreviewed or unsealed deployment.
 
 Preview through HTTP, not by double-clicking `index.html`:
 
@@ -116,7 +137,7 @@ https://YOUR_ACCOUNT.github.io/tbam-human-evaluation/?slot=4
 ```
 
 Slots are zero-based and must not be reused. Every slot contains every one of
-the 240 items exactly once, in a different frozen order. Four completed slots
+the 216 items exactly once, in a different frozen order. Four completed slots
 give every item four judgments; all five completed slots give every item five
 judgments.
 
@@ -129,7 +150,7 @@ The participant:
 
 1. opens only their assigned slot link;
 2. chooses a pseudonymous username and PIN;
-3. completes the 240-item catalog, over as many sessions as needed;
+3. completes the 216-item catalog, over as many sessions as needed;
    each item requires only one A/B selection and can be reopened to replace
    that selection;
 4. clicks **下载结果与进度 JSON** or

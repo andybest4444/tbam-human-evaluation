@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build and verify the static TBAM GitHub Pages pilot.
+"""Build and verify the static TBAM GitHub Pages evaluation collection.
 
 The generated site intentionally contains only public, blinded judge inputs.
 It never copies videos, contact sheets, SQLite files, tokens, or private
@@ -12,6 +12,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -26,31 +27,46 @@ DEFAULT_ARTIFACT_ROOT = (
     ROOT.parent
     / "paper_experiments"
     / "blind_artifacts"
-    / "s6_v1"
+    / "e9_human_pairwise_v1"
     / "public"
 )
 DEFAULT_SITE = ROOT / "site"
-EXPECTED_PUBLIC_MANIFEST_SHA256 = (
-    "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c"
+# These three identifiers must be replaced with reviewed lowercase SHA-256
+# values before production deployment.  Candidate builds require the explicit
+# --allow-unsealed-identifiers flag and can never pass the default verifier.
+EXPECTED_PUBLIC_MANIFEST_SHA256: str | None = (
+    "9441c978a4552b234d725ad1a8a87df76969d426e1a2dc99c22f3e5f8f95fad4"
 )
-EXPECTED_COLLECTION_PROTOCOL_ID = (
-    "fb40f2bd42dff9e6e1e1b108a9f53bb90c56cc39b06f50ae664f9c8a435d32d3"
+EXPECTED_COLLECTION_PROTOCOL_ID: str | None = (
+    "9dcbcf36e3a192e8f34569e8ccf0cc7575c89a2f0d1c0416a3d8330f7c864bae"
 )
-EXPECTED_BUNDLE_ID = (
-    "61c919ce6a1043c79f9b3db3a4a7030ef0ffd52071c5a3896ca78769a36188f0"
+EXPECTED_BUNDLE_ID: str | None = (
+    "9108225b043c091ca87fbcca1f95d2b9962c2b70071a83d0948bacdf92040f0f"
 )
-STUDY_ID = "tbam_s6_human_forced_choice_full_catalog_pages_v1"
-PRESENTATION_MEDIUM = "static_route_maps_bilingual_pages_v1"
-ASSIGNMENT_RULE_ID = "complete_catalog_round_robin_v1"
-ASSET_VERSION = "full-catalog-bilingual-v2"
+EXPECTED_DESIGN_ID = "e9_human_pairwise_v1"
+STUDY_ID = "tbam_e9_fixed_budget_human_pairwise_pages_v2"
+PRESENTATION_MEDIUM = "static_route_maps_bilingual_variable_scale_pages_v1"
+ASSIGNMENT_RULE_ID = "complete_catalog_round_robin_v2"
+ASSET_VERSION = "e9-fixed-budget-bilingual-formal-v2"
+CONSENT_VERSION = "pages-e9-internal-formal-collection-notice-v2"
 RATER_SLOT_MIN = 0
 RATER_SLOT_MAX = 4
-ITEMS_PER_RATER = 240
+EXPECTED_ITEM_COUNT = 216
+EXPECTED_MAP_COUNT = 36
+EXPECTED_ITEMS_PER_MAP = 6
 JUDGMENTS_PER_ITEM = 5
+SUPPORTED_MAP_SIZES = {8, 16, 24, 32}
+SUPPORTED_AGENT_COUNTS = {2, 3, 4}
+SUPPORTED_HORIZONS = {48, 96, 144, 192}
+EXPECTED_BLIND_MAP_IDS = {
+    f"map_{config_index:02d}_{map_index:02d}"
+    for config_index in range(1, 7)
+    for map_index in range(1, 7)
+}
 DIRECTIVE_EN = (
-    "Reach the goal efficiently, avoid unnecessary elevation changes, and "
-    "prioritize cover; stay dispersed in exposed areas and group together "
-    "in concealed areas."
+    "Reach the goal efficiently, avoid unnecessary elevation change, "
+    "prefer concealed cells, and maintain separation while exposed but "
+    "gather while concealed."
 )
 RUNTIME_FILES = (
     "index.html",
@@ -75,15 +91,14 @@ COLLECTION_RUNTIME_FILES = (
 )
 SOURCE_MIRROR_FILES = (
     ".nojekyll",
-    "static_api.js",
     "results.html",
     "results.js",
     "results.css",
 )
 ENGLISH_TRANSLATIONS = {
     "备份中的 ${field} 无效": "Invalid ${field} in backup",
-    "任意浏览器恢复服务器中的进度": (
-        "resume server progress in any browser"
+    "当前浏览器恢复本地进度": (
+        "resume local progress in this browser"
     ),
     "服务器自动保存草稿": "the server automatically saves drafts",
     "进度已保存在服务器": "progress is saved on the server",
@@ -138,6 +153,9 @@ ENGLISH_TRANSLATIONS = {
     "进度已保存在服务器，您可以继续下一项或稍后回来": (
         "Progress is saved; continue now or return later"
     ),
+    "进度已保存在此浏览器，您可以继续下一项或稍后回来": (
+        "Progress is saved in this browser; continue now or return later"
+    ),
     "感谢完成完整目录。您仍可导出自己的匿名备份": (
         "Thank you for completing the catalog. You may still export "
         "your anonymous backup"
@@ -161,10 +179,41 @@ ENGLISH_TRANSLATIONS = {
     "检测到另一标签页的更新，已读取服务器最新草稿": (
         "Another tab changed this item; its latest draft was loaded"
     ),
+    "检测到另一标签页的更新，已读取浏览器最新草稿": (
+        "Another tab changed this item; its latest browser draft was loaded"
+    ),
     "服务器同步失败，本地草稿已保留": (
         "Browser save failed; the local draft was retained"
     ),
+    "浏览器保存失败，本地草稿已保留": (
+        "Browser save failed; the local draft was retained"
+    ),
     "匿名路线数据格式无效": "Invalid anonymous route data format",
+    "${label} 数据为空": "${label} data is empty",
+    "${label} 数据维度无效": "${label} data dimensions are invalid",
+    "高程图": "Elevation map",
+    "掩体图": "Cover map",
+    "路线地图必须是受支持的 8、16、24 或 32 方形网格": (
+        "Route maps must be supported 8, 16, 24, or 32 square grids"
+    ),
+    "路线 horizon 与地图规模不一致": (
+        "The route horizon does not match the map size"
+    ),
+    "路线 A 与路线 B 的智能体数量不一致": (
+        "Routes A and B have different agent counts"
+    ),
+    "路线地图声明的智能体数量无效": (
+        "The route map declares an invalid agent count"
+    ),
+    "路线与地图声明的智能体数量不一致": (
+        "The route agent count does not match the map declaration"
+    ),
+    "路线 ${arm} 含有越界或无效的轨迹位置": (
+        "Route ${arm} contains an out-of-bounds or invalid trajectory position"
+    ),
+    "路线 ${arm} 的轨迹长度超过声明的 horizon": (
+        "Route ${arm} trajectory length exceeds the declared horizon"
+    ),
     "的轨迹数据不完整": " trajectory data is incomplete",
     "浏览器不支持路线图画布": (
         "This browser does not support the route-map canvas"
@@ -173,6 +222,7 @@ ENGLISH_TRANSLATIONS = {
         "Anonymous route data does not match the current item"
     ),
     "正在读取服务器草稿": "Loading saved draft",
+    "正在读取浏览器草稿": "Loading the browser draft",
     "正在载入匿名路线制品": "Loading anonymous route artifact",
     "已恢复此浏览器中更新的未同步草稿": (
         "Restored a newer unsaved draft from this browser"
@@ -183,6 +233,7 @@ ENGLISH_TRANSLATIONS = {
         "submitted; you may reopen it and change the choice"
     ),
     "服务器汇总于": "Summary generated",
+    "本地汇总于": "Local summary generated",
     "选择 A": "Choice A",
     "选择 B": "Choice B",
     "已退出当前用户": "Signed out",
@@ -223,7 +274,7 @@ ENGLISH_TRANSLATIONS = {
         "or guess the generating method"
     ),
     "继续您的评判": "Continue your evaluation",
-    "使用同一化名与 PIN，可在任意浏览器恢复服务器中的进度": (
+    "使用同一化名与 PIN，可在当前浏览器恢复本地进度": (
         "Use the same pseudonym and PIN to resume progress in this browser"
     ),
     "登录方式": "Sign-in method",
@@ -271,11 +322,18 @@ ENGLISH_TRANSLATIONS = {
         "I will not separately judge completion, assign dimension scores, "
         "or guess the method"
     ),
-    "解锁我的 240 项完整目录": "Unlock my complete 240-item catalog",
+    "解锁我的 ${itemCount} 项完整目录": (
+        "Unlock my complete ${itemCount}-item catalog"
+    ),
+    "解锁我的评判目录": "Unlock my evaluation catalog",
     "您的完整评判目录": "Your complete evaluation catalog",
-    "完整目录包含 240 项；可以分多次完成，已提交项目仍可重新修改": (
-        "The catalog contains 240 items. You may complete it over multiple "
-        "sessions and revise submitted choices"
+    "完整目录包含 ${itemCount} 项；可以分多次完成，已提交项目仍可重新修改": (
+        "The catalog contains ${itemCount} items. You may complete it over "
+        "multiple sessions and revise submitted choices"
+    ),
+    "目录与顺序已冻结；可以分多次完成": (
+        "The catalog and ordering are frozen; you may complete it over "
+        "multiple sessions"
     ),
     "导出个人备份": "Export my backup",
     "欢迎回来": "Welcome back",
@@ -287,16 +345,18 @@ ENGLISH_TRANSLATIONS = {
     "未开始": "Not started",
     "已有草稿": "Draft",
     "已提交": "Submitted",
-    "240 项 · 30 张地图 · 8 组比较": (
-        "240 items · 30 maps · 8 comparisons per map"
+    "${itemCount} 项 · ${mapCount} 张地图 · 每张 ${itemsPerMap} 组比较": (
+        "${itemCount} items · ${mapCount} maps · ${itemsPerMap} "
+        "comparisons per map"
     ),
+    "正在读取目录规模": "Loading catalog size",
     "正在读取目录": "Loading catalog",
     "目录筛选": "Catalog filters",
     "全部": "All",
     "待完成": "To do",
     "返回目录": "Back to catalog",
     "地图 01": "Map 01",
-    "项目 1 / 240": "Item 1 / 240",
+    "项目 1 / —": "Item 1 / —",
     "统一任务指令": "Shared task instruction",
     "路线 A": "Route A",
     "路线 B": "Route B",
@@ -306,13 +366,16 @@ ENGLISH_TRANSLATIONS = {
     ),
     "正在渲染路线": "Rendering Route",
     "静态完整路线": "Complete static routes",
+    "左侧显示高程，右侧显示掩体；数字 0–5 对应六个等比例仿真时刻": (
+        "Elevation is shown on the left and cover on the right. Labels "
+        "0–5 mark six proportionally spaced simulation times"
+    ),
     "左侧显示高程，右侧显示掩体；数字 0–5 分别对应": (
         "Elevation is shown on the left and cover on the right. Labels "
         "0–5 correspond to"
     ),
-    "t=0、19、38、58、77、96，同编号标记表示同一时刻": (
-        "t = 0, 19, 38, 58, 77, and 96. Matching labels indicate the "
-        "same time step"
+    "t=${times.join(\"、\")}，同编号标记表示同一时刻": (
+        "t=${times.join(\", \")}. Matching labels indicate the same time step"
     ),
     "同编号标记表示同一时刻": (
         "Matching labels indicate the same time step"
@@ -331,7 +394,8 @@ ENGLISH_TRANSLATIONS = {
         "Request failed (${response.status})"
     ),
     "正式评判": "Formal evaluation",
-    "试点评判": "Pilot evaluation",
+    "内部评判": "Internal evaluation",
+    "评判任务": "Evaluation",
     "进行中": "In progress",
     "选择": "Choice",
     "A/B 二选一": "A/B forced choice",
@@ -368,11 +432,13 @@ ENGLISH_TRANSLATIONS = {
     "PIN 必须包含 6–64 个字符": (
         "The PIN must contain 6–64 characters"
     ),
-    "首次参加需要研究者分配的席位编号（0–4）": (
-        "First-time registration requires a researcher-assigned slot (0–4)"
+    "首次参加需要研究者分配的席位编号（${manifest.rater_slot_min}–${manifest.rater_slot_max}）": (
+        "First-time registration requires a researcher-assigned slot "
+        "(${manifest.rater_slot_min}–${manifest.rater_slot_max})"
     ),
-    "席位编号必须是 0–4 的整数": (
-        "The slot must be an integer from 0 to 4"
+    "席位编号必须是 ${manifest.rater_slot_min}–${manifest.rater_slot_max} 的整数": (
+        "The slot must be an integer from ${manifest.rater_slot_min} "
+        "through ${manifest.rater_slot_max}"
     ),
     "请先读取此浏览器中的进度": (
         "Load progress from this browser first"
@@ -387,8 +453,8 @@ ENGLISH_TRANSLATIONS = {
     "请求数据不是有效 JSON": "The request body is not valid JSON",
     "必须选择路线 A 或路线 B": "You must choose Route A or Route B",
     "草稿选择无效": "Invalid draft choice",
-    "请先确认内部试运行说明": (
-        "Accept the internal pilot notice before continuing"
+    "请先确认内部评判说明与参与同意": (
+        "Accept the internal evaluation notice and consent before continuing"
     ),
     "该化名已属于另一席位；请使用原席位链接读取进度": (
         "This pseudonym belongs to another slot; use its original slot link"
@@ -434,9 +500,10 @@ ENGLISH_TRANSLATIONS = {
     "请使用研究者发送给您的唯一编号，不要与他人共用": (
         "Use the unique slot sent by the researcher; do not share it"
     ),
-    "GitHub Pages 试运行：进度只保存在当前浏览器。"
+    "GitHub Pages 内部评判：进度只保存在当前浏览器。"
     "完成后必须下载结果 JSON 并交回研究者": (
-        "GitHub Pages pilot: progress is stored only in this browser. "
+        "GitHub Pages internal evaluation: progress is stored only in this "
+        "browser. "
         "Download the result JSON and return it to the researcher when done"
     ),
     "下载结果与进度 JSON": "Download results and progress JSON",
@@ -488,7 +555,8 @@ ENGLISH_TRANSLATIONS = {
     "项目汇总 CSV": "Item summary CSV",
     "进度 CSV": "Progress CSV",
     "私有名册 CSV": "Private roster CSV",
-    "240 项覆盖表": "240-item coverage",
+    "${itemCount} 项覆盖表": "${itemCount}-item coverage",
+    "项目覆盖表": "Item coverage",
     "评判者进度": "Evaluator progress",
     "搜索地图、项目或评判者": "Search maps, items, or evaluators",
     "行": "rows",
@@ -689,7 +757,7 @@ SIMPLE_TUTORIAL_HTML = """
                 </span>
               </label>
               <button class="primary-button wide" id="finish-tutorial" type="button" disabled>
-                解锁我的 240 项完整目录
+                <span id="tutorial-unlock-label">解锁我的评判目录</span>
                 <span aria-hidden="true">→</span>
               </button>
             </aside>
@@ -840,6 +908,14 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--site", type=Path, default=DEFAULT_SITE)
     parser.add_argument("--verify-only", action="store_true")
+    parser.add_argument(
+        "--allow-unsealed-identifiers",
+        action="store_true",
+        help=(
+            "build or verify a local candidate while the three expected "
+            "SHA-256 identifiers are unset; never use for deployment"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -849,6 +925,36 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def is_sha256(value: object) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
+
+
+def identifiers_are_sealed() -> bool:
+    return all(
+        is_sha256(value)
+        for value in (
+            EXPECTED_PUBLIC_MANIFEST_SHA256,
+            EXPECTED_COLLECTION_PROTOCOL_ID,
+            EXPECTED_BUNDLE_ID,
+        )
+    )
+
+
+def require_sealed_identifiers(allow_unsealed: bool) -> None:
+    if identifiers_are_sealed():
+        return
+    if not allow_unsealed:
+        raise RuntimeError(
+            "E9 Pages identifiers are not sealed; set the reviewed public "
+            "manifest SHA-256, collection protocol ID, and bundle ID, or use "
+            "--allow-unsealed-identifiers for a local candidate only"
+        )
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -884,43 +990,240 @@ def repository_commit(path: Path) -> str | None:
     return value if completed.returncode == 0 and len(value) == 40 else None
 
 
+def finite_number(value: object) -> bool:
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(float(value))
+    )
+
+
+def grid_position(
+    value: object,
+    map_size: int,
+    label: str,
+    item_id: str,
+) -> tuple[int, int]:
+    if (
+        not isinstance(value, list)
+        or len(value) != 2
+        or any(not isinstance(coordinate, int) or isinstance(coordinate, bool)
+               for coordinate in value)
+        or value[0] < 0
+        or value[0] >= map_size
+        or value[1] < 0
+        or value[1] >= map_size
+    ):
+        raise RuntimeError(f"invalid judge {label}: {item_id}")
+    return int(value[0]), int(value[1])
+
+
+def public_artifact_path(
+    artifact_root: Path,
+    raw_path: object,
+    expected_path: str,
+    label: str,
+) -> Path:
+    if not isinstance(raw_path, str) or raw_path != expected_path:
+        raise RuntimeError(f"unexpected {label} path")
+    relative = Path(raw_path)
+    if relative.is_absolute() or ".." in relative.parts:
+        raise RuntimeError(f"unsafe {label} path")
+    root = artifact_root.resolve()
+    candidate = (root / relative).resolve()
+    try:
+        candidate.relative_to(root)
+    except ValueError as error:
+        raise RuntimeError(f"{label} path escapes the public root") from error
+    return candidate
+
+
+def judge_route_metadata(payload: dict[str, Any], item_id: str) -> dict[str, int]:
+    map_payload = payload.get("map")
+    routes = payload.get("routes")
+    if not isinstance(map_payload, dict) or not isinstance(routes, dict):
+        raise RuntimeError(f"invalid judge map/routes: {item_id}")
+    height = map_payload.get("height")
+    cover = map_payload.get("cover")
+    if (
+        not isinstance(height, list)
+        or not height
+        or not isinstance(cover, list)
+        or len(height) != len(cover)
+        or any(not isinstance(row, list) for row in height + cover)
+    ):
+        raise RuntimeError(f"invalid judge map matrices: {item_id}")
+    map_size = len(height)
+    if (
+        map_size not in SUPPORTED_MAP_SIZES
+        or any(len(row) != map_size for row in height + cover)
+        or any(
+            not finite_number(value)
+            for row in height + cover
+            for value in row
+        )
+    ):
+        raise RuntimeError(f"unsupported judge map size: {item_id}")
+    horizon = map_payload.get("max_steps")
+    if not isinstance(horizon, int) or isinstance(horizon, bool):
+        raise RuntimeError(f"judge max_steps is missing: {item_id}")
+    if horizon != map_size * 6 or horizon not in SUPPORTED_HORIZONS:
+        raise RuntimeError(f"judge horizon does not match map size: {item_id}")
+    start = grid_position(map_payload.get("start"), map_size, "start", item_id)
+    goal = grid_position(map_payload.get("goal"), map_size, "goal", item_id)
+    agent_count: int | None = None
+    for arm in ("A", "B"):
+        route = routes.get(arm)
+        if (
+            not isinstance(route, dict)
+            or not isinstance(route.get("completed"), bool)
+            or "completion_step" not in route
+            or "trajectory" not in route
+        ):
+            raise RuntimeError(f"invalid judge route {arm}: {item_id}")
+        trajectory = route.get("trajectory")
+        if not isinstance(trajectory, list) or not trajectory:
+            raise RuntimeError(f"missing judge trajectory {arm}: {item_id}")
+        first_frame = trajectory[0]
+        first_positions = (
+            first_frame.get("positions")
+            if isinstance(first_frame, dict)
+            else None
+        )
+        if not isinstance(first_positions, list):
+            raise RuntimeError(f"invalid judge trajectory {arm}: {item_id}")
+        current_count = len(first_positions)
+        if current_count not in SUPPORTED_AGENT_COUNTS:
+            raise RuntimeError(f"unsupported judge agent count: {item_id}")
+        if agent_count is not None and current_count != agent_count:
+            raise RuntimeError(f"judge route agent counts differ: {item_id}")
+        agent_count = current_count
+        if len(trajectory) > horizon + 1:
+            raise RuntimeError(f"judge trajectory exceeds horizon: {item_id}")
+        for expected_time, frame in enumerate(trajectory):
+            positions = frame.get("positions") if isinstance(frame, dict) else None
+            if (
+                not isinstance(frame, dict)
+                or frame.get("t") != expected_time
+                or not isinstance(positions, list)
+                or len(positions) != current_count
+            ):
+                raise RuntimeError(f"invalid judge trajectory frame: {item_id}")
+            for position in positions:
+                grid_position(position, map_size, "trajectory position", item_id)
+        if any(tuple(position) != start for position in first_positions):
+            raise RuntimeError(f"judge trajectory does not start correctly: {item_id}")
+        completion_step = route.get("completion_step")
+        if route["completed"]:
+            if (
+                not isinstance(completion_step, int)
+                or isinstance(completion_step, bool)
+                or completion_step != len(trajectory) - 1
+                or any(
+                    tuple(position) != goal
+                    for position in trajectory[-1]["positions"]
+                )
+            ):
+                raise RuntimeError(
+                    f"judge route completion metadata is invalid: {item_id}"
+                )
+        elif completion_step is not None or len(trajectory) != horizon + 1:
+            raise RuntimeError(
+                f"judge route failure metadata is invalid: {item_id}"
+            )
+    if agent_count is None:
+        raise RuntimeError(f"judge agent count missing: {item_id}")
+    if (
+        not isinstance(map_payload.get("agent_count"), int)
+        or isinstance(map_payload.get("agent_count"), bool)
+        or map_payload.get("agent_count") != agent_count
+    ):
+        raise RuntimeError(f"judge declared agent count differs: {item_id}")
+    return {
+        "map_size": map_size,
+        "agent_count": agent_count,
+        "horizon": horizon,
+    }
+
+
 def checked_public_items(
     artifact_root: Path,
-) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    allow_unsealed: bool,
+) -> tuple[dict[str, Any], list[dict[str, Any]], str]:
     manifest_path = artifact_root / "public_manifest.json"
-    if sha256(manifest_path) != EXPECTED_PUBLIC_MANIFEST_SHA256:
-        raise RuntimeError("the S6 public manifest is not the frozen source")
+    manifest_sha256 = sha256(manifest_path)
+    if (
+        is_sha256(EXPECTED_PUBLIC_MANIFEST_SHA256)
+        and manifest_sha256 != EXPECTED_PUBLIC_MANIFEST_SHA256
+    ):
+        raise RuntimeError("the E9 public manifest is not the sealed source")
+    if not is_sha256(EXPECTED_PUBLIC_MANIFEST_SHA256) and not allow_unsealed:
+        raise RuntimeError("the E9 public manifest SHA-256 is not sealed")
     manifest = load_json(manifest_path)
     records = manifest.get("items")
+    directive = manifest.get("directive")
     if (
-        manifest.get("schema_version") != "tbam.blind_artifacts_public.v1"
+        manifest.get("schema_version")
+        != "tbam.e9_human_artifacts_public.v1"
         or manifest.get("status") != "complete_frozen_artifacts"
-        or manifest.get("design_id") != "s6_design_v1"
-        or manifest.get("item_count") != 240
+        or manifest.get("design_id") != EXPECTED_DESIGN_ID
+        or manifest.get("map_count") != EXPECTED_MAP_COUNT
+        or manifest.get("items_per_map") != EXPECTED_ITEMS_PER_MAP
+        or manifest.get("item_count") != EXPECTED_ITEM_COUNT
+        or not isinstance(manifest.get("generated_utc"), str)
+        or not manifest["generated_utc"].strip()
+        or not isinstance(directive, str)
+        or not directive.strip()
+        or directive != DIRECTIVE_EN
         or not isinstance(records, list)
-        or len(records) != 240
+        or len(records) != EXPECTED_ITEM_COUNT
     ):
-        raise RuntimeError("the S6 public manifest is incomplete")
+        raise RuntimeError("the E9 public manifest is incomplete")
 
     map_ids = sorted({str(record.get("blind_map_id")) for record in records})
-    if len(map_ids) != 30:
-        raise RuntimeError("expected exactly 30 blind maps")
+    if set(map_ids) != EXPECTED_BLIND_MAP_IDS:
+        raise RuntimeError(
+            "the E9 blind-map IDs must be exactly map_01_01 through map_06_06"
+        )
     map_index = {map_id: index for index, map_id in enumerate(map_ids)}
     item_position: dict[str, int] = defaultdict(int)
+    map_payloads: dict[str, str] = {}
     checked: list[dict[str, Any]] = []
     seen: set[str] = set()
     for record in records:
+        if not isinstance(record, dict):
+            raise RuntimeError("the E9 public manifest contains a non-object item")
         item_id = str(record.get("item_id"))
         blind_map_id = str(record.get("blind_map_id"))
-        if item_id in seen or blind_map_id not in map_index:
+        if (
+            not re.fullmatch(r"item_[0-9a-f]{16}", item_id)
+            or item_id in seen
+            or blind_map_id not in map_index
+            or set(record)
+            != {
+                "item_id",
+                "blind_map_id",
+                "public_item_path",
+                "public_item_sha256",
+                "judge_input_path",
+                "judge_input_sha256",
+            }
+            or not is_sha256(record.get("public_item_sha256"))
+            or not is_sha256(record.get("judge_input_sha256"))
+        ):
             raise RuntimeError("duplicate item or invalid blind map")
         seen.add(item_id)
         position = item_position[blind_map_id]
         item_position[blind_map_id] += 1
-        if position >= 8:
-            raise RuntimeError("a blind map contains more than eight items")
+        if position >= EXPECTED_ITEMS_PER_MAP:
+            raise RuntimeError("a blind map contains too many items")
 
-        public_item_path = artifact_root / str(record["public_item_path"])
+        public_item_path = public_artifact_path(
+            artifact_root,
+            record["public_item_path"],
+            f"items/{item_id}/public_item.json",
+            f"public item {item_id}",
+        )
         if (
             not public_item_path.is_file()
             or sha256(public_item_path) != record["public_item_sha256"]
@@ -928,56 +1231,94 @@ def checked_public_items(
             raise RuntimeError(f"public item changed: {item_id}")
         public_item = load_json(public_item_path)
         if (
-            public_item.get("schema_version") != "tbam.blind_item_public.v1"
+            public_item.get("schema_version")
+            != "tbam.e9_human_item_public.v1"
+            or public_item.get("design_id") != EXPECTED_DESIGN_ID
             or public_item.get("item_id") != item_id
             or public_item.get("blind_map_id") != blind_map_id
-            or bool(public_item.get("both_completed"))
-            != bool(record.get("both_completed"))
+            or public_item.get("directive") != directive
         ):
             raise RuntimeError(f"invalid public item: {item_id}")
-        artifacts = public_item.get("artifacts")
-        if not isinstance(artifacts, dict):
+        artifact = public_item.get("artifact")
+        if (
+            not isinstance(artifact, dict)
+            or set(artifact)
+            != {"judge_input_path", "judge_input_sha256"}
+            or artifact.get("judge_input_path")
+            != record.get("judge_input_path")
+            or artifact.get("judge_input_sha256")
+            != record.get("judge_input_sha256")
+            or not is_sha256(record.get("judge_input_sha256"))
+        ):
             raise RuntimeError(f"missing artifact declaration: {item_id}")
-        required = {"A_video", "B_video", "contact_sheet", "judge_input"}
-        if set(artifacts) != required:
-            raise RuntimeError(f"unexpected artifact set: {item_id}")
-        for name in required:
-            source = artifact_root / str(artifacts[name]["path"])
-            if not source.is_file() or sha256(source) != artifacts[name]["sha256"]:
-                raise RuntimeError(f"public artifact changed: {item_id}/{name}")
-
-        judge_source = artifact_root / str(artifacts["judge_input"]["path"])
+        judge_source = public_artifact_path(
+            artifact_root,
+            record["judge_input_path"],
+            f"items/{item_id}/judge_input.json",
+            f"judge input {item_id}",
+        )
+        if (
+            not judge_source.is_file()
+            or sha256(judge_source) != record["judge_input_sha256"]
+        ):
+            raise RuntimeError(f"public judge input changed: {item_id}")
         judge_payload = load_json(judge_source)
         if (
             judge_payload.get("schema_version")
             != "tbam.blind_judge_input.v1"
+            or judge_payload.get("design_id") != EXPECTED_DESIGN_ID
             or judge_payload.get("item_id") != item_id
+            or judge_payload.get("blind_map_id") != blind_map_id
+            or judge_payload.get("directive") != directive
             or set(judge_payload.get("routes", {})) != {"A", "B"}
         ):
             raise RuntimeError(f"invalid judge input: {item_id}")
+        route_metadata = judge_route_metadata(judge_payload, item_id)
+        stable_map_payload = json.dumps(
+            judge_payload["map"],
+            ensure_ascii=True,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
+        previous_map_payload = map_payloads.setdefault(
+            blind_map_id,
+            stable_map_payload,
+        )
+        if previous_map_payload != stable_map_payload:
+            raise RuntimeError(
+                f"judge map changed within blind map {blind_map_id}"
+            )
+        input_hashes = {
+            "judge_input": str(record["judge_input_sha256"])
+        }
         checked.append(
             {
                 "item_id": item_id,
                 "blind_map_id": blind_map_id,
-                "both_completed": bool(record["both_completed"]),
                 "map_index": map_index[blind_map_id],
                 "item_index": position,
-                "directive": str(public_item["directive"]),
+                "directive": directive,
                 "judge_source": judge_source,
                 "judge_input_path": (
                     f"data/items/{item_id}/judge_input.json"
                 ),
                 "public_item_sha256": str(record["public_item_sha256"]),
-                "input_artifact_sha256": {
-                    "A_video": str(artifacts["A_video"]["sha256"]),
-                    "B_video": str(artifacts["B_video"]["sha256"]),
-                    "judge_input": str(artifacts["judge_input"]["sha256"]),
-                },
+                "input_artifact_sha256": input_hashes,
+                **route_metadata,
             }
         )
-    if set(item_position.values()) != {8}:
-        raise RuntimeError("every blind map must contain exactly eight items")
-    return manifest, checked
+    if set(item_position.values()) != {EXPECTED_ITEMS_PER_MAP}:
+        raise RuntimeError(
+            "every blind map must contain the expected number of items"
+        )
+    if {item["map_size"] for item in checked} != SUPPORTED_MAP_SIZES:
+        raise RuntimeError("E9 catalog does not cover every map size")
+    if {item["agent_count"] for item in checked} != SUPPORTED_AGENT_COUNTS:
+        raise RuntimeError("E9 catalog does not cover every agent count")
+    if {item["horizon"] for item in checked} != SUPPORTED_HORIZONS:
+        raise RuntimeError("E9 catalog does not cover every horizon")
+    return manifest, checked, manifest_sha256
 
 
 def replace_block(
@@ -1068,19 +1409,9 @@ def transformed_index(portal: Path) -> str:
     )
     source = source.replace(
         "<title>TBAM 匿名路线人工评判</title>",
-        "<title>TBAM 匿名路线人工评判 · Pages Pilot</title>",
+        "<title>TBAM 匿名路线人工评判 · Internal Evaluation</title>",
     )
     page_replacements = {
-        "每张地图恰好一项。目录与顺序已冻结，提交后该项不可修改。": (
-            "完整目录包含 240 项；可以分多次完成，已提交项目仍可重新修改。"
-        ),
-        "<span>/ 30</span>": "<span>/ 240</span>",
-        "<h2>30 项 · 30 张地图</h2>": (
-            "<h2>240 项 · 30 张地图 · 8 组比较</h2>"
-        ),
-        '<strong id="judge-count-label">项目 1 / 30</strong>': (
-            '<strong id="judge-count-label">项目 1 / 240</strong>'
-        ),
         "<strong>提交前请再次确认</strong>": (
             "<strong>保存当前选择</strong>"
         ),
@@ -1119,17 +1450,6 @@ def transformed_index(portal: Path) -> str:
         SIMPLE_TUTORIAL_HTML,
         "portal tutorial",
     )
-    route_note_before = """            <span>
-              高程图用于判断升降；掩体图用于判断隐蔽与协同。数字 0–5 分别对应
-              t=0、19、38、58、77、96，同编号标记表示同一时刻。
-            </span>"""
-    route_note_after = """            <span>
-              左侧显示高程，右侧显示掩体；数字 0–5 分别对应
-              t=0、19、38、58、77、96，同编号标记表示同一时刻。
-            </span>"""
-    if source.count(route_note_before) != 1:
-        raise RuntimeError("portal route-map note changed unexpectedly")
-    source = source.replace(route_note_before, route_note_after, 1)
     if 'href="/' in source or 'src="/' in source:
         raise RuntimeError("generated Pages index still contains a root URL")
     return source
@@ -1238,28 +1558,33 @@ def transformed_app(portal: Path) -> str:
         raise RuntimeError("portal local-draft recovery changed unexpectedly")
     source = source.replace(recovery_before, recovery_after, 1)
     app_replacements = {
-        "const total = state.catalog.length || 30;": (
-            "const total = state.catalog.length || 240;"
-        ),
-        'button.textContent = "30 项全部完成";': (
-            "button.textContent = `${total} 项全部完成`;"
-        ),
-        (
-            '          ${item.status === "submitted" ? "disabled" : ""}\n'
-        ): "",
-        (
-            '  if (!catalogItem || catalogItem.status === "submitted") '
-            "return;"
-        ): (
-            "  if (!catalogItem) return;\n"
-            '  $("#submit-rating").disabled = false;'
-        ),
         (
             "`已提交 ${completed} 项，剩余 ${total - completed} 项；"
             "服务器自动保存草稿。`"
         ): (
             "`已提交 ${completed} 项，剩余 ${total - completed} 项；"
             "已提交项目仍可重新修改。`"
+        ),
+        '"已恢复服务器进度。"': '"已恢复此浏览器中的进度。"',
+        '"进度已保存在服务器，您可以继续下一项或稍后回来。"': (
+            '"进度已保存在此浏览器，您可以继续下一项或稍后回来。"'
+        ),
+        "// Server persistence remains authoritative.": (
+            "// Browser-local persistence remains authoritative."
+        ),
+        '"草稿已保存到服务器。"': '"草稿已保存到此浏览器。"',
+        '"检测到另一标签页的更新，已读取服务器最新草稿。"': (
+            '"检测到另一标签页的更新，已读取浏览器最新草稿。"'
+        ),
+        '"服务器同步失败，本地草稿已保留"': (
+            '"浏览器保存失败，本地草稿已保留"'
+        ),
+        '"正在读取服务器草稿…"': '"正在读取浏览器草稿…"',
+        "`服务器汇总于 ${formatDate(summary.generated_utc)} · ${summary.study_id}`": (
+            "`本地汇总于 ${formatDate(summary.generated_utc)} · ${summary.study_id}`"
+        ),
+        "// Clear local state even if the server is temporarily unreachable.": (
+            "// Clear local state even if browser storage is temporarily unavailable."
         ),
     }
     for before, after in app_replacements.items():
@@ -1334,8 +1659,16 @@ def transformed_app_en(portal: Path) -> str:
     return translate_to_english(source, "English app")
 
 
-def transformed_static_api_en() -> str:
+def transformed_static_api(public_manifest_sha256: str) -> str:
     source = (ROOT / "src" / "static_api.js").read_text(encoding="utf-8")
+    token = "__E9_PUBLIC_MANIFEST_SHA256__"
+    if source.count(token) != 1:
+        raise RuntimeError("static API public-manifest token changed")
+    return source.replace(token, public_manifest_sha256, 1)
+
+
+def transformed_static_api_en(public_manifest_sha256: str) -> str:
+    source = transformed_static_api(public_manifest_sha256)
     replacements = {
         "consent_text: manifest.consent_text,": (
             "consent_text: manifest.consent_text_en,"
@@ -1398,6 +1731,9 @@ def stable_collection_binding(manifest: dict[str, Any]) -> dict[str, Any]:
                 "judge_input_path": item["judge_input_path"],
                 "public_item_sha256": item["public_item_sha256"],
                 "input_artifact_sha256": item["input_artifact_sha256"],
+                "map_size": item["map_size"],
+                "agent_count": item["agent_count"],
+                "horizon": item["horizon"],
             }
             for item in manifest["items"]
         ],
@@ -1436,18 +1772,27 @@ def bundle_digest(manifest: dict[str, Any]) -> str:
 def complete_catalog_assignments(
     items: list[dict[str, Any]],
 ) -> dict[str, list[str]]:
-    """Return five balanced orderings, each containing all 240 items."""
+    """Return balanced orderings, each containing the complete catalog."""
     by_map: dict[int, list[dict[str, Any]]] = defaultdict(list)
     for item in items:
         by_map[int(item["map_index"])].append(item)
-    if set(by_map) != set(range(30)):
-        raise RuntimeError("full-catalog assignment requires map indices 0–29")
+    map_count = len(by_map)
+    item_count = len(items)
+    if set(by_map) != set(range(map_count)):
+        raise RuntimeError("full-catalog assignment map indices are not dense")
+    if (
+        map_count != EXPECTED_MAP_COUNT
+        or item_count != EXPECTED_ITEM_COUNT
+        or item_count % map_count
+    ):
+        raise RuntimeError("full-catalog assignment dimensions are invalid")
+    items_per_map = item_count // map_count
     for map_index, candidates in by_map.items():
         candidates.sort(key=lambda item: int(item["item_index"]))
         if (
-            len(candidates) != 8
+            len(candidates) != items_per_map
             or [int(item["item_index"]) for item in candidates]
-            != list(range(8))
+            != list(range(items_per_map))
         ):
             raise RuntimeError(
                 f"full-catalog assignment is invalid for map {map_index}"
@@ -1456,18 +1801,18 @@ def complete_catalog_assignments(
     assignments: dict[str, list[str]] = {}
     for slot in range(RATER_SLOT_MIN, RATER_SLOT_MAX + 1):
         ordered: list[str] = []
-        for round_index in range(8):
-            for step in range(30):
+        for round_index in range(items_per_map):
+            for step in range(map_count):
                 map_index = (
                     step + 7 * round_index + 6 * slot
-                ) % 30
+                ) % map_count
                 item_index = (
                     round_index + map_index + slot
-                ) % 8
+                ) % items_per_map
                 ordered.append(
                     str(by_map[map_index][item_index]["item_id"])
                 )
-        if len(ordered) != ITEMS_PER_RATER or len(set(ordered)) != 240:
+        if len(ordered) != item_count or len(set(ordered)) != item_count:
             raise RuntimeError(
                 f"slot {slot} does not contain the complete catalog"
             )
@@ -1475,7 +1820,13 @@ def complete_catalog_assignments(
     return assignments
 
 
-def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
+def build_site(
+    portal: Path,
+    artifact_root: Path,
+    site: Path,
+    allow_unsealed: bool,
+) -> None:
+    require_sealed_identifiers(allow_unsealed)
     portal = portal.expanduser().resolve()
     artifact_root = artifact_root.expanduser().resolve()
     site = site.expanduser().resolve()
@@ -1486,7 +1837,10 @@ def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
         old_manifest = site / "data" / "pages_manifest.json"
         if not marker.is_file() and not old_manifest.is_file():
             raise RuntimeError("refusing to replace an unrecognized site directory")
-    manifest, items = checked_public_items(artifact_root)
+    manifest, items, public_manifest_sha256 = checked_public_items(
+        artifact_root,
+        allow_unsealed,
+    )
     staging = site.with_name(f".{site.name}.building")
     if staging.exists():
         shutil.rmtree(staging)
@@ -1507,19 +1861,18 @@ def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
     (staging / "styles.css").write_text(
         transformed_styles(portal), encoding="utf-8"
     )
-    for name in (
-        ".nojekyll",
-        "static_api.js",
-        "results.html",
-        "results.js",
-        "results.css",
-    ):
+    for name in (".nojekyll", "results.html", "results.js", "results.css"):
         source = ROOT / "src" / name
         if not source.is_file():
             raise FileNotFoundError(source)
         shutil.copy2(source, staging / name)
+    (staging / "static_api.js").write_text(
+        transformed_static_api(public_manifest_sha256),
+        encoding="utf-8",
+    )
     (staging / "static_api-en.js").write_text(
-        transformed_static_api_en(), encoding="utf-8"
+        transformed_static_api_en(public_manifest_sha256),
+        encoding="utf-8",
     )
     (staging / ".tbam-pages-generated").write_text(
         "generated by build_site.py\n", encoding="utf-8"
@@ -1555,35 +1908,40 @@ def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
     consent_text_en_sha256 = hashlib.sha256(
         consent_text_en.encode("utf-8")
     ).hexdigest()
+    item_count = len(public_items)
+    map_count = len(
+        {str(item["blind_map_id"]) for item in public_items}
+    )
+    if item_count % map_count:
+        raise RuntimeError("catalog items are not evenly grouped by map")
+    items_per_map = item_count // map_count
     slot_assignments = complete_catalog_assignments(public_items)
     pages_manifest = {
         "schema_version": "tbam.github_pages_bundle.v1",
-        "status": "complete_browser_local_pilot",
+        "status": "complete_browser_local_collection",
         "study_id": STUDY_ID,
-        "study_mode": "pilot",
+        "study_mode": "formal_collection",
         "storage_mode": "browser_local",
         "presentation_medium": PRESENTATION_MEDIUM,
         "built_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "portal_source_commit": repository_commit(portal),
         "source_design_id": str(manifest["design_id"]),
-        "source_public_manifest_sha256": (
-            EXPECTED_PUBLIC_MANIFEST_SHA256
-        ),
+        "source_public_manifest_sha256": public_manifest_sha256,
         "source_public_manifest_generated_utc": str(
             manifest["generated_utc"]
         ),
         "assignment_rule_id": ASSIGNMENT_RULE_ID,
         "rater_slot_min": RATER_SLOT_MIN,
         "rater_slot_max": RATER_SLOT_MAX,
-        "item_count": 240,
-        "map_count": 30,
-        "items_per_map": 8,
-        "items_per_rater": ITEMS_PER_RATER,
+        "item_count": item_count,
+        "map_count": map_count,
+        "items_per_map": items_per_map,
+        "items_per_rater": item_count,
         "judgments_per_item_if_all_slots_complete": JUDGMENTS_PER_ITEM,
         "slot_assignments": slot_assignments,
         "directive": str(manifest["directive"]),
         "directive_en": DIRECTIVE_EN,
-        "consent_version": "pages-forced-choice-full-catalog-notice-v1",
+        "consent_version": CONSENT_VERSION,
         "consent_text": consent_text,
         "consent_text_sha256": consent_text_sha256,
         "consent_text_en": consent_text_en,
@@ -1595,7 +1953,7 @@ def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
         pages_manifest
     )
     pages_manifest["bundle_id"] = bundle_digest(pages_manifest)
-    if (
+    if identifiers_are_sealed() and (
         pages_manifest["collection_protocol_id"]
         != EXPECTED_COLLECTION_PROTOCOL_ID
         or pages_manifest["bundle_id"] != EXPECTED_BUNDLE_ID
@@ -1608,48 +1966,61 @@ def build_site(portal: Path, artifact_root: Path, site: Path) -> None:
         )
     write_json(staging / "data" / "pages_manifest.json", pages_manifest)
 
-    verify_site(staging)
+    verify_site(staging, allow_unsealed)
     if site.exists():
         shutil.rmtree(site)
     staging.rename(site)
-    report = verify_site(site)
+    report = verify_site(site, allow_unsealed)
     print(json.dumps(report, indent=2, sort_keys=True))
 
 
-def verify_site(site: Path) -> dict[str, Any]:
+def verify_site(site: Path, allow_unsealed: bool = False) -> dict[str, Any]:
+    require_sealed_identifiers(allow_unsealed)
     site = site.expanduser().resolve()
     manifest_path = site / "data" / "pages_manifest.json"
     manifest = load_json(manifest_path)
     items = manifest.get("items")
+    sealed = identifiers_are_sealed()
     if (
         manifest.get("schema_version") != "tbam.github_pages_bundle.v1"
-        or manifest.get("status") != "complete_browser_local_pilot"
+        or manifest.get("status") != "complete_browser_local_collection"
         or manifest.get("study_id") != STUDY_ID
-        or manifest.get("study_mode") != "pilot"
+        or manifest.get("study_mode") != "formal_collection"
         or manifest.get("storage_mode") != "browser_local"
         or manifest.get("presentation_medium") != PRESENTATION_MEDIUM
-        or manifest.get("source_design_id") != "s6_design_v1"
+        or manifest.get("source_design_id") != EXPECTED_DESIGN_ID
         or manifest.get("assignment_rule_id") != ASSIGNMENT_RULE_ID
-        or manifest.get("source_public_manifest_sha256")
-        != EXPECTED_PUBLIC_MANIFEST_SHA256
+        or not is_sha256(manifest.get("source_public_manifest_sha256"))
+        or (
+            sealed
+            and manifest.get("source_public_manifest_sha256")
+            != EXPECTED_PUBLIC_MANIFEST_SHA256
+        )
         or manifest.get("rater_slot_min") != RATER_SLOT_MIN
         or manifest.get("rater_slot_max") != RATER_SLOT_MAX
-        or manifest.get("item_count") != 240
-        or manifest.get("map_count") != 30
-        or manifest.get("items_per_map") != 8
-        or manifest.get("items_per_rater") != ITEMS_PER_RATER
+        or manifest.get("item_count") != EXPECTED_ITEM_COUNT
+        or manifest.get("map_count") != EXPECTED_MAP_COUNT
+        or manifest.get("items_per_map") != EXPECTED_ITEMS_PER_MAP
+        or manifest.get("items_per_rater") != EXPECTED_ITEM_COUNT
         or manifest.get("judgments_per_item_if_all_slots_complete")
         != JUDGMENTS_PER_ITEM
-        or manifest.get("consent_version")
-        != "pages-forced-choice-full-catalog-notice-v1"
+        or manifest.get("directive") != DIRECTIVE_EN
+        or manifest.get("directive_en") != DIRECTIVE_EN
+        or manifest.get("consent_version") != CONSENT_VERSION
         or manifest.get("collection_protocol_id")
         != collection_digest(manifest)
-        or manifest.get("collection_protocol_id")
-        != EXPECTED_COLLECTION_PROTOCOL_ID
+        or (
+            sealed
+            and manifest.get("collection_protocol_id")
+            != EXPECTED_COLLECTION_PROTOCOL_ID
+        )
         or manifest.get("bundle_id") != bundle_digest(manifest)
-        or manifest.get("bundle_id") != EXPECTED_BUNDLE_ID
+        or (
+            sealed
+            and manifest.get("bundle_id") != EXPECTED_BUNDLE_ID
+        )
         or not isinstance(items, list)
-        or len(items) != 240
+        or len(items) != EXPECTED_ITEM_COUNT
     ):
         raise RuntimeError("invalid generated Pages manifest")
     if (
@@ -1669,7 +2040,6 @@ def verify_site(site: Path) -> dict[str, Any]:
         != (
             ROOT / "src" / "PILOT_TEST_NOTICE.en.txt"
         ).read_text(encoding="utf-8")
-        or manifest.get("directive_en") != DIRECTIVE_EN
     ):
         raise RuntimeError(
             "generated bilingual consent or directive mismatch"
@@ -1700,6 +2070,7 @@ def verify_site(site: Path) -> dict[str, Any]:
         raise RuntimeError("generated Pages index contains a root URL")
     seen: set[str] = set()
     map_counts: dict[str, int] = defaultdict(int)
+    map_payloads: dict[str, str] = {}
     expected_files = {
         ".nojekyll",
         ".tbam-pages-generated",
@@ -1717,9 +2088,14 @@ def verify_site(site: Path) -> dict[str, Any]:
             or not blind_map_id.startswith("map_")
             or not isinstance(item.get("map_index"), int)
             or not isinstance(item.get("item_index"), int)
-            or not isinstance(item.get("directive"), str)
+            or item.get("directive") != manifest["directive"]
+            or not is_sha256(item.get("public_item_sha256"))
+            or item.get("map_size") not in SUPPORTED_MAP_SIZES
+            or item.get("agent_count") not in SUPPORTED_AGENT_COUNTS
+            or item.get("horizon") not in SUPPORTED_HORIZONS
+            or item.get("horizon") != item.get("map_size") * 6
             or not isinstance(hashes, dict)
-            or set(hashes) != {"A_video", "B_video", "judge_input"}
+            or set(hashes) != {"judge_input"}
             or any(
                 not isinstance(value, str)
                 or len(value) != 64
@@ -1731,7 +2107,12 @@ def verify_site(site: Path) -> dict[str, Any]:
         seen.add(item_id)
         map_counts[blind_map_id] += 1
         relative = Path(str(item["judge_input_path"]))
-        if relative.is_absolute() or ".." in relative.parts:
+        if (
+            relative.as_posix()
+            != f"data/items/{item_id}/judge_input.json"
+            or relative.is_absolute()
+            or ".." in relative.parts
+        ):
             raise RuntimeError(f"unsafe judge input path: {item_id}")
         path = (site / relative).resolve()
         try:
@@ -1743,9 +2124,48 @@ def verify_site(site: Path) -> dict[str, Any]:
         expected = item["input_artifact_sha256"]["judge_input"]
         if not path.is_file() or sha256(path) != expected:
             raise RuntimeError(f"generated judge input mismatch: {item_id}")
+        judge_payload = load_json(path)
+        if (
+            judge_payload.get("schema_version")
+            != "tbam.blind_judge_input.v1"
+            or judge_payload.get("design_id") != EXPECTED_DESIGN_ID
+            or judge_payload.get("item_id") != item_id
+            or judge_payload.get("blind_map_id") != blind_map_id
+            or judge_payload.get("directive") != manifest["directive"]
+            or set(judge_payload.get("routes", {})) != {"A", "B"}
+            or judge_route_metadata(judge_payload, item_id)
+            != {
+                "map_size": item["map_size"],
+                "agent_count": item["agent_count"],
+                "horizon": item["horizon"],
+            }
+        ):
+            raise RuntimeError(f"generated judge metadata mismatch: {item_id}")
+        stable_map_payload = json.dumps(
+            judge_payload["map"],
+            ensure_ascii=True,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        )
+        previous_map_payload = map_payloads.setdefault(
+            blind_map_id,
+            stable_map_payload,
+        )
+        if previous_map_payload != stable_map_payload:
+            raise RuntimeError(
+                f"generated map changed within blind map {blind_map_id}"
+            )
         expected_files.add(relative.as_posix())
         judge_bytes += path.stat().st_size
-    if len(map_counts) != 30 or set(map_counts.values()) != {8}:
+    if (
+        set(map_counts) != EXPECTED_BLIND_MAP_IDS
+        or set(map_counts.values()) != {manifest["items_per_map"]}
+        or {item["map_size"] for item in items} != SUPPORTED_MAP_SIZES
+        or {item["agent_count"] for item in items}
+        != SUPPORTED_AGENT_COUNTS
+        or {item["horizon"] for item in items} != SUPPORTED_HORIZONS
+    ):
         raise RuntimeError("generated assignment map grouping is invalid")
     map_ids = sorted(map_counts)
     for map_index, map_id in enumerate(map_ids):
@@ -1778,12 +2198,12 @@ def verify_site(site: Path) -> dict[str, Any]:
     for slot, assigned in assignments.items():
         if (
             not isinstance(assigned, list)
-            or len(assigned) != ITEMS_PER_RATER
-            or len(set(assigned)) != ITEMS_PER_RATER
+            or len(assigned) != manifest["items_per_rater"]
+            or len(set(assigned)) != manifest["items_per_rater"]
             or set(assigned) != seen
         ):
             raise RuntimeError(
-                f"slot {slot} does not contain all 240 items exactly once"
+                f"slot {slot} does not contain the full catalog exactly once"
             )
         for item_id in assigned:
             assignment_counts[item_id] += 1
@@ -1837,13 +2257,21 @@ def main() -> int:
     if args.verify_only:
         print(
             json.dumps(
-                verify_site(args.site),
+                verify_site(
+                    args.site,
+                    allow_unsealed=args.allow_unsealed_identifiers,
+                ),
                 indent=2,
                 sort_keys=True,
             )
         )
     else:
-        build_site(args.portal, args.artifact_root, args.site)
+        build_site(
+            args.portal,
+            args.artifact_root,
+            args.site,
+            allow_unsealed=args.allow_unsealed_identifiers,
+        )
     return 0
 
 

@@ -23,10 +23,8 @@ const ROUTE_CANVAS = Object.freeze({
   width: 1280,
   height: 720,
   gridPixels: 496,
-  cellPixels: 31,
   gridY: 126,
   gridXs: [66, 704],
-  checkpointTimes: [0, 19, 38, 58, 77, 96],
   agentColors: ["#D55E00", "#0072B2", "#CC79A7", "#009E73"],
 });
 
@@ -124,11 +122,42 @@ function setIntegrity(config) {
 
 function renderConfig() {
   const config = state.config;
+  const itemCount = Number(config.items_per_rater);
+  const mapCount = Number(config.map_count);
+  const itemsPerMap =
+    Number(config.items_per_map) ||
+    (Number.isInteger(itemCount) && Number.isInteger(mapCount)
+      ? itemCount / mapCount
+      : 0);
   $("#metric-maps").textContent = config.map_count;
   $("#metric-personal").textContent = config.items_per_rater;
   $("#metric-votes").textContent = config.judgments_per_item;
+  const unlockLabel = $("#tutorial-unlock-label");
+  if (unlockLabel) {
+    unlockLabel.textContent = `Unlock my complete ${itemCount}-item catalog`;
+  }
+  const progressTotal = $("#progress-total");
+  if (progressTotal) {
+    progressTotal.textContent = `/ ${itemCount}`;
+  }
+  const catalogDescription = $("#catalog-description");
+  if (catalogDescription) {
+    catalogDescription.textContent =
+      `The catalog contains ${itemCount} items. You may complete it over multiple sessions and revise submitted choices.`;
+  }
+  const catalogSizeLabel = $("#catalog-size-label");
+  if (catalogSizeLabel) {
+    catalogSizeLabel.textContent =
+      `${itemCount} items · ${mapCount} maps · ${itemsPerMap} comparisons per map`;
+  }
+  const adminItemsTab = $("#admin-items-tab");
+  if (adminItemsTab) {
+    adminItemsTab.textContent = `${itemCount}-item coverage`;
+  }
   $("#study-mode-label").textContent =
-    config.study_mode === "formal" ? "FORMAL STUDY" : "PILOT STUDY";
+    ["formal", "formal_collection"].includes(config.study_mode)
+      ? "INTERNAL EVALUATION"
+      : "EVALUATION";
   $("#consent-copy").textContent = config.consent_text;
   $("#registration-note").classList.toggle("hidden", config.registration_open);
   $("#register-tab").disabled = !config.registration_open;
@@ -189,7 +218,7 @@ async function submitAuth(event) {
     toast(
       state.authMode === "register"
         ? `Assigned anonymous ID ${state.participant.rater_id}`
-        : "Restored progress from this browser.",
+        : "restored progress from this browser.",
     );
     if (state.participant.tutorial_completed) {
       await loadDashboard();
@@ -266,7 +295,7 @@ function renderCatalog() {
 
 function updateDashboardStats() {
   const completed = state.catalog.filter((item) => item.status === "submitted").length;
-  const total = state.catalog.length || 240;
+  const total = state.catalog.length || state.config.items_per_rater;
   const percent = Math.round((completed / total) * 100);
   state.participant.completed = completed;
   $("#progress-value").textContent = completed;
@@ -274,7 +303,11 @@ function updateDashboardStats() {
   $("#progress-bar-fill").style.width = `${percent}%`;
   $("#welcome-name").textContent = `Welcome, ${state.participant.username}`;
   $("#rater-id-label").textContent =
-    `${state.participant.rater_id} · ${state.config.study_mode === "formal" ? "Formal evaluation" : "Pilot evaluation"}`;
+    `${state.participant.rater_id} · ${
+      ["formal", "formal_collection"].includes(state.config.study_mode)
+        ? "Internal evaluation"
+        : "Evaluation"
+    }`;
   $("#catalog-summary").textContent =
     `Submitted ${completed} items; ${total - completed} remaining. Submitted choices may still be revised.`;
   const next = state.catalog.find((item) => item.status !== "submitted");
@@ -287,7 +320,7 @@ function updateDashboardStats() {
     $("#progress-message").textContent =
       completed === 0
         ? "You may split the catalog across sessions; use the same pseudonym and PIN to resume."
-        : "Progress is saved; continue now or return later.";
+        : "Progress is saved in this browser; continue now or return later.";
   } else {
     button.disabled = true;
     button.textContent = `${total} items complete`;
@@ -403,7 +436,7 @@ function saveLocalDraft() {
       }),
     );
   } catch {
-    // Server persistence remains authoritative.
+    // Browser-local persistence remains authoritative.
   }
 }
 
@@ -434,12 +467,12 @@ async function saveDraft(showConfirmation = false) {
     });
     state.draftRevision = result.revision;
     setSaveState(`Draft saved · v${result.revision}`, true);
-    if (showConfirmation) toast("Draft saved in this browser.");
+    if (showConfirmation) toast("draft saved in this browser.");
   } catch (error) {
     if (error.status === 409 && error.payload?.detail) {
       applyDraft(error.payload.detail);
       setSaveState("Loaded the version from another tab", true);
-      toast("Another tab changed this item; its latest draft was loaded.", "error");
+      toast("Another tab changed this item; its latest browser draft was loaded.", "error");
     } else {
       setSaveState("Browser save failed; the local draft was retained", false);
       if (showConfirmation) toast(error.message, "error");
@@ -498,11 +531,66 @@ function interpolateColor(palette, value) {
   return `rgb(${rgb.join(",")})`;
 }
 
-function cellCenter(gridX, position) {
+function matrixShape(values, label) {
+  if (!Array.isArray(values) || values.length === 0) {
+    throw new Error(`${label} data is empty.`);
+  }
+  const columns = Array.isArray(values[0]) ? values[0].length : 0;
+  if (
+    columns === 0 ||
+    values.some(
+      (row) =>
+        !Array.isArray(row) ||
+        row.length !== columns ||
+        row.some((value) => !Number.isFinite(Number(value))),
+    )
+  ) {
+    throw new Error(`${label} data dimensions are invalid.`);
+  }
+  return { rows: values.length, columns };
+}
+
+function routeGeometry(map) {
+  const heightShape = matrixShape(map.height, "Elevation map");
+  const coverShape = matrixShape(map.cover, "Cover map");
+  if (
+    heightShape.rows !== coverShape.rows ||
+    heightShape.columns !== coverShape.columns ||
+    heightShape.rows !== heightShape.columns ||
+    ![8, 16, 24, 32].includes(heightShape.rows)
+  ) {
+    throw new Error("Route maps must be supported 8, 16, 24, or 32 square grids.");
+  }
+  return {
+    rows: heightShape.rows,
+    columns: heightShape.columns,
+    cellWidth: ROUTE_CANVAS.gridPixels / heightShape.columns,
+    cellHeight: ROUTE_CANVAS.gridPixels / heightShape.rows,
+    gridWidth: ROUTE_CANVAS.gridPixels,
+    gridHeight: ROUTE_CANVAS.gridPixels,
+  };
+}
+
+function cellCenter(gridX, position, geometry) {
   return [
-    gridX + (Number(position[1]) + 0.5) * ROUTE_CANVAS.cellPixels,
-    ROUTE_CANVAS.gridY + (Number(position[0]) + 0.5) * ROUTE_CANVAS.cellPixels,
+    gridX + (Number(position[1]) + 0.5) * geometry.cellWidth,
+    ROUTE_CANVAS.gridY + (Number(position[0]) + 0.5) * geometry.cellHeight,
   ];
+}
+
+function routeHorizon(routeInput) {
+  const mapSize = routeInput.map.height.length;
+  const horizon = Number(routeInput.map.max_steps);
+  if (horizon !== mapSize * 6 || ![48, 96, 144, 192].includes(horizon)) {
+    throw new Error("The route horizon does not match the map size.");
+  }
+  return horizon;
+}
+
+function checkpointTimes(horizon) {
+  return Array.from({ length: 6 }, (_, index) =>
+    Math.round((horizon * index) / 5),
+  );
 }
 
 function drawStar(context, centerX, centerY, outerRadius = 14, innerRadius = 6) {
@@ -523,7 +611,7 @@ function drawStar(context, centerX, centerY, outerRadius = 14, innerRadius = 6) 
   context.stroke();
 }
 
-function drawMapPanel(context, values, gridX, title, kind) {
+function drawMapPanel(context, values, gridX, title, kind, geometry) {
   const palettes = {
     height: [[43, 73, 121], [72, 132, 86], [188, 173, 118], [245, 245, 238]],
     cover: [[255, 251, 230], [183, 220, 187], [67, 141, 111], [16, 71, 52]],
@@ -532,31 +620,33 @@ function drawMapPanel(context, values, gridX, title, kind) {
   context.fillStyle = "#141414";
   context.font = "700 24px system-ui, sans-serif";
   context.fillText(title, gridX, ROUTE_CANVAS.gridY - 22);
-  for (let row = 0; row < 16; row += 1) {
-    for (let column = 0; column < 16; column += 1) {
+  for (let row = 0; row < geometry.rows; row += 1) {
+    for (let column = 0; column < geometry.columns; column += 1) {
       const normalized =
         kind === "height" ? Number(values[row][column]) / 5 : Number(values[row][column]);
       context.fillStyle = interpolateColor(palette, normalized);
       context.fillRect(
-        gridX + column * ROUTE_CANVAS.cellPixels,
-        ROUTE_CANVAS.gridY + row * ROUTE_CANVAS.cellPixels,
-        ROUTE_CANVAS.cellPixels,
-        ROUTE_CANVAS.cellPixels,
+        gridX + column * geometry.cellWidth,
+        ROUTE_CANVAS.gridY + row * geometry.cellHeight,
+        geometry.cellWidth,
+        geometry.cellHeight,
       );
     }
   }
   context.strokeStyle = "rgba(35, 35, 35, 0.62)";
-  context.lineWidth = 1;
-  for (let offset = 0; offset <= 16; offset += 1) {
-    const x = gridX + offset * ROUTE_CANVAS.cellPixels;
-    const y = ROUTE_CANVAS.gridY + offset * ROUTE_CANVAS.cellPixels;
+  context.lineWidth = geometry.rows >= 24 ? 0.6 : 1;
+  for (let offset = 0; offset <= geometry.rows; offset += 1) {
+    const y = ROUTE_CANVAS.gridY + offset * geometry.cellHeight;
     context.beginPath();
     context.moveTo(gridX, y);
-    context.lineTo(gridX + ROUTE_CANVAS.gridPixels, y);
+    context.lineTo(gridX + geometry.gridWidth, y);
     context.stroke();
+  }
+  for (let offset = 0; offset <= geometry.columns; offset += 1) {
+    const x = gridX + offset * geometry.cellWidth;
     context.beginPath();
     context.moveTo(x, ROUTE_CANVAS.gridY);
-    context.lineTo(x, ROUTE_CANVAS.gridY + ROUTE_CANVAS.gridPixels);
+    context.lineTo(x, ROUTE_CANVAS.gridY + geometry.gridHeight);
     context.stroke();
   }
   context.strokeStyle = "#080808";
@@ -564,28 +654,28 @@ function drawMapPanel(context, values, gridX, title, kind) {
   context.strokeRect(
     gridX,
     ROUTE_CANVAS.gridY,
-    ROUTE_CANVAS.gridPixels,
-    ROUTE_CANVAS.gridPixels,
+    geometry.gridWidth,
+    geometry.gridHeight,
   );
 
-  const barY = ROUTE_CANVAS.gridY + ROUTE_CANVAS.gridPixels + 15;
-  for (let pixel = 0; pixel < ROUTE_CANVAS.gridPixels; pixel += 1) {
-    context.fillStyle = interpolateColor(palette, pixel / (ROUTE_CANVAS.gridPixels - 1));
+  const barY = ROUTE_CANVAS.gridY + geometry.gridHeight + 15;
+  for (let pixel = 0; pixel < geometry.gridWidth; pixel += 1) {
+    context.fillStyle = interpolateColor(palette, pixel / (geometry.gridWidth - 1));
     context.fillRect(gridX + pixel, barY, 1, 14);
   }
   context.strokeStyle = "#282828";
   context.lineWidth = 1;
-  context.strokeRect(gridX, barY, ROUTE_CANVAS.gridPixels, 14);
+  context.strokeRect(gridX, barY, geometry.gridWidth, 14);
   context.fillStyle = "#202020";
   context.font = "16px system-ui, sans-serif";
   context.fillText(kind === "height" ? "0 low" : "0 exposed", gridX, barY + 34);
   const highLabel = kind === "height" ? "5 high" : "1 concealed";
   context.textAlign = "right";
-  context.fillText(highLabel, gridX + ROUTE_CANVAS.gridPixels, barY + 34);
+  context.fillText(highLabel, gridX + geometry.gridWidth, barY + 34);
   context.textAlign = "left";
 }
 
-function markerCenters(gridX, positions) {
+function markerCenters(gridX, positions, geometry) {
   const groups = new Map();
   positions.forEach((position, agent) => {
     const key = `${position[0]},${position[1]}`;
@@ -594,15 +684,19 @@ function markerCenters(gridX, positions) {
   });
   const centers = Array(positions.length);
   for (const agents of groups.values()) {
-    const base = cellCenter(gridX, positions[agents[0]]);
+    const base = cellCenter(gridX, positions[agents[0]], geometry);
     agents.forEach((agent, index) => {
       if (agents.length === 1) {
         centers[agent] = base;
       } else {
         const angle = -Math.PI / 2 + 2 * Math.PI * index / agents.length;
+        const offset = Math.max(
+          3,
+          Math.min(8, Math.min(geometry.cellWidth, geometry.cellHeight) * 0.25),
+        );
         centers[agent] = [
-          base[0] + 8 * Math.cos(angle),
-          base[1] + 8 * Math.sin(angle),
+          base[0] + offset * Math.cos(angle),
+          base[1] + offset * Math.sin(angle),
         ];
       }
     });
@@ -610,15 +704,19 @@ function markerCenters(gridX, positions) {
   return centers;
 }
 
-function drawRouteTrace(context, gridX, trajectory) {
+function drawRouteTrace(context, gridX, trajectory, geometry) {
   const agentCount = trajectory[0].positions.length;
+  const colorWidth = Math.max(
+    2,
+    Math.min(5, Math.min(geometry.cellWidth, geometry.cellHeight) * 0.18),
+  );
   for (let agent = 0; agent < agentCount; agent += 1) {
     const points = trajectory.map((stateFrame) =>
-      cellCenter(gridX, stateFrame.positions[agent]),
+      cellCenter(gridX, stateFrame.positions[agent], geometry),
     );
-    for (const [strokeStyle, lineWidth] of [["rgba(255,255,255,0.9)", 8], [
+    for (const [strokeStyle, lineWidth] of [["rgba(255,255,255,0.9)", colorWidth + 3], [
       ROUTE_CANVAS.agentColors[agent % ROUTE_CANVAS.agentColors.length],
-      5,
+      colorWidth,
     ]]) {
       context.beginPath();
       points.forEach(([x, y], index) => {
@@ -634,13 +732,23 @@ function drawRouteTrace(context, gridX, trajectory) {
   }
 }
 
-function drawCheckpointMarkers(context, gridX, trajectory) {
-  ROUTE_CANVAS.checkpointTimes.forEach((time, checkpointIndex) => {
+function drawCheckpointMarkers(
+  context,
+  gridX,
+  trajectory,
+  geometry,
+  times,
+) {
+  const radius = Math.max(
+    4,
+    Math.min(8, Math.min(geometry.cellWidth, geometry.cellHeight) * 0.24),
+  );
+  times.forEach((time, checkpointIndex) => {
     const frame = trajectory[Math.min(time, trajectory.length - 1)];
-    const centers = markerCenters(gridX, frame.positions);
+    const centers = markerCenters(gridX, frame.positions, geometry);
     centers.forEach(([x, y], agent) => {
       context.beginPath();
-      context.arc(x, y, 8, 0, Math.PI * 2);
+      context.arc(x, y, radius, 0, Math.PI * 2);
       context.fillStyle =
         ROUTE_CANVAS.agentColors[agent % ROUTE_CANVAS.agentColors.length];
       context.fill();
@@ -648,7 +756,7 @@ function drawCheckpointMarkers(context, gridX, trajectory) {
       context.lineWidth = 2;
       context.stroke();
       context.fillStyle = "#ffffff";
-      context.font = "700 9px system-ui, sans-serif";
+      context.font = `700 ${Math.max(7, Math.round(radius * 1.1))}px system-ui, sans-serif`;
       context.textAlign = "center";
       context.textBaseline = "middle";
       context.fillText(String(checkpointIndex), x, y + 0.5);
@@ -658,21 +766,41 @@ function drawCheckpointMarkers(context, gridX, trajectory) {
   context.textBaseline = "alphabetic";
 }
 
-function drawEndpoints(context, gridX, map, trajectory) {
-  const [startX, startY] = cellCenter(gridX, map.start);
-  const [goalX, goalY] = cellCenter(gridX, map.goal);
+function drawEndpoints(context, gridX, map, trajectory, geometry) {
+  const [startX, startY] = cellCenter(gridX, map.start, geometry);
+  const [goalX, goalY] = cellCenter(gridX, map.goal, geometry);
+  const endpointRadius = Math.max(
+    6,
+    Math.min(12, Math.min(geometry.cellWidth, geometry.cellHeight) * 0.38),
+  );
   context.fillStyle = "#ffffff";
   context.strokeStyle = "#000000";
   context.lineWidth = 2;
-  context.fillRect(startX - 10, startY - 10, 20, 20);
-  context.strokeRect(startX - 10, startY - 10, 20, 20);
-  drawStar(context, goalX, goalY);
+  context.fillRect(
+    startX - endpointRadius,
+    startY - endpointRadius,
+    endpointRadius * 2,
+    endpointRadius * 2,
+  );
+  context.strokeRect(
+    startX - endpointRadius,
+    startY - endpointRadius,
+    endpointRadius * 2,
+    endpointRadius * 2,
+  );
+  drawStar(
+    context,
+    goalX,
+    goalY,
+    endpointRadius * 1.15,
+    endpointRadius * 0.5,
+  );
 
   const finalFrame = trajectory[trajectory.length - 1];
-  const centers = markerCenters(gridX, finalFrame.positions);
+  const centers = markerCenters(gridX, finalFrame.positions, geometry);
   centers.forEach(([x, y], agent) => {
     context.beginPath();
-    context.arc(x, y, 12, 0, Math.PI * 2);
+    context.arc(x, y, endpointRadius, 0, Math.PI * 2);
     context.fillStyle =
       ROUTE_CANVAS.agentColors[agent % ROUTE_CANVAS.agentColors.length];
     context.fill();
@@ -680,7 +808,8 @@ function drawEndpoints(context, gridX, map, trajectory) {
     context.lineWidth = 3;
     context.stroke();
     context.fillStyle = "#ffffff";
-    context.font = "700 15px system-ui, sans-serif";
+    context.font =
+      `700 ${Math.max(9, Math.round(endpointRadius * 1.2))}px system-ui, sans-serif`;
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillText(String(agent + 1), x, y);
@@ -689,61 +818,119 @@ function drawEndpoints(context, gridX, map, trajectory) {
   context.textBaseline = "alphabetic";
 }
 
-function drawRouteLegend(context) {
+function drawRouteLegend(context, agentCount) {
+  const legendX = 568;
+  const legendY = 126;
+  const agentStartY = 180;
+  const rowStep = 29;
+  const startY = agentStartY + agentCount * rowStep + 4;
+  const goalY = startY + 37;
+  const legendHeight = goalY - legendY + 22;
   context.fillStyle = "rgba(255,255,255,0.96)";
   context.strokeStyle = "#aaaaaa";
   context.lineWidth = 1;
-  context.fillRect(568, 126, 118, 224);
-  context.strokeRect(568, 126, 118, 224);
+  context.fillRect(legendX, legendY, 118, legendHeight);
+  context.strokeRect(legendX, legendY, 118, legendHeight);
   context.fillStyle = "#141414";
   context.font = "700 18px system-ui, sans-serif";
   context.fillText("Legend", 580, 151);
-  ROUTE_CANVAS.agentColors.slice(0, 3).forEach((color, index) => {
+  ROUTE_CANVAS.agentColors.slice(0, agentCount).forEach((color, index) => {
     context.beginPath();
-    context.arc(587, 180 + index * 31, 9, 0, Math.PI * 2);
+    context.arc(587, agentStartY + index * rowStep, 8, 0, Math.PI * 2);
     context.fillStyle = color;
     context.fill();
     context.fillStyle = "#202020";
-    context.font = "15px system-ui, sans-serif";
-    context.fillText(`agent ${index + 1}`, 605, 185 + index * 31);
+    context.font = "14px system-ui, sans-serif";
+    context.fillText(`agent ${index + 1}`, 603, agentStartY + 5 + index * rowStep);
   });
   context.fillStyle = "#ffffff";
   context.strokeStyle = "#000000";
   context.lineWidth = 2;
-  context.fillRect(579, 273, 16, 16);
-  context.strokeRect(579, 273, 16, 16);
+  context.fillRect(579, startY - 8, 16, 16);
+  context.strokeRect(579, startY - 8, 16, 16);
   context.fillStyle = "#202020";
   context.font = "15px system-ui, sans-serif";
-  context.fillText("start", 605, 287);
-  drawStar(context, 587, 320, 10, 4);
+  context.fillText("start", 605, startY + 5);
+  drawStar(context, 587, goalY, 10, 4);
   context.fillStyle = "#202020";
-  context.fillText("goal", 605, 325);
+  context.fillText("goal", 605, goalY + 5);
 }
 
 function validateRouteInput(payload) {
   if (
     payload?.schema_version !== "tbam.blind_judge_input.v1" ||
     !Array.isArray(payload?.map?.height) ||
-    !Array.isArray(payload?.map?.cover)
+    !Array.isArray(payload?.map?.cover) ||
+    !Array.isArray(payload?.map?.start) ||
+    payload.map.start.length !== 2 ||
+    !Array.isArray(payload?.map?.goal) ||
+    payload.map.goal.length !== 2
   ) {
     throw new Error("Invalid anonymous route data format.");
   }
+  const geometry = routeGeometry(payload.map);
+  const horizon = routeHorizon(payload);
+  const declaredAgentCount = Number(payload.map.agent_count);
+  if (![2, 3, 4].includes(declaredAgentCount)) {
+    throw new Error("The route map declares an invalid agent count.");
+  }
+  let expectedAgentCount = null;
   for (const arm of ["A", "B"]) {
-    const trajectory = payload?.routes?.[arm]?.trajectory;
+    const route = payload?.routes?.[arm];
+    const trajectory = route?.trajectory;
     if (
+      typeof route?.completed !== "boolean" ||
+      !Object.hasOwn(route || {}, "completion_step") ||
       !Array.isArray(trajectory) ||
       trajectory.length === 0 ||
-      !Array.isArray(trajectory[0]?.positions)
+      !Array.isArray(trajectory[0]?.positions) ||
+      trajectory[0].positions.length < 2 ||
+      trajectory[0].positions.length > 4
     ) {
       throw new Error(`Route ${arm} trajectory data is incomplete.`);
     }
+    const agentCount = trajectory[0].positions.length;
+    if (agentCount !== declaredAgentCount) {
+      throw new Error("The route agent count does not match the map declaration.");
+    }
+    if (expectedAgentCount !== null && agentCount !== expectedAgentCount) {
+      throw new Error("Routes A and B have different agent counts.");
+    }
+    expectedAgentCount = agentCount;
+    for (const frame of trajectory) {
+      if (
+        !Array.isArray(frame?.positions) ||
+        frame.positions.length !== agentCount ||
+        frame.positions.some(
+          (position) =>
+            !Array.isArray(position) ||
+            position.length !== 2 ||
+            !Number.isInteger(Number(position[0])) ||
+            !Number.isInteger(Number(position[1])) ||
+            Number(position[0]) < 0 ||
+            Number(position[0]) >= geometry.rows ||
+            Number(position[1]) < 0 ||
+            Number(position[1]) >= geometry.columns,
+        )
+      ) {
+        throw new Error(`Route ${arm} contains an out-of-bounds or invalid trajectory position.`);
+      }
+    }
+    if (trajectory.length > horizon + 1) {
+      throw new Error(`Route ${arm} trajectory length exceeds the declared horizon.`);
+    }
   }
+  return { geometry, horizon, agentCount: expectedAgentCount };
 }
 
 function renderRouteCanvas(canvas, routeInput, arm) {
   const context = canvas.getContext("2d");
   if (!context) throw new Error("This browser does not support the route-map canvas.");
   const trajectory = routeInput.routes[arm].trajectory;
+  const geometry = routeGeometry(routeInput.map);
+  const horizon = routeHorizon(routeInput);
+  const times = checkpointTimes(horizon);
+  const agentCount = trajectory[0].positions.length;
   canvas.width = ROUTE_CANVAS.width;
   canvas.height = ROUTE_CANVAS.height;
   context.fillStyle = "#f8f8f6";
@@ -755,17 +942,37 @@ function renderRouteCanvas(canvas, routeInput, arm) {
   context.fillText(`Route ${arm} · full trace`, 32, 46);
   context.textAlign = "right";
   context.font = "22px system-ui, sans-serif";
-  context.fillText("time marks 0–5 = t 0, 19, 38, 58, 77, 96", 1248, 45);
+  context.fillText(`time marks 0–5 = t ${times.join(", ")}`, 1248, 45);
   context.textAlign = "left";
 
-  drawMapPanel(context, routeInput.map.height, ROUTE_CANVAS.gridXs[0], "Elevation", "height");
-  drawMapPanel(context, routeInput.map.cover, ROUTE_CANVAS.gridXs[1], "Cover", "cover");
+  drawMapPanel(
+    context,
+    routeInput.map.height,
+    ROUTE_CANVAS.gridXs[0],
+    "Elevation",
+    "height",
+    geometry,
+  );
+  drawMapPanel(
+    context,
+    routeInput.map.cover,
+    ROUTE_CANVAS.gridXs[1],
+    "Cover",
+    "cover",
+    geometry,
+  );
   for (const gridX of ROUTE_CANVAS.gridXs) {
-    drawRouteTrace(context, gridX, trajectory);
-    drawEndpoints(context, gridX, routeInput.map, trajectory);
+    drawRouteTrace(context, gridX, trajectory, geometry);
+    drawEndpoints(context, gridX, routeInput.map, trajectory, geometry);
   }
-  drawCheckpointMarkers(context, ROUTE_CANVAS.gridXs[1], trajectory);
-  drawRouteLegend(context);
+  drawCheckpointMarkers(
+    context,
+    ROUTE_CANVAS.gridXs[1],
+    trajectory,
+    geometry,
+    times,
+  );
+  drawRouteLegend(context, agentCount);
 }
 
 async function configureRouteMaps() {
@@ -775,9 +982,16 @@ async function configureRouteMaps() {
     context?.clearRect(0, 0, canvas.width, canvas.height);
   }
   const routeInput = await api(state.activeItem.media.judge_input);
-  validateRouteInput(routeInput);
+  const routeMetadata = validateRouteInput(routeInput);
   if (routeInput.item_id !== state.activeItem.item_id) {
     throw new Error("Anonymous route data does not match the current item.");
+  }
+  const routeTimeNote = $("#route-time-note");
+  if (routeTimeNote) {
+    const times = checkpointTimes(routeMetadata.horizon);
+    routeTimeNote.textContent =
+      `Elevation is shown on the left and cover on the right. Labels 0–5 correspond to ` +
+      `t=${times.join(", ")}. Matching labels indicate the same time step.`;
   }
   renderRouteCanvas($("#route-map-a"), routeInput, "A");
   renderRouteCanvas($("#route-map-b"), routeInput, "B");
@@ -788,7 +1002,7 @@ async function openItem(itemId) {
   const catalogItem = state.catalog.find((item) => item.item_id === itemId);
   if (!catalogItem) return;
   $("#submit-rating").disabled = false;
-  setSaveState("Loading saved draft...", false);
+  setSaveState("Loading the browser draft...", false);
   showView("judge");
   $("#endpoint-forms").innerHTML =
     '<div class="loading-inline">Loading anonymous route artifact...</div>';
@@ -950,7 +1164,7 @@ function renderAdminSummary() {
   ).length;
   $("#admin-covered-target").textContent = `/ ${summary.target_item_count}`;
   $("#admin-generated").textContent =
-    `Summary generated ${formatDate(summary.generated_utc)} · ${summary.study_id}`;
+    `Local summary generated ${formatDate(summary.generated_utc)} · ${summary.study_id}`;
   renderAdminTable();
 }
 
@@ -1040,7 +1254,7 @@ async function logout() {
       body: JSON.stringify({ logout: true }),
     });
   } catch {
-    // Clear local state even if the server is temporarily unreachable.
+    // Clear local state even if browser storage is temporarily unavailable.
   }
   state.participant = null;
   state.catalog = [];

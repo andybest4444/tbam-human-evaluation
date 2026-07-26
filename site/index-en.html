@@ -9,10 +9,10 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'">
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="#123c3b">
-    <title>TBAM Anonymous Route Evaluation · Pages Pilot</title>
-    <link rel="stylesheet" href="styles.css?v=full-catalog-bilingual-v2">
-    <script src="static_api-en.js?v=full-catalog-bilingual-v2" defer></script>
-    <script src="app-en.js?v=full-catalog-bilingual-v2" defer></script>
+    <title>TBAM Anonymous Route Evaluation · Internal Evaluation</title>
+    <link rel="stylesheet" href="styles.css?v=e9-fixed-budget-bilingual-formal-v2">
+    <script src="static_api-en.js?v=e9-fixed-budget-bilingual-formal-v2" defer></script>
+    <script src="app-en.js?v=e9-fixed-budget-bilingual-formal-v2" defer></script>
   </head>
   <body>
     <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -62,15 +62,15 @@
 
             <div class="study-numbers" aria-label="Study size">
               <div>
-                <strong id="metric-maps">30</strong>
+                <strong id="metric-maps">—</strong>
                 <span>frozen maps</span>
               </div>
               <div>
-                <strong id="metric-personal">30</strong>
+                <strong id="metric-personal">—</strong>
                 <span>items in your catalog</span>
               </div>
               <div>
-                <strong id="metric-votes">5</strong>
+                <strong id="metric-votes">—</strong>
                 <span>independent judgments per item</span>
               </div>
             </div>
@@ -95,7 +95,7 @@
 
           <div class="auth-panel">
             <div class="auth-panel-heading">
-              <p class="kicker" id="study-mode-label">PILOT STUDY</p>
+              <p class="kicker" id="study-mode-label">INTERNAL EVALUATION</p>
               <h2>Continue your evaluation</h2>
               <p>Use the same pseudonym and PIN to resume progress in this browser.</p>
             </div>
@@ -191,7 +191,7 @@
                 </span>
               </label>
               <button class="primary-button wide" id="finish-tutorial" type="button" disabled>
-                Unlock my complete 240-item catalog
+                <span id="tutorial-unlock-label">Unlock my evaluation catalog</span>
                 <span aria-hidden="true">→</span>
               </button>
             </aside>
@@ -203,7 +203,7 @@
             <div>
               <p class="kicker">PERSONAL BLIND CATALOG</p>
               <h1>Your complete evaluation catalog</h1>
-              <p>The catalog contains 240 items. You may complete it over multiple sessions and revise submitted choices.</p>
+              <p id="catalog-description">The catalog and ordering are frozen; you may complete it over multiple sessions.</p>
             </div>
             <button class="secondary-button" id="export-mine" type="button">
               Export my backup
@@ -215,7 +215,7 @@
               <div class="progress-ring" id="progress-ring" style="--progress: 0">
                 <div>
                   <strong id="progress-value">0</strong>
-                  <span>/ 240</span>
+                  <span id="progress-total">/ —</span>
                 </div>
               </div>
               <h2 id="welcome-name">Welcome back</h2>
@@ -238,7 +238,7 @@
             <div class="catalog-panel">
               <div class="catalog-toolbar">
                 <div>
-                  <h2>240 items · 30 maps · 8 comparisons per map</h2>
+                  <h2 id="catalog-size-label">Loading catalog size...</h2>
                   <p id="catalog-summary">Loading catalog...</p>
                 </div>
                 <div class="filter-pills" role="group" aria-label="Catalog filters">
@@ -259,7 +259,7 @@
             </button>
             <div class="item-position">
               <span id="judge-map-label">Map 01</span>
-              <strong id="judge-count-label">Item 1 / 240</strong>
+              <strong id="judge-count-label">Item 1 / —</strong>
             </div>
             <div class="save-state" id="save-state">
               <span class="status-dot"></span>
@@ -316,9 +316,8 @@
 
           <div class="route-map-note">
             <strong>Complete static routes</strong>
-            <span>
-              Elevation is shown on the left and cover on the right. Labels 0–5 correspond to
-              t = 0, 19, 38, 58, 77, and 96. Matching labels indicate the same time step.
+            <span id="route-time-note">
+              Elevation is shown on the left and cover on the right. Labels 0–5 mark six proportionally spaced simulation times.
             </span>
           </div>
 
@@ -383,7 +382,7 @@
               <article>
                 <span>Fully covered items</span>
                 <strong id="admin-covered">0</strong>
-                <small id="admin-covered-target">/ 240</small>
+                <small id="admin-covered-target">/ —</small>
               </article>
             </div>
 
@@ -401,7 +400,7 @@
             </div>
 
             <div class="admin-tabs">
-              <button class="active" data-admin-tab="items" type="button">240-item coverage</button>
+              <button class="active" data-admin-tab="items" id="admin-items-tab" type="button">Item coverage</button>
               <button data-admin-tab="raters" type="button">Evaluator progress</button>
             </div>
 
@@ -422,7 +421,7 @@
       </main>
 
       <footer>
-        <span>TBAM · S6 Blinded Trajectory Preference Study</span>
+        <span>TBAM · Internal Anonymous Route Evaluation Collection</span>
         <span id="manifest-footer">Manifest pending</span>
       </footer>
     </div>

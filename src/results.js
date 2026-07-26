@@ -5,11 +5,10 @@ const MANIFEST_SCHEMA = "tbam.github_pages_bundle.v1";
 const PAGES_EXPORT_SCHEMA = "tbam.pages_human_rater_export.v2";
 const JUDGMENT_SCHEMA = "tbam.blind_pairwise_choice.v1";
 const MERGED_EXPORT_SCHEMA = "tbam.merged_pairwise_choices.v1";
-const MAP_COUNT = 30;
-const ASSIGNMENT_SIZE = 240;
-const ITEMS_PER_MAP = 8;
-const RATER_SLOT_MIN = 0;
-const RATER_SLOT_MAX = 4;
+const EXPECTED_STUDY_ID =
+  "tbam_e9_fixed_budget_human_pairwise_pages_v2";
+const EXPECTED_DESIGN_ID = "e9_human_pairwise_v1";
+const EXPECTED_ASSIGNMENT_RULE = "complete_catalog_round_robin_v2";
 const MAX_DURATION_SECONDS = 43200;
 const PAGES_EXPORT_FIELDS = [
   "schema_version",
@@ -42,7 +41,7 @@ const JUDGMENT_FIELDS = [
   "completed_utc",
   "duration_seconds",
 ];
-const ARTIFACT_HASH_FIELDS = ["A_video", "B_video", "judge_input"];
+const ARTIFACT_HASH_FIELDS = ["judge_input"];
 const PAIRWISE_CHOICES = new Set(["A", "B"]);
 const HASH_PATTERN = /^[a-f0-9]{64}$/i;
 const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}$/;
@@ -183,6 +182,12 @@ function validateManifest(manifest) {
     throw new Error(`不支持的清单版本 ${String(manifest.schema_version)}`);
   }
   assertNonEmptyString(manifest.study_id, "manifest.study_id");
+  if (manifest.study_id !== EXPECTED_STUDY_ID) {
+    throw new Error("manifest.study_id 不是当前 E9 人工评判版本");
+  }
+  if (manifest.source_design_id !== EXPECTED_DESIGN_ID) {
+    throw new Error("manifest.source_design_id 不是当前 E9 盲化设计");
+  }
   assertSha256(manifest.bundle_id, "manifest.bundle_id");
   assertSha256(
     manifest.collection_protocol_id,
@@ -201,23 +206,30 @@ function validateManifest(manifest) {
     "manifest.assignment_rule_id",
   );
   if (
-    manifest.items_per_rater !== ASSIGNMENT_SIZE ||
-    manifest.map_count !== MAP_COUNT ||
-    manifest.items_per_map !== ITEMS_PER_MAP ||
+    !Number.isInteger(manifest.item_count) ||
+    manifest.item_count <= 0 ||
+    !Number.isInteger(manifest.map_count) ||
+    manifest.map_count <= 0 ||
+    !Number.isInteger(manifest.items_per_map) ||
+    manifest.items_per_map <= 0 ||
+    manifest.map_count * manifest.items_per_map !== manifest.item_count ||
+    manifest.items_per_rater !== manifest.item_count ||
     manifest.judgments_per_item_if_all_slots_complete !== 5 ||
-    manifest.assignment_rule_id !== "complete_catalog_round_robin_v1" ||
-    manifest.rater_slot_min !== RATER_SLOT_MIN ||
-    manifest.rater_slot_max !== RATER_SLOT_MAX
+    manifest.assignment_rule_id !== EXPECTED_ASSIGNMENT_RULE ||
+    !Number.isInteger(manifest.rater_slot_min) ||
+    !Number.isInteger(manifest.rater_slot_max) ||
+    manifest.rater_slot_min < 0 ||
+    manifest.rater_slot_max < manifest.rater_slot_min
   ) {
     throw new Error(
-      "manifest 的 Pages 分配参数必须为完整240项目录和席位0–4",
+      "manifest 的 Pages 分配参数不完整或内部不一致",
     );
   }
   if (!Array.isArray(manifest.items) || manifest.items.length === 0) {
     throw new Error("manifest.items 必须是非空数组");
   }
-  if (manifest.items.length !== ASSIGNMENT_SIZE) {
-    throw new Error("manifest.items 必须精确包含 240 个项目");
+  if (manifest.items.length !== manifest.item_count) {
+    throw new Error("manifest.items 数量必须与 item_count 一致");
   }
 
   const seen = new Set();
@@ -243,15 +255,17 @@ function inferExpectedPerRater(manifest) {
 
 function validateAssignmentCatalog(manifest) {
   const mapIds = sortedMapIds(manifest);
-  if (mapIds.length !== MAP_COUNT) {
-    throw new Error("manifest 必须精确包含 30 个盲化地图");
+  if (mapIds.length !== manifest.map_count) {
+    throw new Error("manifest 的盲化地图数量与 map_count 不一致");
   }
   for (const [mapIndex, mapId] of mapIds.entries()) {
     const candidates = manifest.items.filter(
       (item) => item.blind_map_id === mapId,
     );
-    if (candidates.length !== ITEMS_PER_MAP) {
-      throw new Error(`manifest 地图 ${mapId} 必须精确包含 8 个项目`);
+    if (candidates.length !== manifest.items_per_map) {
+      throw new Error(
+        `manifest 地图 ${mapId} 的项目数与 items_per_map 不一致`,
+      );
     }
     for (const [itemIndex, item] of candidates.entries()) {
       if (item.map_index !== mapIndex || item.item_index !== itemIndex) {
@@ -262,23 +276,35 @@ function validateAssignmentCatalog(manifest) {
     }
   }
   const expectedIds = new Set(manifest.items.map((item) => item.item_id));
-  const expectedSlots = new Set(["0", "1", "2", "3", "4"]);
+  const expectedSlots = new Set(
+    Array.from(
+      {
+        length:
+          manifest.rater_slot_max - manifest.rater_slot_min + 1,
+      },
+      (_, index) => String(manifest.rater_slot_min + index),
+    ),
+  );
   if (
     !manifest.slot_assignments ||
     typeof manifest.slot_assignments !== "object" ||
     Array.isArray(manifest.slot_assignments) ||
     !sameSet(new Set(Object.keys(manifest.slot_assignments)), expectedSlots)
   ) {
-    throw new Error("manifest.slot_assignments 必须精确包含席位0–4");
+    throw new Error("manifest.slot_assignments 与声明的席位范围不一致");
   }
-  for (let slot = RATER_SLOT_MIN; slot <= RATER_SLOT_MAX; slot += 1) {
+  for (
+    let slot = manifest.rater_slot_min;
+    slot <= manifest.rater_slot_max;
+    slot += 1
+  ) {
     const assigned = manifest.slot_assignments[String(slot)];
     if (
       !Array.isArray(assigned) ||
-      assigned.length !== ASSIGNMENT_SIZE ||
+      assigned.length !== manifest.items_per_rater ||
       !sameSet(new Set(assigned), expectedIds)
     ) {
-      throw new Error(`席位 ${slot} 未完整覆盖240个项目`);
+      throw new Error(`席位 ${slot} 未完整覆盖当前目录`);
     }
   }
 }
@@ -398,10 +424,10 @@ function validateAndNormalizeExport(payload, file, inputIndex) {
   }
   if (
     !Number.isInteger(payload.rater_slot) ||
-    payload.rater_slot < RATER_SLOT_MIN ||
-    payload.rater_slot > RATER_SLOT_MAX
+    payload.rater_slot < state.manifest.rater_slot_min ||
+    payload.rater_slot > state.manifest.rater_slot_max
   ) {
-    throw new Error("rater_slot 必须是 0–4 的整数");
+    throw new Error("rater_slot 不在当前 manifest 声明的范围内");
   }
   const expectedRaterId =
     `human_pages_${String(payload.rater_slot + 1).padStart(2, "0")}`;
@@ -472,8 +498,10 @@ function validateAssignmentItemIds(actual, expected) {
   if (!Array.isArray(actual)) {
     throw new Error("assignment_item_ids 必须是数组");
   }
-  if (actual.length !== ASSIGNMENT_SIZE) {
-    throw new Error("assignment_item_ids 必须精确包含 240 个项目");
+  if (actual.length !== state.expectedPerRater) {
+    throw new Error(
+      "assignment_item_ids 数量与当前完整目录不一致",
+    );
   }
   for (const [index, expectedItemId] of expected.entries()) {
     assertSafeId(actual[index], `assignment_item_ids[${index}]`);
