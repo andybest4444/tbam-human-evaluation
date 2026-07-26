@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMxZTJiM2IiLz48cGF0aCBkPSJNMTMgNDQgMjggMTdsOSAxNyA3LTEwIDggMjBaIiBmaWxsPSIjZmZmIi8+PC9zdmc+"
+    />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="referrer" content="no-referrer" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'"
+    />
+    <meta
+      name="description"
+      content="TBAM 人工评判结果的本地校验、合并与汇总工具"
+    />
+    <title>TBAM · 结果汇总</title>
+    <link rel="stylesheet" href="./results.css" />
+    <script src="./results.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <div>
+          <p class="eyebrow">TBAM HUMAN EVALUATION</p>
+          <h1>结果汇总</h1>
+        </div>
+        <a class="back-link" href="./index.html">返回评判页面</a>
+      </div>
+    </header>
+
+    <main class="shell">
+      <section class="intro" aria-labelledby="intro-title">
+        <div>
+          <h2 id="intro-title">在本机合并评判结果</h2>
+          <p>
+            选择评判者下载的 JSON 文件。本页只在当前浏览器中读取并处理文件，
+            不会上传结果，也不会读取或显示路线与方法的私有对应关系。
+          </p>
+        </div>
+        <div class="manifest-state" id="manifest-state" role="status" aria-live="polite">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span id="manifest-message">正在加载公开实验清单…</span>
+        </div>
+      </section>
+
+      <section class="import-panel" aria-labelledby="import-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">01 · IMPORT</p>
+            <h2 id="import-title">导入导出文件</h2>
+          </div>
+          <button class="button button-secondary" id="clear-button" type="button" disabled>
+            清空
+          </button>
+        </div>
+
+        <label class="drop-zone" id="drop-zone" for="file-input">
+          <span class="drop-icon" aria-hidden="true">↓</span>
+          <span class="drop-title">选择多个 JSON 文件</span>
+          <span class="drop-copy">
+            也可以把文件拖放到这里；同一评判者仅在判断集合单调时保留最大超集
+          </span>
+          <span class="button button-primary" aria-hidden="true">选择文件</span>
+          <input
+            id="file-input"
+            type="file"
+            accept=".json,application/json"
+            multiple
+            disabled
+          />
+        </label>
+
+        <div id="messages" class="messages" aria-live="polite" hidden></div>
+      </section>
+
+      <section class="summary-section" aria-labelledby="summary-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">02 · SUMMARY</p>
+            <h2 id="summary-title">合并概览</h2>
+          </div>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric">
+            <span class="metric-label">有效文件</span>
+            <strong id="metric-files">0</strong>
+            <small id="metric-files-detail">尚未导入</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">评判者</span>
+            <strong id="metric-raters">0</strong>
+            <small>按评判者标识去重</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">有效判断</span>
+            <strong id="metric-judgments">0</strong>
+            <small>来自每位评判者的最大单调导出</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">已完成评判者</span>
+            <strong id="metric-complete">0</strong>
+            <small id="metric-complete-detail">目标尚未加载</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">项目覆盖</span>
+            <strong id="metric-coverage">0 / 0</strong>
+            <small id="metric-coverage-detail">0%</small>
+          </article>
+        </div>
+      </section>
+
+      <section class="table-section" aria-labelledby="rater-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">03 · RATERS</p>
+            <h2 id="rater-title">评判者进度</h2>
+          </div>
+          <button
+            class="button button-download"
+            id="download-raters"
+            type="button"
+            disabled
+          >
+            下载 rater_progress.csv
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">评判者</th>
+                <th scope="col">选定导出时间</th>
+                <th scope="col">判断</th>
+                <th scope="col">进度</th>
+                <th scope="col">状态</th>
+                <th scope="col">来源文件</th>
+              </tr>
+            </thead>
+            <tbody id="rater-body">
+              <tr class="empty-row">
+                <td colspan="6">导入结果后显示评判者进度。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="table-section" aria-labelledby="item-title">
+        <div class="section-heading item-heading">
+          <div>
+            <p class="section-kicker">04 · ITEMS</p>
+            <h2 id="item-title">项目选择计数</h2>
+            <p class="section-note">
+              主表统计“完整指令”总体选择；仅在两条路线均完成时统计条件选择。
+            </p>
+          </div>
+          <div class="download-group">
+            <button
+              class="button button-download"
+              id="download-judgments"
+              type="button"
+              disabled
+            >
+              下载 merged_judgments.jsonl
+            </button>
+            <button
+              class="button button-download"
+              id="download-wrapper"
+              type="button"
+              disabled
+            >
+              下载 merged_results.json
+            </button>
+            <button
+              class="button button-download"
+              id="download-items"
+              type="button"
+              disabled
+            >
+              下载 item_summary.csv
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap table-wrap-wide">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col" rowspan="2">项目</th>
+                <th scope="col" rowspan="2">盲化地图</th>
+                <th scope="col" rowspan="2">判断数</th>
+                <th scope="colgroup" colspan="3">完整指令</th>
+                <th scope="colgroup" colspan="3">两者均完成（条件）</th>
+              </tr>
+              <tr>
+                <th scope="col">A</th>
+                <th scope="col">B</th>
+                <th scope="col">平局</th>
+                <th scope="col">A</th>
+                <th scope="col">B</th>
+                <th scope="col">平局</th>
+              </tr>
+            </thead>
+            <tbody id="item-body">
+              <tr class="empty-row">
+                <td colspan="9">导入结果后显示项目计数。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <aside class="privacy-note">
+        <strong>盲法保护：</strong>
+        此工具只使用公开项目编号、盲化地图编号和 A/B/tie 选择。
+        下载文件中不会添加任何方法身份或私有映射。
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell">
+        <span id="bundle-label">公开实验清单尚未加载</span>
+      </div>
+    </footer>
+
+    <noscript>
+      <p class="noscript-message">此汇总工具需要启用 JavaScript。</p>
+    </noscript>
+  </body>
+</html>

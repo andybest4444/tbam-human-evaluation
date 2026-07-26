@@ -1,0 +1,1385 @@
+const state = {
+  config: null,
+  participant: null,
+  catalog: [],
+  catalogFilter: "all",
+  authMode: "login",
+  activeItem: null,
+  draftRevision: 0,
+  activeSeconds: 0,
+  activeTimer: null,
+  saveTimer: null,
+  saving: false,
+  saveQueued: false,
+  evidence: {
+    all_sample: [],
+    conditional_semantic: [],
+  },
+  adminToken: "",
+  adminSummary: null,
+  adminTab: "items",
+};
+
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+const ROUTE_CANVAS = Object.freeze({
+  width: 1280,
+  height: 720,
+  gridPixels: 496,
+  cellPixels: 31,
+  gridY: 126,
+  gridXs: [66, 704],
+  checkpointTimes: [0, 19, 38, 58, 77, 96],
+  agentColors: ["#D55E00", "#0072B2", "#CC79A7", "#009E73"],
+});
+
+class ApiError extends Error {
+  constructor(message, status, payload) {
+    super(message);
+    this.status = status;
+    this.payload = payload;
+  }
+}
+
+async function api(path, options = {}) {
+  const headers = new Headers(options.headers || {});
+  if (options.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+  const response = await fetch(path, {
+    credentials: "same-origin",
+    ...options,
+    headers,
+  });
+  const contentType = response.headers.get("Content-Type") || "";
+  const payload = contentType.includes("json")
+    ? await response.json()
+    : await response.text();
+  if (!response.ok) {
+    throw new ApiError(
+      payload?.message || `请求失败（${response.status}）`,
+      response.status,
+      payload,
+    );
+  }
+  return payload;
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function formatDate(value) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.valueOf())) return value;
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return "0:00";
+  const whole = Math.max(0, Math.floor(seconds));
+  return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
+}
+
+function toast(message, type = "success") {
+  const element = document.createElement("div");
+  element.className = `toast ${type === "error" ? "error" : ""}`;
+  element.textContent = message;
+  $("#toast-region").append(element);
+  window.setTimeout(() => element.remove(), 4200);
+}
+
+function showView(name) {
+  $$(".view").forEach((view) => {
+    view.classList.toggle("active", view.id === `${name}-view`);
+  });
+  const signedIn = Boolean(state.participant);
+  $("#directory-button").classList.toggle("hidden", !signedIn || name === "dashboard");
+  $("#profile-button").classList.toggle("hidden", !signedIn);
+  $("#profile-popover").classList.add("hidden");
+  if (name !== "judge") {
+    stopActiveTimer();
+  }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function setIntegrity(config) {
+  const chip = $("#integrity-chip");
+  const complete = config.artifact_status === "complete_frozen_artifacts";
+  chip.classList.toggle("verified", complete);
+  chip.innerHTML = complete
+    ? '<span class="status-dot"></span>公开制品已冻结并验证'
+    : '<span class="status-dot"></span>界面预览 · 未连接收集服务';
+  $("#manifest-footer").textContent =
+    `Manifest ${config.public_manifest_sha256.slice(0, 12)}…`;
+}
+
+function renderConfig() {
+  const config = state.config;
+  $("#metric-maps").textContent = config.map_count;
+  $("#metric-personal").textContent = config.items_per_rater;
+  $("#metric-votes").textContent = config.judgments_per_item;
+  $("#study-mode-label").textContent =
+    config.study_mode === "formal" ? "FORMAL STUDY" : "PILOT STUDY";
+  $("#consent-copy").textContent = config.consent_text;
+  $("#registration-note").classList.toggle("hidden", config.registration_open);
+  $("#register-tab").disabled = !config.registration_open;
+  $("#register-tab").title = config.registration_open
+    ? ""
+    : "新用户注册尚未开放";
+  setIntegrity(config);
+}
+
+function updateProfile() {
+  if (!state.participant) return;
+  const name = state.participant.username;
+  $("#avatar-initial").textContent = [...name][0]?.toUpperCase() || "R";
+  $("#profile-username").textContent = name;
+  $("#profile-rater-id").textContent = state.participant.rater_id;
+}
+
+function setAuthMode(mode) {
+  if (mode === "register" && !state.config.registration_open) {
+    toast("当前尚未开放新用户注册。", "error");
+    return;
+  }
+  state.authMode = mode;
+  $("#login-tab").classList.toggle("active", mode === "login");
+  $("#register-tab").classList.toggle("active", mode === "register");
+  $("#login-tab").setAttribute("aria-selected", mode === "login");
+  $("#register-tab").setAttribute("aria-selected", mode === "register");
+  $("#consent-box").classList.toggle("hidden", mode !== "register");
+  $("#auth-submit").innerHTML =
+    mode === "register"
+      ? '创建匿名席位 <span aria-hidden="true">→</span>'
+      : '读取已有进度 <span aria-hidden="true">→</span>';
+  $("#pin-input").autocomplete =
+    mode === "register" ? "new-password" : "current-password";
+  $("#auth-error").classList.add("hidden");
+}
+
+async function submitAuth(event) {
+  event.preventDefault();
+  const error = $("#auth-error");
+  const submit = $("#auth-submit");
+  error.classList.add("hidden");
+  submit.disabled = true;
+  const body = {
+    username: $("#username-input").value.trim(),
+    pin: $("#pin-input").value,
+  };
+  if (state.authMode === "register") {
+    body.consented = $("#consent-checkbox").checked;
+  }
+  try {
+    const result = await api(`/api/auth/${state.authMode}`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    state.participant = result.participant;
+    updateProfile();
+    toast(
+      state.authMode === "register"
+        ? `已分配匿名编号 ${state.participant.rater_id}`
+        : "已恢复服务器进度。",
+    );
+    if (state.participant.tutorial_completed) {
+      await loadDashboard();
+    } else {
+      showView("tutorial");
+    }
+  } catch (requestError) {
+    error.textContent = requestError.message;
+    error.classList.remove("hidden");
+  } finally {
+    submit.disabled = false;
+  }
+}
+
+async function finishTutorial() {
+  const button = $("#finish-tutorial");
+  button.disabled = true;
+  try {
+    await api("/api/tutorial/complete", {
+      method: "POST",
+      body: JSON.stringify({ completed: true }),
+    });
+    state.participant.tutorial_completed = true;
+    toast("教程已完成，个人目录已解锁。");
+    await loadDashboard();
+  } catch (error) {
+    toast(error.message, "error");
+    button.disabled = false;
+  }
+}
+
+function statusLabel(status) {
+  return {
+    not_started: "未开始",
+    in_progress: "进行中",
+    draft: "已有草稿",
+    submitted: "已提交",
+  }[status] || status;
+}
+
+function renderCatalog() {
+  const list = $("#catalog-list");
+  const filtered = state.catalog.filter((item) => {
+    if (state.catalogFilter === "submitted") return item.status === "submitted";
+    if (state.catalogFilter === "open") return item.status !== "submitted";
+    return true;
+  });
+  list.innerHTML = filtered
+    .map(
+      (item) => `
+        <button
+          class="catalog-item ${escapeHtml(item.status)}"
+          type="button"
+          data-item-id="${escapeHtml(item.item_id)}"
+          ${item.status === "submitted" ? "disabled" : ""}
+        >
+          <span class="catalog-number">${String(item.catalog_number).padStart(2, "0")}</span>
+          <span class="catalog-copy">
+            <strong>${escapeHtml(item.blind_map_id.replace("_", " ").toUpperCase())}</strong>
+            <span>${escapeHtml(item.item_id)}</span>
+          </span>
+          <span class="status-label">${statusLabel(item.status)}</span>
+        </button>
+      `,
+    )
+    .join("");
+  if (!filtered.length) {
+    list.innerHTML =
+      '<p class="empty-state">这个筛选条件下没有项目。</p>';
+  }
+  $$("[data-item-id]", list).forEach((button) => {
+    button.addEventListener("click", () => openItem(button.dataset.itemId));
+  });
+}
+
+function updateDashboardStats() {
+  const completed = state.catalog.filter((item) => item.status === "submitted").length;
+  const total = state.catalog.length || 30;
+  const percent = Math.round((completed / total) * 100);
+  state.participant.completed = completed;
+  $("#progress-value").textContent = completed;
+  $("#progress-ring").style.setProperty("--progress", percent);
+  $("#progress-bar-fill").style.width = `${percent}%`;
+  $("#welcome-name").textContent = `欢迎，${state.participant.username}`;
+  $("#rater-id-label").textContent =
+    `${state.participant.rater_id} · ${state.config.study_mode === "formal" ? "正式评判" : "试点评判"}`;
+  $("#catalog-summary").textContent =
+    `已提交 ${completed} 项，剩余 ${total - completed} 项；服务器自动保存草稿。`;
+  const next = state.catalog.find((item) => item.status !== "submitted");
+  const button = $("#resume-button");
+  if (next) {
+    button.disabled = false;
+    button.innerHTML =
+      `${next.status === "not_started" ? "开始" : "继续"}第 ${next.catalog_number} 项 <span aria-hidden="true">→</span>`;
+    button.onclick = () => openItem(next.item_id);
+    $("#progress-message").textContent =
+      completed === 0
+        ? "建议分多次完成；使用同一化名与 PIN 可随时恢复。"
+        : "进度已保存在服务器，您可以继续下一项或稍后回来。";
+  } else {
+    button.disabled = true;
+    button.textContent = "30 项全部完成";
+    $("#progress-message").textContent =
+      "感谢完成完整目录。您仍可导出自己的匿名备份。";
+  }
+}
+
+async function loadDashboard() {
+  try {
+    const [catalogResult, meResult] = await Promise.all([
+      api("/api/catalog"),
+      api("/api/me"),
+    ]);
+    state.catalog = catalogResult.items;
+    if (meResult.authenticated) {
+      state.participant = meResult.participant;
+    }
+    updateProfile();
+    updateDashboardStats();
+    renderCatalog();
+    showView("dashboard");
+  } catch (error) {
+    if (error.status === 401) {
+      state.participant = null;
+      showView("auth");
+    }
+    toast(error.message, "error");
+  }
+}
+
+function ratingSection(endpoint, index, conditional = false) {
+  const prefix = endpoint;
+  const title = conditional ? "共同完成条件下的路线语义" : "完整指令判断";
+  const description = conditional
+    ? "两条路线都已完成任务。只比较可见的路线行为，哪条更符合地形、掩体、协同与效率要求？"
+    : "综合是否完成任务与路线行为，哪条路线更符合完整自然语言指令？";
+  const questions = [
+    {
+      key: "overall",
+      title: "总体 Overall",
+      description: "请直接回答这一终点；不要机械地把下面四项相加。",
+      choices: ["A", "B", "tie"],
+    },
+    {
+      key: "terrain",
+      title: "地形 Terrain",
+      description: "更少不必要的上升或下降。",
+      choices: ["A", "B", "tie", "unclear"],
+    },
+    {
+      key: "cover",
+      title: "掩体 Cover",
+      description: "更合理地利用隐蔽区域。",
+      choices: ["A", "B", "tie", "unclear"],
+    },
+    {
+      key: "coordination",
+      title: "协同 Coordination",
+      description: "比较同编号时间标记：暴露时分散，隐蔽时聚集。",
+      choices: ["A", "B", "tie", "unclear"],
+    },
+    {
+      key: "efficiency",
+      title: "效率 Efficiency",
+      description: "在满足要求时路径更直接、少绕行。",
+      choices: ["A", "B", "tie", "unclear"],
+    },
+  ];
+  const choiceText = {
+    A: "路线 A",
+    B: "路线 B",
+    tie: "平局",
+    unclear: "不清楚",
+  };
+  return `
+    <section class="rating-section ${conditional ? "conditional-section" : ""}" data-endpoint="${endpoint}">
+      <header class="rating-heading">
+        <span class="endpoint-number">${String(index).padStart(2, "0")}</span>
+        <div>
+          <h2>${title}</h2>
+          <p>${description}</p>
+        </div>
+        <span class="endpoint-tag">${conditional ? "仅共同完成项目" : "所有项目"}</span>
+      </header>
+      <div class="rating-body">
+        ${questions
+          .map(
+            (question) => `
+              <div class="question-row">
+                <div class="question-copy">
+                  <strong>${question.title}</strong>
+                  <span>${question.description}</span>
+                </div>
+                <div class="choice-group ${question.choices.length === 3 ? "three" : ""}">
+                  ${question.choices
+                    .map(
+                      (choice) => `
+                        <label class="choice-pill">
+                          <input
+                            type="radio"
+                            name="${prefix}-${question.key}"
+                            value="${choice}"
+                            data-rating-field
+                          >
+                          <span>${choiceText[choice]}</span>
+                        </label>
+                      `,
+                    )
+                    .join("")}
+                </div>
+              </div>
+            `,
+          )
+          .join("")}
+        <div class="question-row">
+          <div class="question-copy">
+            <strong>置信度 Confidence</strong>
+            <span>1 表示很不确定，5 表示非常确定；不会作为票数权重。</span>
+          </div>
+          <div class="confidence-group">
+            ${[1, 2, 3, 4, 5]
+              .map(
+                (value) => `
+                  <label class="choice-pill">
+                    <input
+                      type="radio"
+                      name="${prefix}-confidence"
+                      value="${value}"
+                      data-rating-field
+                    >
+                    <span>${value}</span>
+                  </label>
+                `,
+              )
+              .join("")}
+          </div>
+        </div>
+        <div class="question-row rationale-row">
+          <div class="question-copy">
+            <strong>简短理由 Rationale</strong>
+            <span>可留空；若填写，请只引用两张匿名路线图中可见的证据。</span>
+          </div>
+          <div class="rationale-box">
+            <textarea
+              maxlength="500"
+              name="${prefix}-rationale"
+              data-rating-field
+              placeholder="例如：路线 A 在暴露区域的同编号时刻更分散，同时没有明显绕行。"
+            ></textarea>
+            <span class="character-count" data-count-for="${prefix}">0 / 500</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function localDraftKey(itemId) {
+  return [
+    "tbam-draft",
+    state.config.storage_namespace_id,
+    state.participant.rater_id,
+    itemId,
+  ].join(":");
+}
+
+function applyDraft(draft) {
+  const payload = draft?.payload || {};
+  state.activeSeconds = Number(draft?.active_seconds || 0);
+  state.draftRevision = Number(draft?.revision || 0);
+  for (const endpoint of ["all_sample", "conditional_semantic"]) {
+    const rating = payload?.endpoints?.[endpoint];
+    state.evidence[endpoint] = Array.isArray(rating?.evidence_time_steps)
+      ? [...rating.evidence_time_steps]
+      : [];
+    if (!rating) continue;
+    for (const key of [
+      "overall",
+      "terrain",
+      "cover",
+      "coordination",
+      "efficiency",
+      "confidence",
+    ]) {
+      const input = $(
+        `input[name="${endpoint}-${key}"][value="${CSS.escape(String(rating[key] ?? ""))}"]`,
+      );
+      if (input) input.checked = true;
+    }
+    const rationale = $(`[name="${endpoint}-rationale"]`);
+    if (rationale) rationale.value = rating.rationale || "";
+  }
+  renderEvidenceTags();
+  updateCharacterCounts();
+}
+
+function renderEvidenceTags() {
+  for (const endpoint of ["all_sample", "conditional_semantic"]) {
+    const container = $(`[data-evidence-tags="${endpoint}"]`);
+    if (!container) continue;
+    container.innerHTML = state.evidence[endpoint]
+      .map(
+        (step) => `
+          <span class="evidence-tag">
+            t=${step}
+            <button type="button" data-remove-evidence="${endpoint}" data-step="${step}" aria-label="删除 t=${step}">×</button>
+          </span>
+        `,
+      )
+      .join("");
+  }
+}
+
+function addEvidence(endpoint, rawValue) {
+  const value = Number(rawValue);
+  const max = Math.min(96, state.activeItem.max_evidence_step ?? 96);
+  if (!Number.isInteger(value) || value < 0 || value > max) {
+    toast(`证据时刻必须是 0–${max} 的整数。`, "error");
+    return;
+  }
+  if (state.evidence[endpoint].includes(value)) return;
+  if (state.evidence[endpoint].length >= 8) {
+    toast("每个终点最多记录 8 个证据时刻。", "error");
+    return;
+  }
+  state.evidence[endpoint].push(value);
+  state.evidence[endpoint].sort((a, b) => a - b);
+  renderEvidenceTags();
+  scheduleDraftSave();
+}
+
+function partialRating(endpoint) {
+  const result = {};
+  for (const key of [
+    "overall",
+    "terrain",
+    "cover",
+    "coordination",
+    "efficiency",
+    "confidence",
+  ]) {
+    const checked = $(`input[name="${endpoint}-${key}"]:checked`);
+    if (checked) {
+      result[key] = key === "confidence" ? Number(checked.value) : checked.value;
+    }
+  }
+  result.evidence_time_steps = [...state.evidence[endpoint]];
+  result.rationale = $(`[name="${endpoint}-rationale"]`)?.value || "";
+  return result;
+}
+
+function draftPayload() {
+  return {
+    endpoints: {
+      all_sample: partialRating("all_sample"),
+      conditional_semantic: state.activeItem?.both_completed
+        ? partialRating("conditional_semantic")
+        : null,
+    },
+  };
+}
+
+function completedRating(endpoint) {
+  const rating = partialRating(endpoint);
+  const missing = [
+    "overall",
+    "terrain",
+    "cover",
+    "coordination",
+    "efficiency",
+    "confidence",
+  ].filter((key) => rating[key] === undefined);
+  if (missing.length) {
+    const section = $(`[data-endpoint="${endpoint}"]`);
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    throw new Error(
+      `${endpoint === "all_sample" ? "完整指令" : "共同完成"}部分还有 ${missing.length} 项必答选择未完成。`,
+    );
+  }
+  return rating;
+}
+
+function finalEndpoints() {
+  return {
+    all_sample: completedRating("all_sample"),
+    conditional_semantic: state.activeItem.both_completed
+      ? completedRating("conditional_semantic")
+      : null,
+  };
+}
+
+function setSaveState(label, saved = false) {
+  const element = $("#save-state");
+  element.classList.toggle("saved", saved);
+  element.innerHTML = `<span class="status-dot"></span>${escapeHtml(label)}`;
+}
+
+function saveLocalDraft() {
+  if (!state.activeItem || !state.participant) return;
+  try {
+    localStorage.setItem(
+      localDraftKey(state.activeItem.item_id),
+      JSON.stringify({
+        payload: draftPayload(),
+        active_seconds: state.activeSeconds,
+        saved_utc: new Date().toISOString(),
+      }),
+    );
+  } catch {
+    // Server persistence remains authoritative.
+  }
+}
+
+function scheduleDraftSave() {
+  if (!state.activeItem) return;
+  saveLocalDraft();
+  setSaveState("有尚未同步的修改", false);
+  window.clearTimeout(state.saveTimer);
+  state.saveTimer = window.setTimeout(() => saveDraft(false), 900);
+}
+
+async function saveDraft(showConfirmation = false) {
+  if (!state.activeItem) return;
+  if (state.saving) {
+    state.saveQueued = true;
+    return;
+  }
+  state.saving = true;
+  setSaveState("正在同步草稿…", false);
+  try {
+    const result = await api(`/api/item/${state.activeItem.item_id}/draft`, {
+      method: "PUT",
+      body: JSON.stringify({
+        payload: draftPayload(),
+        active_seconds: state.activeSeconds,
+        expected_revision: state.draftRevision,
+      }),
+    });
+    state.draftRevision = result.revision;
+    setSaveState(`草稿已同步 · v${result.revision}`, true);
+    if (showConfirmation) toast("草稿已保存到服务器。");
+  } catch (error) {
+    if (error.status === 409 && error.payload?.detail) {
+      applyDraft(error.payload.detail);
+      setSaveState("已读取另一标签页的版本", true);
+      toast("检测到另一标签页的更新，已读取服务器最新草稿。", "error");
+    } else {
+      setSaveState("服务器同步失败，本地草稿已保留", false);
+      if (showConfirmation) toast(error.message, "error");
+    }
+  } finally {
+    state.saving = false;
+    if (state.saveQueued) {
+      state.saveQueued = false;
+      window.setTimeout(() => saveDraft(false), 0);
+    }
+  }
+}
+
+function updateCharacterCounts() {
+  for (const endpoint of ["all_sample", "conditional_semantic"]) {
+    const textarea = $(`[name="${endpoint}-rationale"]`);
+    const count = $(`[data-count-for="${endpoint}"]`);
+    if (textarea && count) count.textContent = `${textarea.value.length} / 500`;
+  }
+}
+
+function bindRatingEvents() {
+  const form = $("#rating-form");
+  form.oninput = (event) => {
+    if (event.target.matches("[data-rating-field]")) {
+      updateCharacterCounts();
+      scheduleDraftSave();
+    }
+  };
+  form.onclick = (event) => {
+    const removeButton = event.target.closest("[data-remove-evidence]");
+    if (removeButton) {
+      const endpoint = removeButton.dataset.removeEvidence;
+      const step = Number(removeButton.dataset.step);
+      state.evidence[endpoint] = state.evidence[endpoint].filter(
+        (value) => value !== step,
+      );
+      renderEvidenceTags();
+      scheduleDraftSave();
+    }
+  };
+  form.onkeydown = (event) => {
+    const input = event.target.closest("[data-evidence-input]");
+    if (input && event.key === "Enter") {
+      event.preventDefault();
+      addEvidence(input.dataset.evidenceInput, input.value);
+      input.value = "";
+    }
+  };
+  form.onchange = (event) => {
+    const input = event.target.closest("[data-evidence-input]");
+    if (input && input.value !== "") {
+      addEvidence(input.dataset.evidenceInput, input.value);
+      input.value = "";
+    }
+  };
+}
+
+function startActiveTimer() {
+  stopActiveTimer();
+  state.activeTimer = window.setInterval(() => {
+    if (
+      state.activeItem &&
+      $("#judge-view").classList.contains("active") &&
+      !document.hidden
+    ) {
+      state.activeSeconds += 1;
+      saveLocalDraft();
+    }
+  }, 1000);
+}
+
+function stopActiveTimer() {
+  if (state.activeTimer) window.clearInterval(state.activeTimer);
+  state.activeTimer = null;
+}
+
+function interpolateColor(palette, value) {
+  const bounded = Math.max(0, Math.min(1, Number(value)));
+  const scaled = bounded * (palette.length - 1);
+  const lower = Math.min(palette.length - 2, Math.floor(scaled));
+  const fraction = scaled - lower;
+  const rgb = palette[lower].map((channel, index) =>
+    Math.round(channel * (1 - fraction) + palette[lower + 1][index] * fraction),
+  );
+  return `rgb(${rgb.join(",")})`;
+}
+
+function cellCenter(gridX, position) {
+  return [
+    gridX + (Number(position[1]) + 0.5) * ROUTE_CANVAS.cellPixels,
+    ROUTE_CANVAS.gridY + (Number(position[0]) + 0.5) * ROUTE_CANVAS.cellPixels,
+  ];
+}
+
+function drawStar(context, centerX, centerY, outerRadius = 14, innerRadius = 6) {
+  context.beginPath();
+  for (let index = 0; index < 10; index += 1) {
+    const angle = -Math.PI / 2 + index * Math.PI / 5;
+    const radius = index % 2 === 0 ? outerRadius : innerRadius;
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
+    if (index === 0) context.moveTo(x, y);
+    else context.lineTo(x, y);
+  }
+  context.closePath();
+  context.fillStyle = "#ffcd00";
+  context.fill();
+  context.strokeStyle = "#101010";
+  context.lineWidth = 2;
+  context.stroke();
+}
+
+function drawMapPanel(context, values, gridX, title, kind) {
+  const palettes = {
+    height: [[43, 73, 121], [72, 132, 86], [188, 173, 118], [245, 245, 238]],
+    cover: [[255, 251, 230], [183, 220, 187], [67, 141, 111], [16, 71, 52]],
+  };
+  const palette = palettes[kind];
+  context.fillStyle = "#141414";
+  context.font = "700 24px system-ui, sans-serif";
+  context.fillText(title, gridX, ROUTE_CANVAS.gridY - 22);
+  for (let row = 0; row < 16; row += 1) {
+    for (let column = 0; column < 16; column += 1) {
+      const normalized =
+        kind === "height" ? Number(values[row][column]) / 5 : Number(values[row][column]);
+      context.fillStyle = interpolateColor(palette, normalized);
+      context.fillRect(
+        gridX + column * ROUTE_CANVAS.cellPixels,
+        ROUTE_CANVAS.gridY + row * ROUTE_CANVAS.cellPixels,
+        ROUTE_CANVAS.cellPixels,
+        ROUTE_CANVAS.cellPixels,
+      );
+    }
+  }
+  context.strokeStyle = "rgba(35, 35, 35, 0.62)";
+  context.lineWidth = 1;
+  for (let offset = 0; offset <= 16; offset += 1) {
+    const x = gridX + offset * ROUTE_CANVAS.cellPixels;
+    const y = ROUTE_CANVAS.gridY + offset * ROUTE_CANVAS.cellPixels;
+    context.beginPath();
+    context.moveTo(gridX, y);
+    context.lineTo(gridX + ROUTE_CANVAS.gridPixels, y);
+    context.stroke();
+    context.beginPath();
+    context.moveTo(x, ROUTE_CANVAS.gridY);
+    context.lineTo(x, ROUTE_CANVAS.gridY + ROUTE_CANVAS.gridPixels);
+    context.stroke();
+  }
+  context.strokeStyle = "#080808";
+  context.lineWidth = 2;
+  context.strokeRect(
+    gridX,
+    ROUTE_CANVAS.gridY,
+    ROUTE_CANVAS.gridPixels,
+    ROUTE_CANVAS.gridPixels,
+  );
+
+  const barY = ROUTE_CANVAS.gridY + ROUTE_CANVAS.gridPixels + 15;
+  for (let pixel = 0; pixel < ROUTE_CANVAS.gridPixels; pixel += 1) {
+    context.fillStyle = interpolateColor(palette, pixel / (ROUTE_CANVAS.gridPixels - 1));
+    context.fillRect(gridX + pixel, barY, 1, 14);
+  }
+  context.strokeStyle = "#282828";
+  context.lineWidth = 1;
+  context.strokeRect(gridX, barY, ROUTE_CANVAS.gridPixels, 14);
+  context.fillStyle = "#202020";
+  context.font = "16px system-ui, sans-serif";
+  context.fillText(kind === "height" ? "0 low" : "0 exposed", gridX, barY + 34);
+  const highLabel = kind === "height" ? "5 high" : "1 concealed";
+  context.textAlign = "right";
+  context.fillText(highLabel, gridX + ROUTE_CANVAS.gridPixels, barY + 34);
+  context.textAlign = "left";
+}
+
+function markerCenters(gridX, positions) {
+  const groups = new Map();
+  positions.forEach((position, agent) => {
+    const key = `${position[0]},${position[1]}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(agent);
+  });
+  const centers = Array(positions.length);
+  for (const agents of groups.values()) {
+    const base = cellCenter(gridX, positions[agents[0]]);
+    agents.forEach((agent, index) => {
+      if (agents.length === 1) {
+        centers[agent] = base;
+      } else {
+        const angle = -Math.PI / 2 + 2 * Math.PI * index / agents.length;
+        centers[agent] = [
+          base[0] + 8 * Math.cos(angle),
+          base[1] + 8 * Math.sin(angle),
+        ];
+      }
+    });
+  }
+  return centers;
+}
+
+function drawRouteTrace(context, gridX, trajectory) {
+  const agentCount = trajectory[0].positions.length;
+  for (let agent = 0; agent < agentCount; agent += 1) {
+    const points = trajectory.map((stateFrame) =>
+      cellCenter(gridX, stateFrame.positions[agent]),
+    );
+    for (const [strokeStyle, lineWidth] of [["rgba(255,255,255,0.9)", 8], [
+      ROUTE_CANVAS.agentColors[agent % ROUTE_CANVAS.agentColors.length],
+      5,
+    ]]) {
+      context.beginPath();
+      points.forEach(([x, y], index) => {
+        if (index === 0) context.moveTo(x, y);
+        else context.lineTo(x, y);
+      });
+      context.strokeStyle = strokeStyle;
+      context.lineWidth = lineWidth;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.stroke();
+    }
+  }
+}
+
+function drawCheckpointMarkers(context, gridX, trajectory) {
+  ROUTE_CANVAS.checkpointTimes.forEach((time, checkpointIndex) => {
+    const frame = trajectory[Math.min(time, trajectory.length - 1)];
+    const centers = markerCenters(gridX, frame.positions);
+    centers.forEach(([x, y], agent) => {
+      context.beginPath();
+      context.arc(x, y, 8, 0, Math.PI * 2);
+      context.fillStyle =
+        ROUTE_CANVAS.agentColors[agent % ROUTE_CANVAS.agentColors.length];
+      context.fill();
+      context.strokeStyle = "#ffffff";
+      context.lineWidth = 2;
+      context.stroke();
+      context.fillStyle = "#ffffff";
+      context.font = "700 9px system-ui, sans-serif";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.fillText(String(checkpointIndex), x, y + 0.5);
+    });
+  });
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+}
+
+function drawEndpoints(context, gridX, map, trajectory) {
+  const [startX, startY] = cellCenter(gridX, map.start);
+  const [goalX, goalY] = cellCenter(gridX, map.goal);
+  context.fillStyle = "#ffffff";
+  context.strokeStyle = "#000000";
+  context.lineWidth = 2;
+  context.fillRect(startX - 10, startY - 10, 20, 20);
+  context.strokeRect(startX - 10, startY - 10, 20, 20);
+  drawStar(context, goalX, goalY);
+
+  const finalFrame = trajectory[trajectory.length - 1];
+  const centers = markerCenters(gridX, finalFrame.positions);
+  centers.forEach(([x, y], agent) => {
+    context.beginPath();
+    context.arc(x, y, 12, 0, Math.PI * 2);
+    context.fillStyle =
+      ROUTE_CANVAS.agentColors[agent % ROUTE_CANVAS.agentColors.length];
+    context.fill();
+    context.strokeStyle = "#ffffff";
+    context.lineWidth = 3;
+    context.stroke();
+    context.fillStyle = "#ffffff";
+    context.font = "700 15px system-ui, sans-serif";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(String(agent + 1), x, y);
+  });
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+}
+
+function drawRouteLegend(context) {
+  context.fillStyle = "rgba(255,255,255,0.96)";
+  context.strokeStyle = "#aaaaaa";
+  context.lineWidth = 1;
+  context.fillRect(568, 126, 118, 224);
+  context.strokeRect(568, 126, 118, 224);
+  context.fillStyle = "#141414";
+  context.font = "700 18px system-ui, sans-serif";
+  context.fillText("Legend", 580, 151);
+  ROUTE_CANVAS.agentColors.slice(0, 3).forEach((color, index) => {
+    context.beginPath();
+    context.arc(587, 180 + index * 31, 9, 0, Math.PI * 2);
+    context.fillStyle = color;
+    context.fill();
+    context.fillStyle = "#202020";
+    context.font = "15px system-ui, sans-serif";
+    context.fillText(`agent ${index + 1}`, 605, 185 + index * 31);
+  });
+  context.fillStyle = "#ffffff";
+  context.strokeStyle = "#000000";
+  context.lineWidth = 2;
+  context.fillRect(579, 273, 16, 16);
+  context.strokeRect(579, 273, 16, 16);
+  context.fillStyle = "#202020";
+  context.font = "15px system-ui, sans-serif";
+  context.fillText("start", 605, 287);
+  drawStar(context, 587, 320, 10, 4);
+  context.fillStyle = "#202020";
+  context.fillText("goal", 605, 325);
+}
+
+function validateRouteInput(payload) {
+  if (
+    payload?.schema_version !== "tbam.blind_judge_input.v1" ||
+    !Array.isArray(payload?.map?.height) ||
+    !Array.isArray(payload?.map?.cover)
+  ) {
+    throw new Error("匿名路线数据格式无效。");
+  }
+  for (const arm of ["A", "B"]) {
+    const trajectory = payload?.routes?.[arm]?.trajectory;
+    if (
+      !Array.isArray(trajectory) ||
+      trajectory.length === 0 ||
+      !Array.isArray(trajectory[0]?.positions)
+    ) {
+      throw new Error(`路线 ${arm} 的轨迹数据不完整。`);
+    }
+  }
+}
+
+function renderRouteCanvas(canvas, routeInput, arm) {
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("浏览器不支持路线图画布。");
+  const trajectory = routeInput.routes[arm].trajectory;
+  canvas.width = ROUTE_CANVAS.width;
+  canvas.height = ROUTE_CANVAS.height;
+  context.fillStyle = "#f8f8f6";
+  context.fillRect(0, 0, ROUTE_CANVAS.width, ROUTE_CANVAS.height);
+  context.fillStyle = "#1e2b3b";
+  context.fillRect(0, 0, ROUTE_CANVAS.width, 72);
+  context.fillStyle = "#ffffff";
+  context.font = "700 30px system-ui, sans-serif";
+  context.fillText(`Route ${arm} · full trace`, 32, 46);
+  context.textAlign = "right";
+  context.font = "22px system-ui, sans-serif";
+  context.fillText("time marks 0–5 = t 0, 19, 38, 58, 77, 96", 1248, 45);
+  context.textAlign = "left";
+
+  drawMapPanel(context, routeInput.map.height, ROUTE_CANVAS.gridXs[0], "Elevation", "height");
+  drawMapPanel(context, routeInput.map.cover, ROUTE_CANVAS.gridXs[1], "Cover", "cover");
+  for (const gridX of ROUTE_CANVAS.gridXs) {
+    drawRouteTrace(context, gridX, trajectory);
+    drawEndpoints(context, gridX, routeInput.map, trajectory);
+  }
+  drawCheckpointMarkers(context, ROUTE_CANVAS.gridXs[1], trajectory);
+  drawRouteLegend(context);
+}
+
+async function configureRouteMaps() {
+  $$(".route-map-loading").forEach((element) => element.classList.remove("hidden"));
+  for (const canvas of [$("#route-map-a"), $("#route-map-b")]) {
+    const context = canvas.getContext("2d");
+    context?.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  const routeInput = await api(state.activeItem.media.judge_input);
+  validateRouteInput(routeInput);
+  if (routeInput.item_id !== state.activeItem.item_id) {
+    throw new Error("匿名路线数据与当前项目不一致。");
+  }
+  renderRouteCanvas($("#route-map-a"), routeInput, "A");
+  renderRouteCanvas($("#route-map-b"), routeInput, "B");
+  $$(".route-map-loading").forEach((element) => element.classList.add("hidden"));
+}
+
+async function openItem(itemId) {
+  const catalogItem = state.catalog.find((item) => item.item_id === itemId);
+  if (!catalogItem || catalogItem.status === "submitted") return;
+  setSaveState("正在读取服务器草稿…", false);
+  showView("judge");
+  $("#endpoint-forms").innerHTML =
+    '<div class="loading-inline">正在载入匿名路线制品…</div>';
+  try {
+    const [item] = await Promise.all([
+      api(`/api/item/${itemId}`),
+      api(`/api/item/${itemId}/start`, {
+        method: "POST",
+        body: JSON.stringify({ open: true }),
+      }),
+    ]);
+    state.activeItem = { ...item, catalog_number: catalogItem.catalog_number };
+    state.draftRevision = 0;
+    state.activeSeconds = 0;
+    state.evidence = { all_sample: [], conditional_semantic: [] };
+    $("#judge-map-label").textContent = item.blind_map_id.replace("_", " ");
+    $("#judge-count-label").textContent =
+      `项目 ${catalogItem.catalog_number} / ${state.catalog.length}`;
+    $("#judge-directive").textContent = item.directive;
+    $("#endpoint-forms").innerHTML =
+      ratingSection("all_sample", 1, false) +
+      (item.both_completed
+        ? ratingSection("conditional_semantic", 2, true)
+        : "");
+    bindRatingEvents();
+    await configureRouteMaps();
+
+    let draft = item.draft;
+    let recoveredLocalDraft = false;
+    try {
+      const local = JSON.parse(localStorage.getItem(localDraftKey(itemId)));
+      const localTime = Date.parse(local?.saved_utc || "") || 0;
+      const storedTime = Date.parse(draft?.updated_utc || "") || 0;
+      if (local?.payload && (!draft || localTime > storedTime)) {
+        draft = {
+          ...local,
+          revision: Number(draft?.revision || 0),
+        };
+        recoveredLocalDraft = true;
+        toast("已恢复此浏览器中更新的未同步草稿。");
+      }
+    } catch {
+      // Ignore malformed recovery data.
+    }
+    applyDraft(draft);
+    if (recoveredLocalDraft) {
+      setSaveState("正在保存恢复的浏览器草稿…", false);
+      window.setTimeout(() => saveDraft(false), 0);
+    } else {
+      setSaveState(
+        draft?.revision ? `草稿已同步 · v${draft.revision}` : "尚无浏览器草稿",
+        Boolean(draft?.revision),
+      );
+    }
+    startActiveTimer();
+  } catch (error) {
+    toast(error.message, "error");
+    await loadDashboard();
+  }
+}
+
+function confirmFinalSubmission() {
+  const dialog = $("#confirm-dialog");
+  if (!dialog.showModal) return Promise.resolve(window.confirm("确认最终提交？"));
+  return new Promise((resolve) => {
+    const onClose = () => {
+      dialog.removeEventListener("close", onClose);
+      resolve(dialog.returnValue === "confirm");
+    };
+    dialog.addEventListener("close", onClose);
+    dialog.showModal();
+  });
+}
+
+async function submitRating(event) {
+  event.preventDefault();
+  let endpoints;
+  try {
+    endpoints = finalEndpoints();
+  } catch (error) {
+    toast(error.message, "error");
+    return;
+  }
+  if (!(await confirmFinalSubmission())) return;
+  const button = $("#submit-rating");
+  button.disabled = true;
+  try {
+    const result = await api(`/api/item/${state.activeItem.item_id}/submit`, {
+      method: "POST",
+      body: JSON.stringify({
+        endpoints,
+        active_seconds: Math.max(0.001, state.activeSeconds),
+      }),
+    });
+    localStorage.removeItem(localDraftKey(state.activeItem.item_id));
+    toast(`项目 ${state.activeItem.catalog_number} 已最终提交并锁定。`);
+    const currentId = state.activeItem.item_id;
+    state.activeItem = null;
+    const item = state.catalog.find((row) => row.item_id === currentId);
+    if (item) {
+      item.status = "submitted";
+      item.submitted_utc = result.record.completed_utc;
+    }
+    await loadDashboard();
+  } catch (error) {
+    toast(error.message, "error");
+    button.disabled = false;
+  }
+}
+
+function openAdmin() {
+  showView("admin");
+  if (state.adminToken) {
+    loadAdminSummary();
+  } else {
+    $("#admin-login-card").classList.remove("hidden");
+    $("#admin-dashboard").classList.add("hidden");
+  }
+}
+
+async function loadAdminSummary() {
+  const error = $("#admin-error");
+  error.classList.add("hidden");
+  try {
+    const summary = await api("/api/admin/summary", {
+      headers: { "X-Admin-Token": state.adminToken },
+    });
+    state.adminSummary = summary;
+    sessionStorage.setItem("tbam-admin-token", state.adminToken);
+    $("#admin-login-card").classList.add("hidden");
+    $("#admin-dashboard").classList.remove("hidden");
+    renderAdminSummary();
+  } catch (requestError) {
+    state.adminToken = "";
+    sessionStorage.removeItem("tbam-admin-token");
+    $("#admin-login-card").classList.remove("hidden");
+    $("#admin-dashboard").classList.add("hidden");
+    error.textContent = requestError.message;
+    error.classList.remove("hidden");
+  }
+}
+
+function renderAdminSummary() {
+  const summary = state.adminSummary;
+  $("#admin-judgments").textContent = summary.judgment_count.toLocaleString();
+  $("#admin-judgments-target").textContent =
+    `/ ${summary.target_judgment_count.toLocaleString()}`;
+  $("#admin-raters").textContent = summary.participant_count;
+  $("#admin-raters-target").textContent = `/ ${summary.max_raters}`;
+  $("#admin-complete").textContent = summary.completed_participant_count;
+  $("#admin-covered").textContent = summary.items.filter(
+    (item) => item.target > 0 && item.submitted === item.target,
+  ).length;
+  $("#admin-covered-target").textContent = `/ ${summary.target_item_count}`;
+  $("#admin-generated").textContent =
+    `服务器汇总于 ${formatDate(summary.generated_utc)} · ${summary.study_id}`;
+  renderAdminTable();
+}
+
+function renderAdminTable() {
+  const query = $("#admin-search").value.trim().toLowerCase();
+  const isItems = state.adminTab === "items";
+  const rows = isItems
+    ? state.adminSummary.items
+    : state.adminSummary.participants;
+  const filtered = rows.filter((row) =>
+    Object.values(row).some((value) =>
+      String(value ?? "").toLowerCase().includes(query),
+    ),
+  );
+  $("#admin-table-count").textContent = `${filtered.length} 行`;
+  if (isItems) {
+    $("#admin-table-head").innerHTML = `
+      <tr>
+        <th>地图</th><th>匿名项目</th><th>覆盖</th><th>已分配</th>
+        <th>Overall A</th><th>Overall B</th><th>平局</th>
+        <th>条件 A</th><th>条件 B</th><th>条件平局</th>
+      </tr>`;
+    $("#admin-table-body").innerHTML = filtered
+      .map(
+        (row) => `
+          <tr>
+            <td>${escapeHtml(row.blind_map_id)}</td>
+            <td><code>${escapeHtml(row.item_id)}</code></td>
+            <td class="coverage-cell">
+              <span class="coverage-track"><span style="width:${row.target ? Math.min(100, (row.submitted / row.target) * 100) : 0}%"></span></span>
+              ${row.submitted}/${row.target}
+            </td>
+            <td>${row.assigned}/${row.target}</td>
+            <td>${row.all_A ?? "封存"}</td><td>${row.all_B ?? "封存"}</td><td>${row.all_tie ?? "封存"}</td>
+            <td>${row.conditional_A ?? "封存"}</td><td>${row.conditional_B ?? "封存"}</td><td>${row.conditional_tie ?? "封存"}</td>
+          </tr>`,
+      )
+      .join("");
+  } else {
+    $("#admin-table-head").innerHTML = `
+      <tr>
+        <th>匿名编号</th><th>运营化名</th><th>进度</th><th>教程</th>
+        <th>注册时间</th><th>最近登录</th>
+      </tr>`;
+    $("#admin-table-body").innerHTML = filtered
+      .map(
+        (row) => `
+          <tr>
+            <td><code>${escapeHtml(row.rater_id)}</code></td>
+            <td>${escapeHtml(row.username)}</td>
+            <td class="coverage-cell">
+              <span class="coverage-track"><span style="width:${Math.min(100, (row.completed / row.total) * 100)}%"></span></span>
+              ${row.completed}/${row.total}
+            </td>
+            <td>${row.tutorial_completed ? "已完成" : "未完成"}</td>
+            <td>${formatDate(row.created_utc)}</td>
+            <td>${formatDate(row.last_login_utc)}</td>
+          </tr>`,
+      )
+      .join("");
+  }
+}
+
+async function downloadAdminExport(name) {
+  try {
+    const response = await fetch(`/api/admin/export/${name}`, {
+      headers: { "X-Admin-Token": state.adminToken },
+      credentials: "same-origin",
+    });
+    if (!response.ok) {
+      const payload = await response.json();
+      throw new Error(payload.message || "导出失败");
+    }
+    const blob = await response.blob();
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = name;
+    link.click();
+    window.setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  } catch (error) {
+    toast(error.message, "error");
+  }
+}
+
+async function logout() {
+  try {
+    await api("/api/auth/logout", {
+      method: "POST",
+      body: JSON.stringify({ logout: true }),
+    });
+  } catch {
+    // Clear local state even if the server is temporarily unreachable.
+  }
+  state.participant = null;
+  state.catalog = [];
+  state.activeItem = null;
+  $("#profile-popover").classList.add("hidden");
+  showView("auth");
+  toast("已退出当前用户。");
+}
+
+function bindGlobalEvents() {
+  $("#login-tab").addEventListener("click", () => setAuthMode("login"));
+  $("#register-tab").addEventListener("click", () => setAuthMode("register"));
+  $("#auth-form").addEventListener("submit", submitAuth);
+  $$(".tutorial-check").forEach((checkbox) => {
+    checkbox.addEventListener("change", () => {
+      $("#finish-tutorial").disabled = !$$(".tutorial-check").every(
+        (item) => item.checked,
+      );
+    });
+  });
+  $("#finish-tutorial").addEventListener("click", finishTutorial);
+  $(".filter-pills").addEventListener("click", (event) => {
+    const button = event.target.closest("[data-filter]");
+    if (!button) return;
+    state.catalogFilter = button.dataset.filter;
+    $$(".filter-pill").forEach((pill) =>
+      pill.classList.toggle("active", pill === button),
+    );
+    renderCatalog();
+  });
+  $("#back-to-directory").addEventListener("click", async () => {
+    await saveDraft(false);
+    await loadDashboard();
+  });
+  $("#directory-button").addEventListener("click", loadDashboard);
+  $("#brand-button").addEventListener("click", () => {
+    if (state.participant?.tutorial_completed) loadDashboard();
+    else if (state.participant) showView("tutorial");
+    else showView("auth");
+  });
+  $("#profile-button").addEventListener("click", () => {
+    $("#profile-popover").classList.toggle("hidden");
+  });
+  $("#logout-button").addEventListener("click", logout);
+  $("#save-draft-button").addEventListener("click", () => saveDraft(true));
+  $("#rating-form").addEventListener("submit", submitRating);
+  $("#export-mine").addEventListener("click", () => {
+    window.location.href = "/api/export/mine.json";
+  });
+  $("#open-admin-login").addEventListener("click", openAdmin);
+  $("#leave-admin").addEventListener("click", () => {
+    if (state.participant?.tutorial_completed) loadDashboard();
+    else if (state.participant) showView("tutorial");
+    else showView("auth");
+  });
+  $("#admin-token-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    state.adminToken = $("#admin-token-input").value;
+    loadAdminSummary();
+  });
+  $$(".admin-download").forEach((button) => {
+    button.addEventListener("click", () =>
+      downloadAdminExport(button.dataset.export),
+    );
+  });
+  $$(".admin-tabs button").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.adminTab = button.dataset.adminTab;
+      $$(".admin-tabs button").forEach((tab) =>
+        tab.classList.toggle("active", tab === button),
+      );
+      renderAdminTable();
+    });
+  });
+  $("#admin-search").addEventListener("input", renderAdminTable);
+  window.addEventListener("beforeunload", saveLocalDraft);
+  document.addEventListener("click", (event) => {
+    if (
+      !event.target.closest("#profile-popover") &&
+      !event.target.closest("#profile-button")
+    ) {
+      $("#profile-popover").classList.add("hidden");
+    }
+  });
+}
+
+async function boot() {
+  bindGlobalEvents();
+  state.adminToken = sessionStorage.getItem("tbam-admin-token") || "";
+  try {
+    const [config, me] = await Promise.all([
+      api("/api/config"),
+      api("/api/me"),
+    ]);
+    state.config = config;
+    renderConfig();
+    if (me.authenticated) {
+      state.participant = me.participant;
+      updateProfile();
+    }
+    if (window.location.pathname === "/admin") {
+      openAdmin();
+    } else if (!state.participant) {
+      showView("auth");
+    } else if (!state.participant.tutorial_completed) {
+      showView("tutorial");
+    } else {
+      await loadDashboard();
+    }
+  } catch (error) {
+    $("#loading-view p").textContent =
+      `页面无法连接评判服务：${error.message}`;
+    toast(error.message, "error");
+  }
+}
+
+boot();

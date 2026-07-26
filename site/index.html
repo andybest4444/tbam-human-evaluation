@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMxZTJiM2IiLz48cGF0aCBkPSJNMTMgNDQgMjggMTdsOSAxNyA3LTEwIDggMjBaIiBmaWxsPSIjZmZmIi8+PC9zdmc+">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'self'">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#123c3b">
+    <title>TBAM 匿名路线人工评判 · Pages Pilot</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="static_api.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <div class="shell">
+      <header class="topbar">
+        <button class="brand" id="brand-button" type="button" aria-label="返回任务目录">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </span>
+          <span>
+            <strong>TBAM</strong>
+            <small>Blind Route Study</small>
+          </span>
+        </button>
+
+        <div class="topbar-actions">
+          <span class="integrity-chip" id="integrity-chip">
+            <span class="status-dot"></span>
+            正在核对制品
+          </span>
+          <button class="text-button hidden" id="directory-button" type="button">
+            我的目录
+          </button>
+          <button class="avatar-button hidden" id="profile-button" type="button" aria-label="账户菜单">
+            <span id="avatar-initial">R</span>
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section class="view loading-view active" id="loading-view" aria-live="polite">
+          <div class="loader-mark"><span></span><span></span><span></span></div>
+          <p>正在验证冻结目录与评判协议…</p>
+        </section>
+
+        <section class="view auth-view" id="auth-view">
+          <div class="auth-hero">
+            <div class="eyebrow">匿名 · 均衡 · 可恢复</div>
+            <h1>判断路线，不判断方法。</h1>
+            <p class="hero-copy">
+              您将比较成对的匿名团队路线。页面不会展示算法名称、奖励、回报、
+              训练规模或计算时间，只关注路线是否遵循同一条自然语言指令。
+            </p>
+
+            <div class="study-numbers" aria-label="研究规模">
+              <div>
+                <strong id="metric-maps">30</strong>
+                <span>张冻结地图</span>
+              </div>
+              <div>
+                <strong id="metric-personal">30</strong>
+                <span>项个人目录</span>
+              </div>
+              <div>
+                <strong id="metric-votes">5</strong>
+                <span>次独立判断 / 项</span>
+              </div>
+            </div>
+
+            <div class="directive-card">
+              <span class="quote-mark">“</span>
+              <p>
+                高效到达目标，避免不必要的升降，优先利用掩体；在暴露区域保持分散，
+                在隐蔽区域聚集。
+              </p>
+            </div>
+          </div>
+
+          <div class="auth-panel">
+            <div class="auth-panel-heading">
+              <p class="kicker" id="study-mode-label">PILOT STUDY</p>
+              <h2>继续您的评判</h2>
+              <p>使用同一化名与 PIN，可在任意浏览器恢复服务器中的进度。</p>
+            </div>
+
+            <div class="tab-list" role="tablist" aria-label="登录方式">
+              <button class="tab active" id="login-tab" role="tab" type="button" aria-selected="true">
+                读取进度
+              </button>
+              <button class="tab" id="register-tab" role="tab" type="button" aria-selected="false">
+                首次参加
+              </button>
+            </div>
+
+            <form id="auth-form" novalidate>
+              <label class="field">
+                <span>化名</span>
+                <input id="username-input" name="username" autocomplete="username" minlength="3" maxlength="32" required placeholder="例如 route_owl">
+                <small>请勿使用真实姓名、邮箱、学号或工号。</small>
+              </label>
+              <label class="field">
+                <span>恢复 PIN</span>
+                <input id="pin-input" name="pin" type="password" autocomplete="current-password" minlength="6" maxlength="64" required placeholder="至少 6 位">
+              </label>
+
+              <div class="consent-box hidden" id="consent-box">
+                <div class="consent-copy" id="consent-copy"></div>
+                <label class="check-row">
+                  <input id="consent-checkbox" type="checkbox">
+                  <span>我已阅读上述说明，自愿参加，并确认使用的是不含身份信息的化名。</span>
+                </label>
+              </div>
+
+              <p class="form-error hidden" id="auth-error" role="alert"></p>
+              <button class="primary-button wide" id="auth-submit" type="submit">
+                读取已有进度
+                <span aria-hidden="true">→</span>
+              </button>
+            </form>
+
+            <p class="registration-note hidden" id="registration-note">
+              当前尚未开放新用户注册；已有用户仍可读取进度。
+            </p>
+            <button class="admin-link" id="open-admin-login" type="button">
+              研究管理员入口
+            </button>
+          </div>
+        </section>
+
+        <section class="view tutorial-view" id="tutorial-view">
+          <div class="page-heading">
+            <div>
+              <p class="kicker">开始前 · 约 3 分钟</p>
+              <h1>先统一评判尺度</h1>
+              <p>下面四个维度各自独立；它们不会被事后加权成新的总分。</p>
+            </div>
+            <span class="step-chip">教程 1 / 1</span>
+          </div>
+
+          <div class="tutorial-layout">
+            <div class="tutorial-main">
+              <article class="instruction-card">
+                <div class="mini-map" aria-label="路线图例示意">
+                  <div class="terrain-grid" aria-hidden="true"></div>
+                  <span class="mini-start">S</span>
+                  <span class="mini-goal">G</span>
+                  <span class="mini-agent agent-one"></span>
+                  <span class="mini-agent agent-two"></span>
+                  <span class="mini-agent agent-three"></span>
+                  <span class="mini-path path-one"></span>
+                  <span class="mini-path path-two"></span>
+                </div>
+                <div>
+                  <p class="kicker">如何观看</p>
+                  <h2>并排比较两张完整路线图</h2>
+                  <p>
+                    A 与 B 使用相同地图、图例和渲染规则。左侧为高程，右侧为掩体；
+                    彩色线表示完整路径，掩体图上的 0–5 标记对应相同的六个仿真时刻，
+                    可用于检查队形变化与停留。A/B 只是匿名位置，不代表优劣。
+                  </p>
+                </div>
+              </article>
+
+              <div class="rubric-grid">
+                <article class="rubric-card">
+                  <span class="rubric-number">01</span>
+                  <h3>地形 Terrain</h3>
+                  <p>哪条路线更少出现与到达目标无关的不必要升降？</p>
+                </article>
+                <article class="rubric-card">
+                  <span class="rubric-number">02</span>
+                  <h3>掩体 Cover</h3>
+                  <p>哪条路线更合理地利用隐蔽区域，而非无理由暴露？</p>
+                </article>
+                <article class="rubric-card">
+                  <span class="rubric-number">03</span>
+                  <h3>协同 Coordination</h3>
+                  <p>比较同编号时间标记：暴露时是否分散、隐蔽时是否聚集？</p>
+                </article>
+                <article class="rubric-card">
+                  <span class="rubric-number">04</span>
+                  <h3>效率 Efficiency</h3>
+                  <p>在不牺牲上述要求时，哪条路线更直接、少停留或绕行？</p>
+                </article>
+              </div>
+            </div>
+
+            <aside class="tutorial-checklist">
+              <p class="kicker">确认理解</p>
+              <h2>评判目录解锁前</h2>
+              <label class="check-card">
+                <input type="checkbox" class="tutorial-check">
+                <span>
+                  <strong>允许平局与不清楚</strong>
+                  两条路线相当时选择平局；证据不足的单项维度可选“不清楚”。
+                </span>
+              </label>
+              <label class="check-card">
+                <input type="checkbox" class="tutorial-check">
+                <span>
+                  <strong>不猜测生成方法</strong>
+                  只依据可见路线，不依据画风、运行速度或可能的算法身份。
+                </span>
+              </label>
+              <label class="check-card">
+                <input type="checkbox" class="tutorial-check">
+                <span>
+                  <strong>总判断独立作答</strong>
+                  四个解释维度不会自动决定 Overall；请直接回答完整指令。
+                </span>
+              </label>
+              <button class="primary-button wide" id="finish-tutorial" type="button" disabled>
+                解锁我的 30 项目录
+                <span aria-hidden="true">→</span>
+              </button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="view dashboard-view" id="dashboard-view">
+          <div class="page-heading dashboard-heading">
+            <div>
+              <p class="kicker">PERSONAL BLIND CATALOG</p>
+              <h1>您的完整评判目录</h1>
+              <p>每张地图恰好一项。目录与顺序已冻结，提交后该项不可修改。</p>
+            </div>
+            <button class="secondary-button" id="export-mine" type="button">
+              导出个人备份
+            </button>
+          </div>
+
+          <div class="dashboard-grid">
+            <aside class="progress-panel">
+              <div class="progress-ring" id="progress-ring" style="--progress: 0">
+                <div>
+                  <strong id="progress-value">0</strong>
+                  <span>/ 30</span>
+                </div>
+              </div>
+              <h2 id="welcome-name">欢迎回来</h2>
+              <p id="rater-id-label">匿名评判者</p>
+              <div class="progress-bar"><span id="progress-bar-fill"></span></div>
+              <p class="progress-message" id="progress-message">
+                您可以从任意未完成项目继续。
+              </p>
+              <button class="primary-button wide" id="resume-button" type="button">
+                开始第一项
+                <span aria-hidden="true">→</span>
+              </button>
+              <div class="legend-list">
+                <span><i class="legend-dot not-started"></i>未开始</span>
+                <span><i class="legend-dot draft"></i>已有草稿</span>
+                <span><i class="legend-dot submitted"></i>已提交</span>
+              </div>
+            </aside>
+
+            <div class="catalog-panel">
+              <div class="catalog-toolbar">
+                <div>
+                  <h2>30 项 · 30 张地图</h2>
+                  <p id="catalog-summary">正在读取目录…</p>
+                </div>
+                <div class="filter-pills" role="group" aria-label="目录筛选">
+                  <button class="filter-pill active" data-filter="all" type="button">全部</button>
+                  <button class="filter-pill" data-filter="open" type="button">待完成</button>
+                  <button class="filter-pill" data-filter="submitted" type="button">已提交</button>
+                </div>
+              </div>
+              <div class="catalog-list" id="catalog-list" aria-live="polite"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="view judge-view" id="judge-view">
+          <div class="judge-topline">
+            <button class="back-button" id="back-to-directory" type="button">
+              <span aria-hidden="true">←</span> 返回目录
+            </button>
+            <div class="item-position">
+              <span id="judge-map-label">地图 01</span>
+              <strong id="judge-count-label">项目 1 / 30</strong>
+            </div>
+            <div class="save-state" id="save-state">
+              <span class="status-dot"></span>
+              草稿已同步
+            </div>
+          </div>
+
+          <div class="directive-strip">
+            <span>统一任务指令</span>
+            <p id="judge-directive"></p>
+          </div>
+
+          <div class="media-stage">
+            <article class="route-player route-a">
+              <header>
+                <span class="route-badge">A</span>
+                <div>
+                  <strong>路线 A</strong>
+                  <small>匿名候选路线</small>
+                </div>
+              </header>
+              <div class="route-map-shell">
+                <canvas
+                  id="route-map-a"
+                  width="1280"
+                  height="720"
+                  role="img"
+                  aria-label="路线 A：高程图、掩体图与完整团队路径"
+                ></canvas>
+                <div class="route-map-loading" aria-live="polite">正在渲染路线 A…</div>
+              </div>
+            </article>
+            <div class="versus-mark" aria-hidden="true">VS</div>
+            <article class="route-player route-b">
+              <header>
+                <span class="route-badge">B</span>
+                <div>
+                  <strong>路线 B</strong>
+                  <small>匿名候选路线</small>
+                </div>
+              </header>
+              <div class="route-map-shell">
+                <canvas
+                  id="route-map-b"
+                  width="1280"
+                  height="720"
+                  role="img"
+                  aria-label="路线 B：高程图、掩体图与完整团队路径"
+                ></canvas>
+                <div class="route-map-loading" aria-live="polite">正在渲染路线 B…</div>
+              </div>
+            </article>
+          </div>
+
+          <div class="route-map-note">
+            <strong>静态完整路线</strong>
+            <span>
+              高程图用于判断升降；掩体图用于判断隐蔽与协同。数字 0–5 分别对应
+              t=0、19、38、58、77、96，同编号标记表示同一时刻。
+            </span>
+          </div>
+
+          <form class="rating-form" id="rating-form" novalidate>
+            <div id="endpoint-forms"></div>
+            <div class="submission-bar">
+              <div>
+                <strong>提交前请再次确认</strong>
+                <span>最终提交后，该项目将锁定且不能由评判者修改。</span>
+              </div>
+              <div class="submission-actions">
+                <button class="secondary-button" id="save-draft-button" type="button">仅保存草稿</button>
+                <button class="primary-button" id="submit-rating" type="submit">
+                  最终提交
+                  <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <section class="view admin-view" id="admin-view">
+          <div class="page-heading">
+            <div>
+              <p class="kicker">RESEARCH OPERATIONS</p>
+              <h1>人工评判收集总表</h1>
+              <p>偏好计数仅用于完整性监控；不得据此改变冻结设计或停止规则。</p>
+            </div>
+            <button class="secondary-button" id="leave-admin" type="button">返回评判入口</button>
+          </div>
+
+          <div class="admin-login-card" id="admin-login-card">
+            <div>
+              <p class="kicker">受保护页面</p>
+              <h2>输入管理员令牌</h2>
+              <p>令牌仅保存在当前浏览器标签页，不会写入网址或本地存储。</p>
+            </div>
+            <form id="admin-token-form">
+              <input id="admin-token-input" type="password" autocomplete="off" placeholder="TBAM_ADMIN_TOKEN" required>
+              <button class="primary-button" type="submit">读取总表</button>
+            </form>
+            <p class="form-error hidden" id="admin-error" role="alert"></p>
+          </div>
+
+          <div class="admin-dashboard hidden" id="admin-dashboard">
+            <div class="admin-metrics">
+              <article>
+                <span>已提交判断</span>
+                <strong id="admin-judgments">0</strong>
+                <small id="admin-judgments-target">/ 1,200</small>
+              </article>
+              <article>
+                <span>已注册评判者</span>
+                <strong id="admin-raters">0</strong>
+                <small id="admin-raters-target">/ 40</small>
+              </article>
+              <article>
+                <span>完成全部目录</span>
+                <strong id="admin-complete">0</strong>
+                <small>名评判者</small>
+              </article>
+              <article>
+                <span>覆盖完整项目</span>
+                <strong id="admin-covered">0</strong>
+                <small id="admin-covered-target">/ 240</small>
+              </article>
+            </div>
+
+            <div class="admin-actions">
+              <div>
+                <h2>数据导出</h2>
+                <p id="admin-generated">尚未读取</p>
+              </div>
+              <div>
+                <button class="secondary-button admin-download" data-export="judgments.jsonl" type="button">分析 JSONL</button>
+                <button class="secondary-button admin-download" data-export="item_summary.csv" type="button">项目汇总 CSV</button>
+                <button class="secondary-button admin-download" data-export="rater_progress.csv" type="button">进度 CSV</button>
+                <button class="secondary-button admin-download" data-export="operational_roster.csv" type="button">私有名册 CSV</button>
+              </div>
+            </div>
+
+            <div class="admin-tabs">
+              <button class="active" data-admin-tab="items" type="button">240 项覆盖表</button>
+              <button data-admin-tab="raters" type="button">评判者进度</button>
+            </div>
+
+            <div class="table-card">
+              <div class="table-toolbar">
+                <input id="admin-search" type="search" placeholder="搜索地图、项目或评判者…">
+                <span id="admin-table-count">0 行</span>
+              </div>
+              <div class="table-scroll">
+                <table>
+                  <thead id="admin-table-head"></thead>
+                  <tbody id="admin-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <span>TBAM · S6 Blinded Trajectory Preference Study</span>
+        <span id="manifest-footer">Manifest pending</span>
+      </footer>
+    </div>
+
+    <div class="profile-popover hidden" id="profile-popover">
+      <strong id="profile-username">—</strong>
+      <span id="profile-rater-id">—</span>
+      <button id="logout-button" type="button">退出当前用户</button>
+    </div>
+
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+
+    <dialog id="confirm-dialog">
+      <form method="dialog">
+        <div class="dialog-icon">✓</div>
+        <h2>确认最终提交？</h2>
+        <p>提交后该项目会锁定。您的草稿将转换为最终匿名判断。</p>
+        <div class="dialog-actions">
+          <button class="secondary-button" value="cancel">再检查一下</button>
+          <button class="primary-button" value="confirm">确认提交</button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>

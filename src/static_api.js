@@ -1,0 +1,1301 @@
+(() => {
+  "use strict";
+
+  const scriptUrl = new URL(document.currentScript.src);
+  const siteBase = new URL("./", scriptUrl);
+  const nativeFetch = window.fetch.bind(window);
+  const namespace = "tbam.pages.local.v1";
+  const expectedManifestSha =
+    "318dc8b5edf6476f7daf8f9bbf5f2c9e2e64b67dcac6af4fcdb3520eed97be7c";
+  const encoder = new TextEncoder();
+  let manifestPromise;
+
+  class LocalApiError extends Error {
+    constructor(status, message, detail = undefined) {
+      super(message);
+      this.status = status;
+      this.detail = detail;
+    }
+  }
+
+  function now() {
+    return new Date().toISOString();
+  }
+
+  function jsonResponse(payload, status = 200) {
+    return new Response(JSON.stringify(payload), {
+      status,
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Cache-Control": "no-store",
+      },
+    });
+  }
+
+  function errorResponse(error) {
+    const status = error instanceof LocalApiError ? error.status : 500;
+    const payload = {
+      error: status === 401 ? "authentication_required" : "local_pages_error",
+      message: error?.message || "浏览器本地存储操作失败。",
+    };
+    if (error instanceof LocalApiError && error.detail !== undefined) {
+      payload.detail = error.detail;
+    }
+    return jsonResponse(payload, status);
+  }
+
+  async function loadManifest() {
+    if (!manifestPromise) {
+      manifestPromise = nativeFetch(
+        new URL("data/pages_manifest.json", siteBase),
+        { cache: "no-store" },
+      )
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Pages manifest 请求失败（${response.status}）`);
+          }
+          return response.json();
+        })
+        .then((manifest) => {
+          if (
+            manifest?.schema_version !== "tbam.github_pages_bundle.v1" ||
+            manifest?.status !== "complete_browser_local_pilot" ||
+            manifest?.source_public_manifest_sha256 !== expectedManifestSha ||
+            !/^[0-9a-f]{64}$/.test(manifest?.bundle_id || "") ||
+            !/^[0-9a-f]{64}$/.test(
+              manifest?.collection_protocol_id || "",
+            ) ||
+            !/^[0-9a-f]{64}$/.test(
+              manifest?.consent_text_sha256 || "",
+            ) ||
+            manifest?.consent_version !== "pages-pilot-notice-v2" ||
+            manifest?.presentation_medium !==
+              "static_route_maps_pages_v1" ||
+            manifest?.assignment_rule_id !==
+              "latin_rotation_r_plus_map_mod_8_v1" ||
+            manifest?.rater_slot_min !== 0 ||
+            manifest?.rater_slot_max !== 39 ||
+            manifest?.items_per_rater !== 30 ||
+            !Array.isArray(manifest?.items) ||
+            manifest.items.length !== 240
+          ) {
+            throw new Error("Pages manifest 不完整或与冻结语料不一致。");
+          }
+          return manifest;
+        });
+    }
+    return manifestPromise;
+  }
+
+  function storeKey(manifest) {
+    return (
+      `${namespace}:${manifest.study_id}:` +
+      `${manifest.collection_protocol_id}:store`
+    );
+  }
+
+  function sessionKey(manifest) {
+    return (
+      `${namespace}:${manifest.study_id}:` +
+      `${manifest.collection_protocol_id}:session`
+    );
+  }
+
+  function emptyStore(manifest) {
+    return {
+      schema_version: "tbam.pages_local_store.v1",
+      study_id: manifest.study_id,
+      collection_protocol_id: manifest.collection_protocol_id,
+      presentation_medium: manifest.presentation_medium,
+      consent_version: manifest.consent_version,
+      consent_text_sha256: manifest.consent_text_sha256,
+      source_public_manifest_sha256:
+        manifest.source_public_manifest_sha256,
+      profiles: Object.create(null),
+    };
+  }
+
+  function readStore(manifest) {
+    const raw = localStorage.getItem(storeKey(manifest));
+    if (!raw) return emptyStore(manifest);
+    let store;
+    try {
+      store = JSON.parse(raw);
+    } catch {
+      throw new LocalApiError(500, "此浏览器中的进度文件已损坏。");
+    }
+    if (
+      store?.schema_version !== "tbam.pages_local_store.v1" ||
+      store?.study_id !== manifest.study_id ||
+      store?.collection_protocol_id !== manifest.collection_protocol_id ||
+      store?.presentation_medium !== manifest.presentation_medium ||
+      store?.consent_version !== manifest.consent_version ||
+      store?.consent_text_sha256 !== manifest.consent_text_sha256 ||
+      store?.source_public_manifest_sha256 !==
+        manifest.source_public_manifest_sha256 ||
+      !store.profiles ||
+      typeof store.profiles !== "object"
+    ) {
+      throw new LocalApiError(500, "此浏览器中的进度属于另一实验版本。");
+    }
+    const profiles = Object.create(null);
+    for (const [key, value] of Object.entries(store.profiles)) {
+      profiles[key] = value;
+    }
+    store.profiles = profiles;
+    return store;
+  }
+
+  function writeStore(manifest, store) {
+    try {
+      localStorage.setItem(storeKey(manifest), JSON.stringify(store));
+    } catch {
+      throw new LocalApiError(
+        507,
+        "浏览器无法保存进度；请检查隐私模式或站点存储设置。",
+      );
+    }
+  }
+
+  function normalizeUsername(raw) {
+    if (typeof raw !== "string") {
+      throw new LocalApiError(400, "化名必须是文本。");
+    }
+    const display = raw.normalize("NFKC").trim();
+    if (display.length < 3 || display.length > 32) {
+      throw new LocalApiError(400, "化名必须包含 3–32 个字符。");
+    }
+    if (!/^[\p{L}\p{N}._-]+$/u.test(display)) {
+      throw new LocalApiError(
+        400,
+        "化名只能包含字母、数字、点、下划线和连字符。",
+      );
+    }
+    const norm = display.toLowerCase();
+    if (["__proto__", "prototype", "constructor"].includes(norm)) {
+      throw new LocalApiError(400, "该化名属于保留名称，请更换。");
+    }
+    return { norm, display };
+  }
+
+  function validatePin(pin) {
+    if (typeof pin !== "string" || pin.length < 6 || pin.length > 64) {
+      throw new LocalApiError(400, "PIN 必须包含 6–64 个字符。");
+    }
+    return pin;
+  }
+
+  function bytesToBase64(bytes) {
+    let binary = "";
+    for (const value of bytes) binary += String.fromCharCode(value);
+    return btoa(binary);
+  }
+
+  function base64ToBytes(value) {
+    const binary = atob(value);
+    return Uint8Array.from(binary, (character) => character.charCodeAt(0));
+  }
+
+  function bytesToHex(bytes) {
+    return [...bytes]
+      .map((value) => value.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  async function derivePin(pin, saltBase64) {
+    const material = await crypto.subtle.importKey(
+      "raw",
+      encoder.encode(pin),
+      "PBKDF2",
+      false,
+      ["deriveBits"],
+    );
+    const bits = await crypto.subtle.deriveBits(
+      {
+        name: "PBKDF2",
+        hash: "SHA-256",
+        salt: base64ToBytes(saltBase64),
+        iterations: 120000,
+      },
+      material,
+      256,
+    );
+    return bytesToHex(new Uint8Array(bits));
+  }
+
+  function requestedSlot() {
+    const query = new URL(window.location.href).searchParams.get("slot");
+    const input = document.querySelector("#pages-slot-input");
+    const raw = query !== null ? query : input?.value;
+    if (raw === undefined || raw === null || String(raw).trim() === "") {
+      throw new LocalApiError(
+        400,
+        "首次参加需要研究者分配的席位编号（0–39）。",
+      );
+    }
+    const slot = Number(raw);
+    if (!Number.isInteger(slot) || slot < 0 || slot > 39) {
+      throw new LocalApiError(400, "席位编号必须是 0–39 的整数。");
+    }
+    return slot;
+  }
+
+  function sessionNorm(manifest) {
+    return sessionStorage.getItem(sessionKey(manifest));
+  }
+
+  function setSession(manifest, norm) {
+    if (norm) sessionStorage.setItem(sessionKey(manifest), norm);
+    else sessionStorage.removeItem(sessionKey(manifest));
+  }
+
+  function currentProfile(manifest, store, required = true) {
+    const norm = sessionNorm(manifest);
+    const profile =
+      norm && Object.hasOwn(store.profiles, norm)
+        ? store.profiles[norm]
+        : null;
+    if (!profile && required) {
+      throw new LocalApiError(401, "请先读取此浏览器中的进度。");
+    }
+    return profile || null;
+  }
+
+  function assignedItems(manifest, profile) {
+    const mapIds = [...new Set(manifest.items.map((item) => item.blind_map_id))]
+      .sort();
+    if (mapIds.length !== 30) {
+      throw new LocalApiError(500, "Pages 目录的地图数量无效。");
+    }
+    return mapIds.map((mapId, mapIndex) => {
+      const candidates = manifest.items.filter(
+        (item) => item.blind_map_id === mapId,
+      );
+      if (candidates.length !== 8) {
+        throw new LocalApiError(500, "Pages 目录的每图项目数量无效。");
+      }
+      return candidates[(profile.rater_slot + mapIndex) % 8];
+    });
+  }
+
+  function itemState(profile, itemId) {
+    if (!profile.items[itemId]) {
+      profile.items[itemId] = {
+        started_utc: null,
+        draft: null,
+        judgment: null,
+      };
+    }
+    return profile.items[itemId];
+  }
+
+  function participantPayload(manifest, profile) {
+    const assigned = assignedItems(manifest, profile);
+    const states = assigned.map((item) => itemState(profile, item.item_id));
+    return {
+      username: profile.username,
+      rater_id: profile.rater_id,
+      rater_slot: profile.rater_slot,
+      tutorial_completed: Boolean(profile.tutorial_completed_utc),
+      completed: states.filter((state) => state.judgment).length,
+      started: states.filter((state) => state.started_utc).length,
+      total: 30,
+      study_id: manifest.study_id,
+      study_mode: "pilot",
+    };
+  }
+
+  function catalogPayload(manifest, profile) {
+    return assignedItems(manifest, profile).map((item, index) => {
+      const local = itemState(profile, item.item_id);
+      const status = local.judgment
+        ? "submitted"
+        : local.draft
+          ? "draft"
+          : local.started_utc
+            ? "in_progress"
+            : "not_started";
+      return {
+        item_id: item.item_id,
+        blind_map_id: item.blind_map_id,
+        catalog_number: index + 1,
+        both_completed: item.both_completed,
+        status,
+        started_utc: local.started_utc,
+        updated_utc: local.draft?.updated_utc || null,
+        submitted_utc: local.judgment?.completed_utc || null,
+      };
+    });
+  }
+
+  function requireAssigned(manifest, profile, itemId) {
+    const item = assignedItems(manifest, profile).find(
+      (candidate) => candidate.item_id === itemId,
+    );
+    if (!item) {
+      throw new LocalApiError(403, "该项目不属于此席位的目录。");
+    }
+    return item;
+  }
+
+  function parseBody(options) {
+    if (!options?.body) return {};
+    try {
+      const value = JSON.parse(options.body);
+      if (!value || typeof value !== "object" || Array.isArray(value)) {
+        throw new Error();
+      }
+      return value;
+    } catch {
+      throw new LocalApiError(400, "请求数据不是有效 JSON。");
+    }
+  }
+
+  function validateRating(rating, field) {
+    const required = [
+      "overall",
+      "terrain",
+      "cover",
+      "coordination",
+      "efficiency",
+      "confidence",
+      "evidence_time_steps",
+      "rationale",
+    ];
+    if (
+      !rating ||
+      typeof rating !== "object" ||
+      Object.keys(rating).sort().join(",") !== required.sort().join(",")
+    ) {
+      throw new LocalApiError(400, `${field} 的评分字段不完整。`);
+    }
+    if (!["A", "B", "tie"].includes(rating.overall)) {
+      throw new LocalApiError(400, `${field}.overall 无效。`);
+    }
+    for (const key of ["terrain", "cover", "coordination", "efficiency"]) {
+      if (!["A", "B", "tie", "unclear"].includes(rating[key])) {
+        throw new LocalApiError(400, `${field}.${key} 无效。`);
+      }
+    }
+    if (!Number.isInteger(rating.confidence) || rating.confidence < 1 ||
+        rating.confidence > 5) {
+      throw new LocalApiError(400, `${field}.confidence 无效。`);
+    }
+    if (
+      !Array.isArray(rating.evidence_time_steps) ||
+      rating.evidence_time_steps.length > 8 ||
+      new Set(rating.evidence_time_steps).size !==
+        rating.evidence_time_steps.length ||
+      rating.evidence_time_steps.some(
+        (step) => !Number.isInteger(step) || step < 0 || step > 96,
+      )
+    ) {
+      throw new LocalApiError(400, `${field}.evidence_time_steps 无效。`);
+    }
+    if (typeof rating.rationale !== "string" || rating.rationale.length > 500) {
+      throw new LocalApiError(400, `${field}.rationale 无效。`);
+    }
+    return {
+      overall: rating.overall,
+      terrain: rating.terrain,
+      cover: rating.cover,
+      coordination: rating.coordination,
+      efficiency: rating.efficiency,
+      confidence: rating.confidence,
+      evidence_time_steps: [...rating.evidence_time_steps].sort(
+        (first, second) => first - second,
+      ),
+      rationale: rating.rationale.trim(),
+    };
+  }
+
+  function validateEndpoints(endpoints, bothCompleted) {
+    const required = ["all_sample", "conditional_semantic"];
+    if (
+      !endpoints ||
+      typeof endpoints !== "object" ||
+      Array.isArray(endpoints) ||
+      Object.keys(endpoints).sort().join(",") !== required.sort().join(",")
+    ) {
+      throw new LocalApiError(400, "评分终点不完整。");
+    }
+    const allSample = validateRating(endpoints.all_sample, "all_sample");
+    let conditional = endpoints.conditional_semantic;
+    if (bothCompleted) {
+      conditional = validateRating(conditional, "conditional_semantic");
+    } else if (conditional !== null) {
+      throw new LocalApiError(400, "未共同完成项目不能提交条件终点。");
+    }
+    return {
+      all_sample: allSample,
+      conditional_semantic: conditional,
+    };
+  }
+
+  async function register(manifest, body) {
+    if (body.consented !== true) {
+      throw new LocalApiError(400, "请先确认内部试运行说明。");
+    }
+    const { norm, display } = normalizeUsername(body.username);
+    const pin = validatePin(body.pin);
+    const slot = requestedSlot();
+    const initialStore = readStore(manifest);
+    if (Object.hasOwn(initialStore.profiles, norm)) {
+      if (initialStore.profiles[norm].rater_slot !== slot) {
+        throw new LocalApiError(
+          409,
+          "该化名已属于另一席位；请使用原席位链接读取进度。",
+        );
+      }
+      return login(manifest, body);
+    }
+    const saltBytes = crypto.getRandomValues(new Uint8Array(16));
+    const salt = bytesToBase64(saltBytes);
+    const pinHash = await derivePin(pin, salt);
+    const store = readStore(manifest);
+    if (Object.hasOwn(store.profiles, norm)) {
+      if (store.profiles[norm].rater_slot !== slot) {
+        throw new LocalApiError(
+          409,
+          "该化名已属于另一席位；请使用原席位链接读取进度。",
+        );
+      }
+      return login(manifest, body);
+    }
+    if (
+      Object.values(store.profiles).some(
+        (profile) => profile.rater_slot === slot,
+      )
+    ) {
+      throw new LocalApiError(
+        409,
+        "此浏览器中该席位已经注册；请读取已有进度。",
+      );
+    }
+    const created = now();
+    const profile = {
+      username: display,
+      username_norm: norm,
+      pin_salt: salt,
+      pin_hash: pinHash,
+      rater_slot: slot,
+      rater_id: `human_pages_${String(slot + 1).padStart(2, "0")}`,
+      collection_protocol_id: manifest.collection_protocol_id,
+      registered_bundle_id: manifest.bundle_id,
+      presentation_medium: manifest.presentation_medium,
+      source_public_manifest_sha256:
+        manifest.source_public_manifest_sha256,
+      consented_utc: created,
+      created_utc: created,
+      last_login_utc: created,
+      tutorial_completed_utc: null,
+      items: {},
+    };
+    store.profiles[norm] = profile;
+    writeStore(manifest, store);
+    setSession(manifest, norm);
+    return participantPayload(manifest, profile);
+  }
+
+  async function login(manifest, body) {
+    const { norm } = normalizeUsername(body.username);
+    const pin = validatePin(body.pin);
+    const store = readStore(manifest);
+    const profile = Object.hasOwn(store.profiles, norm)
+      ? store.profiles[norm]
+      : null;
+    if (!profile) {
+      throw new LocalApiError(
+        401,
+        "此浏览器中没有该化名；请检查设备或导入完整备份。",
+      );
+    }
+    const derived = await derivePin(pin, profile.pin_salt);
+    if (derived !== profile.pin_hash) {
+      throw new LocalApiError(401, "化名或 PIN 不正确。");
+    }
+    setSession(manifest, norm);
+    return participantPayload(manifest, profile);
+  }
+
+  function buildRecord(
+    manifest,
+    profile,
+    item,
+    local,
+    endpoints,
+    activeSeconds,
+  ) {
+    const duration = Number(activeSeconds);
+    if (!Number.isFinite(duration) || duration <= 0 || duration > 43200) {
+      throw new LocalApiError(400, "有效作答时间无效。");
+    }
+    const completed = now();
+    return {
+      schema_version: "tbam.blind_judgment.v1",
+      study_id: manifest.study_id,
+      item_id: item.item_id,
+      judge_type: "human",
+      judge_system_id: profile.rater_id,
+      presentation_variant: "canonical",
+      presented_routes: { A: "A", B: "B" },
+      input_artifact_sha256: {
+        ...item.input_artifact_sha256,
+      },
+      control_item: false,
+      attention_check_passed: null,
+      endpoints: validateEndpoints(endpoints, item.both_completed),
+      started_utc: local.started_utc || completed,
+      completed_utc: completed,
+      duration_seconds: Math.round(duration * 1000) / 1000,
+    };
+  }
+
+  function stableStringify(value) {
+    if (Array.isArray(value)) {
+      return `[${value.map(stableStringify).join(",")}]`;
+    }
+    if (value && typeof value === "object") {
+      return `{${Object.keys(value)
+        .sort()
+        .map(
+          (key) =>
+            `${JSON.stringify(key)}:${stableStringify(value[key])}`,
+        )
+        .join(",")}}`;
+    }
+    return JSON.stringify(value);
+  }
+
+  function validTimestamp(value) {
+    return (
+      typeof value === "string" &&
+      Number.isFinite(Date.parse(value)) &&
+      /(?:Z|[+-]\d\d:\d\d)$/.test(value)
+    );
+  }
+
+  function validateStoredJudgment(manifest, profile, item, record) {
+    const required = [
+      "schema_version",
+      "study_id",
+      "item_id",
+      "judge_type",
+      "judge_system_id",
+      "presentation_variant",
+      "presented_routes",
+      "input_artifact_sha256",
+      "control_item",
+      "attention_check_passed",
+      "endpoints",
+      "started_utc",
+      "completed_utc",
+      "duration_seconds",
+    ].sort();
+    if (
+      !record ||
+      typeof record !== "object" ||
+      Array.isArray(record) ||
+      Object.keys(record).sort().join(",") !== required.join(",") ||
+      record.schema_version !== "tbam.blind_judgment.v1" ||
+      record.study_id !== manifest.study_id ||
+      record.item_id !== item.item_id ||
+      record.judge_type !== "human" ||
+      record.judge_system_id !== profile.rater_id ||
+      record.presentation_variant !== "canonical" ||
+      !record.presented_routes ||
+      typeof record.presented_routes !== "object" ||
+      Array.isArray(record.presented_routes) ||
+      Object.keys(record.presented_routes).sort().join(",") !== "A,B" ||
+      record.presented_routes?.A !== "A" ||
+      record.presented_routes?.B !== "B" ||
+      record.control_item !== false ||
+      record.attention_check_passed !== null
+    ) {
+      throw new Error(`备份中的判断记录无效：${item.item_id}`);
+    }
+    if (
+      stableStringify(record.input_artifact_sha256) !==
+      stableStringify(item.input_artifact_sha256)
+    ) {
+      throw new Error(`备份中的制品哈希不匹配：${item.item_id}`);
+    }
+    validateEndpoints(record.endpoints, item.both_completed);
+    if (
+      !validTimestamp(record.started_utc) ||
+      !validTimestamp(record.completed_utc) ||
+      Date.parse(record.completed_utc) < Date.parse(record.started_utc) ||
+      typeof record.duration_seconds !== "number" ||
+      !Number.isFinite(record.duration_seconds) ||
+      record.duration_seconds <= 0 ||
+      record.duration_seconds > 43200
+    ) {
+      throw new Error(`备份中的时间记录无效：${item.item_id}`);
+    }
+  }
+
+  function validateImportedProfile(manifest, profile) {
+    if (
+      !profile ||
+      typeof profile !== "object" ||
+      Array.isArray(profile) ||
+      profile.collection_protocol_id !==
+        manifest.collection_protocol_id ||
+      !/^[0-9a-f]{64}$/.test(profile.registered_bundle_id || "") ||
+      profile.presentation_medium !== manifest.presentation_medium ||
+      profile.source_public_manifest_sha256 !==
+        manifest.source_public_manifest_sha256
+    ) {
+      throw new Error("备份中的参与者版本绑定无效。");
+    }
+    const normalized = normalizeUsername(profile.username);
+    if (
+      normalized.norm !== profile.username_norm ||
+      !Number.isInteger(profile.rater_slot) ||
+      profile.rater_slot < 0 ||
+      profile.rater_slot > 39 ||
+      profile.rater_id !==
+        `human_pages_${String(profile.rater_slot + 1).padStart(2, "0")}` ||
+      typeof profile.pin_salt !== "string" ||
+      typeof profile.pin_hash !== "string" ||
+      !/^[0-9a-f]{64}$/.test(profile.pin_hash) ||
+      !profile.items ||
+      typeof profile.items !== "object" ||
+      Array.isArray(profile.items)
+    ) {
+      throw new Error("备份中的参与者身份字段无效。");
+    }
+    try {
+      if (base64ToBytes(profile.pin_salt).length !== 16) throw new Error();
+    } catch {
+      throw new Error("备份中的 PIN 盐值无效。");
+    }
+    for (const field of ["consented_utc", "created_utc", "last_login_utc"]) {
+      if (!validTimestamp(profile[field])) {
+        throw new Error(`备份中的 ${field} 无效。`);
+      }
+    }
+    if (
+      profile.tutorial_completed_utc !== null &&
+      !validTimestamp(profile.tutorial_completed_utc)
+    ) {
+      throw new Error("备份中的教程完成时间无效。");
+    }
+
+    const assigned = assignedItems(manifest, profile);
+    const itemById = new Map(assigned.map((item) => [item.item_id, item]));
+    for (const [itemId, local] of Object.entries(profile.items)) {
+      const item = itemById.get(itemId);
+      if (
+        !item ||
+        !local ||
+        typeof local !== "object" ||
+        Array.isArray(local) ||
+        !("started_utc" in local) ||
+        !("draft" in local) ||
+        !("judgment" in local)
+      ) {
+        throw new Error(`备份中的项目状态无效：${itemId}`);
+      }
+      if (
+        local.started_utc !== null &&
+        !validTimestamp(local.started_utc)
+      ) {
+        throw new Error(`备份中的开始时间无效：${itemId}`);
+      }
+      if (local.judgment !== null) {
+        validateStoredJudgment(manifest, profile, item, local.judgment);
+      }
+      if (local.draft !== null) {
+        if (
+          typeof local.draft !== "object" ||
+          !Number.isInteger(local.draft.revision) ||
+          local.draft.revision < 1 ||
+          !validTimestamp(local.draft.updated_utc) ||
+          typeof local.draft.active_seconds !== "number" ||
+          !Number.isFinite(local.draft.active_seconds) ||
+          local.draft.active_seconds < 0 ||
+          !local.draft.payload ||
+          typeof local.draft.payload !== "object"
+        ) {
+          throw new Error(`备份中的草稿无效：${itemId}`);
+        }
+        if (local.judgment !== null) {
+          throw new Error(`已提交项目不能同时带草稿：${itemId}`);
+        }
+      }
+    }
+    return profile;
+  }
+
+  function earlierTimestamp(first, second) {
+    if (!first) return second || null;
+    if (!second) return first;
+    return Date.parse(first) <= Date.parse(second) ? first : second;
+  }
+
+  function laterTimestamp(first, second) {
+    if (!first) return second || null;
+    if (!second) return first;
+    return Date.parse(first) >= Date.parse(second) ? first : second;
+  }
+
+  function mergeProfiles(manifest, current, incoming) {
+    if (!current) return structuredClone(incoming);
+    validateImportedProfile(manifest, current);
+    if (
+      current.username_norm !== incoming.username_norm ||
+      current.rater_slot !== incoming.rater_slot ||
+      current.rater_id !== incoming.rater_id ||
+      current.pin_salt !== incoming.pin_salt ||
+      current.pin_hash !== incoming.pin_hash
+    ) {
+      throw new Error("同名本地进度与备份的身份或 PIN 绑定冲突。");
+    }
+    const merged = structuredClone(current);
+    merged.consented_utc = earlierTimestamp(
+      current.consented_utc,
+      incoming.consented_utc,
+    );
+    merged.created_utc = earlierTimestamp(
+      current.created_utc,
+      incoming.created_utc,
+    );
+    merged.last_login_utc = laterTimestamp(
+      current.last_login_utc,
+      incoming.last_login_utc,
+    );
+    merged.tutorial_completed_utc = earlierTimestamp(
+      current.tutorial_completed_utc,
+      incoming.tutorial_completed_utc,
+    );
+
+    for (const item of assignedItems(manifest, merged)) {
+      const existing = current.items[item.item_id] || {
+        started_utc: null,
+        draft: null,
+        judgment: null,
+      };
+      const restored = incoming.items[item.item_id] || {
+        started_utc: null,
+        draft: null,
+        judgment: null,
+      };
+      const state = {
+        started_utc: earlierTimestamp(
+          existing.started_utc,
+          restored.started_utc,
+        ),
+        draft: null,
+        judgment: null,
+      };
+      if (existing.judgment && restored.judgment) {
+        if (
+          stableStringify(existing.judgment) !==
+          stableStringify(restored.judgment)
+        ) {
+          throw new Error(
+            `备份与本地已有最终判断冲突，拒绝覆盖：${item.item_id}`,
+          );
+        }
+        state.judgment = existing.judgment;
+      } else {
+        state.judgment = existing.judgment || restored.judgment || null;
+      }
+      if (!state.judgment) {
+        const drafts = [existing.draft, restored.draft].filter(Boolean);
+        drafts.sort(
+          (left, right) =>
+            right.revision - left.revision ||
+            Date.parse(right.updated_utc) - Date.parse(left.updated_utc),
+        );
+        state.draft = drafts[0] || null;
+      }
+      merged.items[item.item_id] = state;
+    }
+    return merged;
+  }
+
+  async function handleApi(url, options = {}) {
+    const manifest = await loadManifest();
+    const method = String(options.method || "GET").toUpperCase();
+    const path = url.pathname;
+    const body = parseBody(options);
+
+    if (method === "GET" && path === "/api/config") {
+      return jsonResponse({
+        title: "TBAM 匿名路线人工评判",
+        study_id: manifest.study_id,
+        storage_namespace_id:
+          `${manifest.study_id}:${manifest.collection_protocol_id}`,
+        study_mode: "pilot",
+        storage_mode: "browser_local",
+        registration_open: true,
+        consent_version: manifest.consent_version,
+        consent_text: manifest.consent_text,
+        item_count: manifest.item_count,
+        map_count: manifest.map_count,
+        both_completed_count: manifest.both_completed_count,
+        items_per_rater: manifest.items_per_rater,
+        judgments_per_item:
+          manifest.judgments_per_item_if_all_slots_complete,
+        public_manifest_sha256:
+          manifest.source_public_manifest_sha256,
+        artifact_status: "complete_frozen_artifacts",
+      });
+    }
+
+    if (method === "GET" && path === "/api/me") {
+      const store = readStore(manifest);
+      const profile = currentProfile(manifest, store, false);
+      return jsonResponse(
+        profile
+          ? {
+              authenticated: true,
+              participant: participantPayload(manifest, profile),
+            }
+          : { authenticated: false },
+      );
+    }
+
+    if (method === "POST" && path === "/api/auth/register") {
+      return jsonResponse(
+        { participant: await register(manifest, body) },
+        201,
+      );
+    }
+    if (method === "POST" && path === "/api/auth/login") {
+      return jsonResponse({ participant: await login(manifest, body) });
+    }
+    if (method === "POST" && path === "/api/auth/logout") {
+      setSession(manifest, null);
+      return jsonResponse({ ok: true });
+    }
+
+    const store = readStore(manifest);
+    const profile = currentProfile(manifest, store);
+
+    if (method === "POST" && path === "/api/tutorial/complete") {
+      profile.tutorial_completed_utc ||= now();
+      writeStore(manifest, store);
+      return jsonResponse({ ok: true });
+    }
+
+    if (method === "GET" && path === "/api/catalog") {
+      return jsonResponse({ items: catalogPayload(manifest, profile) });
+    }
+
+    const itemMatch = path.match(/^\/api\/item\/(item_[0-9a-f]{16})$/);
+    if (method === "GET" && itemMatch) {
+      const item = requireAssigned(manifest, profile, itemMatch[1]);
+      const local = itemState(profile, item.item_id);
+      return jsonResponse({
+        item_id: item.item_id,
+        blind_map_id: item.blind_map_id,
+        both_completed: item.both_completed,
+        map_index: item.map_index,
+        item_index: item.item_index,
+        directive: item.directive,
+        media: {
+          judge_input: item.judge_input_path,
+        },
+        max_evidence_step: 96,
+        draft: local.draft,
+      });
+    }
+
+    const startMatch = path.match(
+      /^\/api\/item\/(item_[0-9a-f]{16})\/start$/,
+    );
+    if (method === "POST" && startMatch) {
+      if (!profile.tutorial_completed_utc) {
+        throw new LocalApiError(403, "请先完成教程。");
+      }
+      const item = requireAssigned(manifest, profile, startMatch[1]);
+      const local = itemState(profile, item.item_id);
+      local.started_utc ||= now();
+      writeStore(manifest, store);
+      return jsonResponse({ started_utc: local.started_utc });
+    }
+
+    const draftMatch = path.match(
+      /^\/api\/item\/(item_[0-9a-f]{16})\/draft$/,
+    );
+    if (method === "PUT" && draftMatch) {
+      const item = requireAssigned(manifest, profile, draftMatch[1]);
+      const local = itemState(profile, item.item_id);
+      if (local.judgment) {
+        throw new LocalApiError(409, "该项目已经最终提交。");
+      }
+      const currentRevision = Number(local.draft?.revision || 0);
+      if (
+        !Number.isInteger(body.expected_revision) ||
+        body.expected_revision !== currentRevision
+      ) {
+        throw new LocalApiError(
+          409,
+          "另一标签页已经修改了草稿。",
+          local.draft,
+        );
+      }
+      const activeSeconds = Number(body.active_seconds);
+      if (
+        !Number.isFinite(activeSeconds) ||
+        activeSeconds < 0 ||
+        activeSeconds > 43200 ||
+        !body.payload ||
+        typeof body.payload !== "object"
+      ) {
+        throw new LocalApiError(400, "草稿数据无效。");
+      }
+      local.started_utc ||= now();
+      local.draft = {
+        payload: body.payload,
+        active_seconds: activeSeconds,
+        revision: currentRevision + 1,
+        updated_utc: now(),
+      };
+      writeStore(manifest, store);
+      return jsonResponse({
+        revision: local.draft.revision,
+        updated_utc: local.draft.updated_utc,
+        active_seconds: activeSeconds,
+      });
+    }
+
+    const submitMatch = path.match(
+      /^\/api\/item\/(item_[0-9a-f]{16})\/submit$/,
+    );
+    if (method === "POST" && submitMatch) {
+      const item = requireAssigned(manifest, profile, submitMatch[1]);
+      const local = itemState(profile, item.item_id);
+      if (local.judgment) {
+        return jsonResponse({ record: local.judgment }, 201);
+      }
+      if (!local.started_utc) {
+        throw new LocalApiError(400, "最终提交前必须先打开项目。");
+      }
+      local.judgment = buildRecord(
+        manifest,
+        profile,
+        item,
+        local,
+        body.endpoints,
+        body.active_seconds,
+      );
+      local.draft = null;
+      writeStore(manifest, store);
+      return jsonResponse({ record: local.judgment }, 201);
+    }
+
+    throw new LocalApiError(404, "Pages 静态版不支持该请求。");
+  }
+
+  async function withWriteLock(operation) {
+    if (navigator.locks?.request) {
+      return navigator.locks.request(
+        `${namespace}:write`,
+        { mode: "exclusive" },
+        operation,
+      );
+    }
+    return operation();
+  }
+
+  async function interceptedFetch(input, options = {}) {
+    const raw =
+      typeof input === "string" || input instanceof URL ? String(input) : input.url;
+    const url = new URL(raw, window.location.href);
+    if (url.pathname.startsWith("/api/")) {
+      const execute = async () => {
+        try {
+          return await handleApi(url, options);
+        } catch (error) {
+          return errorResponse(error);
+        }
+      };
+      const method = String(options.method || "GET").toUpperCase();
+      if (method !== "GET" && method !== "HEAD") {
+        return withWriteLock(execute);
+      }
+      return execute();
+    }
+    return nativeFetch(url, options);
+  }
+
+  async function scienceExport() {
+    const manifest = await loadManifest();
+    const store = readStore(manifest);
+    const profile = currentProfile(manifest, store);
+    const assigned = assignedItems(manifest, profile);
+    const judgments = assigned
+      .map((item) => itemState(profile, item.item_id).judgment)
+      .filter(Boolean)
+      .sort((first, second) => first.item_id.localeCompare(second.item_id));
+    return {
+      schema_version: "tbam.pages_human_rater_export.v1",
+      study_id: manifest.study_id,
+      judge_system_id: profile.rater_id,
+      rater_slot: profile.rater_slot,
+      presentation_medium: manifest.presentation_medium,
+      collection_protocol_id: manifest.collection_protocol_id,
+      registered_bundle_id: profile.registered_bundle_id,
+      bundle_id: manifest.bundle_id,
+      source_public_manifest_sha256:
+        manifest.source_public_manifest_sha256,
+      assignment_rule_id: manifest.assignment_rule_id,
+      assignment_item_ids: assigned.map((item) => item.item_id),
+      exported_utc: now(),
+      judgments,
+    };
+  }
+
+  async function browserBackup() {
+    const manifest = await loadManifest();
+    const store = readStore(manifest);
+    const profile = currentProfile(manifest, store);
+    return {
+      schema_version: "tbam.pages_browser_backup.v1",
+      study_id: manifest.study_id,
+      presentation_medium: manifest.presentation_medium,
+      collection_protocol_id: manifest.collection_protocol_id,
+      bundle_id: manifest.bundle_id,
+      source_public_manifest_sha256:
+        manifest.source_public_manifest_sha256,
+      exported_utc: now(),
+      profile,
+    };
+  }
+
+  function downloadJson(payload, filename) {
+    const blob = new Blob(
+      [JSON.stringify(payload, null, 2) + "\n"],
+      { type: "application/json;charset=utf-8" },
+    );
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  async function downloadScienceExport() {
+    try {
+      const payload = await scienceExport();
+      downloadJson(payload, `${payload.judge_system_id}_results.json`);
+    } catch (error) {
+      window.alert(error.message);
+    }
+  }
+
+  async function downloadBrowserBackup() {
+    try {
+      const payload = await browserBackup();
+      downloadJson(
+        payload,
+        `${payload.profile.rater_id}_browser_backup.json`,
+      );
+    } catch (error) {
+      window.alert(error.message);
+    }
+  }
+
+  async function importBrowserBackup(file) {
+    const manifest = await loadManifest();
+    let payload;
+    try {
+      payload = JSON.parse(await file.text());
+    } catch {
+      throw new Error("备份文件不是有效 JSON。");
+    }
+    if (
+      payload?.schema_version !== "tbam.pages_browser_backup.v1" ||
+      payload?.study_id !== manifest.study_id ||
+      payload?.source_public_manifest_sha256 !==
+        manifest.source_public_manifest_sha256 ||
+      payload?.presentation_medium !== manifest.presentation_medium ||
+      payload?.collection_protocol_id !==
+        manifest.collection_protocol_id ||
+      !/^[0-9a-f]{64}$/.test(payload?.bundle_id || "")
+    ) {
+      throw new Error("备份文件与当前 Pages 实验版本不兼容。");
+    }
+    const incoming = validateImportedProfile(manifest, payload.profile);
+    await withWriteLock(async () => {
+      const store = readStore(manifest);
+      const norm = incoming.username_norm;
+      for (const [otherNorm, profile] of Object.entries(store.profiles)) {
+        if (
+          otherNorm !== norm &&
+          profile.rater_slot === incoming.rater_slot
+        ) {
+          throw new Error("此浏览器中该席位已属于另一化名，拒绝导入。");
+        }
+      }
+      const current = Object.hasOwn(store.profiles, norm)
+        ? store.profiles[norm]
+        : null;
+      store.profiles[norm] = mergeProfiles(manifest, current, incoming);
+      writeStore(manifest, store);
+      setSession(manifest, norm);
+    });
+    window.alert("完整浏览器备份已导入。页面将重新载入。");
+    window.location.reload();
+  }
+
+  function replaceTextNode(node) {
+    const replacements = [
+      ["任意浏览器恢复服务器中的进度", "同一浏览器恢复本地进度"],
+      ["服务器自动保存草稿", "此浏览器自动保存草稿"],
+      ["进度已保存在服务器", "进度已保存在此浏览器"],
+      ["已恢复服务器进度", "已恢复此浏览器中的进度"],
+      ["草稿已同步", "草稿已保存在浏览器"],
+      ["正在同步草稿", "正在保存浏览器草稿"],
+      ["服务器同步失败", "浏览器保存失败"],
+      ["尚无服务器草稿", "尚无浏览器草稿"],
+      ["草稿已保存到服务器", "草稿已保存到此浏览器"],
+      ["已读取服务器最新草稿", "已读取浏览器最新草稿"],
+    ];
+    if (node.nodeType === Node.TEXT_NODE) {
+      let value = node.nodeValue;
+      for (const [before, after] of replacements) {
+        value = value.replaceAll(before, after);
+      }
+      if (value !== node.nodeValue) node.nodeValue = value;
+      return;
+    }
+    for (const child of node.childNodes || []) replaceTextNode(child);
+  }
+
+  function installStaticInterface() {
+    const style = document.createElement("style");
+    style.textContent = `
+      .pages-export-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+      #pages-storage-warning { padding: 10px 12px; border: 1px solid rgba(205,139,44,.28);
+        border-radius: 10px; background: rgba(255,248,230,.72); }
+      @media (max-width: 760px) {
+        .pages-export-actions { width: 100%; justify-content: stretch; }
+        .pages-export-actions .secondary-button { flex: 1 1 100%; }
+      }
+    `;
+    document.head.append(style);
+    const querySlot = new URL(window.location.href).searchParams.get("slot");
+    const form = document.querySelector("#auth-form");
+    const pinField = document.querySelector("#pin-input")?.closest(".field");
+    if (form && pinField && !document.querySelector("#pages-slot-field")) {
+      const field = document.createElement("label");
+      field.className = "field hidden";
+      field.id = "pages-slot-field";
+      field.innerHTML = `
+        <span>研究者分配的席位编号</span>
+        <input id="pages-slot-input" type="number" min="0" max="39"
+          inputmode="numeric" placeholder="0–39" required>
+        <small>请使用研究者发送给您的唯一编号，不要与他人共用。</small>
+      `;
+      pinField.after(field);
+      const input = field.querySelector("input");
+      if (querySlot !== null) {
+        input.value = querySlot;
+        input.readOnly = true;
+      }
+      const updateSlotVisibility = () => {
+        field.classList.toggle(
+          "hidden",
+          !document.querySelector("#register-tab")?.classList.contains("active"),
+        );
+      };
+      document
+        .querySelector("#register-tab")
+        ?.addEventListener("click", () => window.setTimeout(updateSlotVisibility));
+      document
+        .querySelector("#login-tab")
+        ?.addEventListener("click", () => window.setTimeout(updateSlotVisibility));
+      updateSlotVisibility();
+    }
+
+    const heading = document.querySelector(".auth-panel-heading");
+    if (heading && !document.querySelector("#pages-storage-warning")) {
+      const warning = document.createElement("p");
+      warning.id = "pages-storage-warning";
+      warning.className = "registration-note";
+      warning.textContent =
+        "GitHub Pages 试运行：进度只保存在当前浏览器。完成后必须下载结果 JSON 并交回研究者。";
+      heading.append(warning);
+    }
+    document.querySelector("#open-admin-login")?.classList.add("hidden");
+
+    const exportButton = document.querySelector("#export-mine");
+    if (exportButton) {
+      exportButton.textContent = "下载结果与进度 JSON";
+      exportButton.addEventListener(
+        "click",
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          downloadScienceExport();
+        },
+        true,
+      );
+      const backupButton = document.createElement("button");
+      backupButton.className = "secondary-button";
+      backupButton.id = "pages-backup-button";
+      backupButton.type = "button";
+      backupButton.textContent = "下载跨浏览器备份";
+      backupButton.addEventListener("click", downloadBrowserBackup);
+      const actions = document.createElement("div");
+      actions.className = "pages-export-actions";
+      exportButton.before(actions);
+      actions.append(exportButton, backupButton);
+    }
+
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "application/json,.json";
+    fileInput.className = "hidden";
+    fileInput.id = "pages-backup-import";
+    fileInput.addEventListener("change", async () => {
+      const [file] = fileInput.files;
+      if (!file) return;
+      try {
+        await importBrowserBackup(file);
+      } catch (error) {
+        window.alert(error.message);
+      } finally {
+        fileInput.value = "";
+      }
+    });
+    document.body.append(fileInput);
+
+    const importButton = document.createElement("button");
+    importButton.type = "button";
+    importButton.className = "admin-link";
+    importButton.textContent = "从完整浏览器备份恢复";
+    importButton.addEventListener("click", () => fileInput.click());
+    document.querySelector("#auth-form")?.after(importButton);
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === "characterData") replaceTextNode(mutation.target);
+        for (const node of mutation.addedNodes) replaceTextNode(node);
+      }
+    });
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      characterData: true,
+    });
+    replaceTextNode(document.body);
+  }
+
+  window.fetch = interceptedFetch;
+  window.TBAMPagesPilot = {
+    siteBase: siteBase.href,
+    loadManifest,
+    scienceExport,
+    browserBackup,
+  };
+  installStaticInterface();
+})();
