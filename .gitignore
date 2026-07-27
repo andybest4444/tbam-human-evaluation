@@ -12,4 +12,5 @@ tbam_merged_*
 tbam_rater_progress_*
 tbam_item_summary_*
 .site-staged-candidate/
+.site-staged-wave3-candidate/
 .site-staged-frozen-wave1*/

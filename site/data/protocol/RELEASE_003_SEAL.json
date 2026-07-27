@@ -1,0 +1,23 @@
+{
+  "amendment": {
+    "amendment_id": "e997a18c336caa1ac13325a289ef3da0c3aa65dba5aae31622bceeb7d986f9c2",
+    "sha256": "d47520fd2c09e8ac00c49ed0f0baa59fc19605a60e8ac549c2904c126ef8c1a7"
+  },
+  "generated_utc": "2026-07-27T20:42:07.311702+00:00",
+  "master_protocol_id": "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d",
+  "release": {
+    "path": "site/data/releases/release_003.json",
+    "sha256": "dcb7510917d2bd737f47b3181560a0f2ec870574e3195f5c380e9cdf603ce4c2"
+  },
+  "release_id": "e68c40f790d7f3895302ca8d7b222a1315059c6d6ae4a6f1c6aa6a9b73f43c7f",
+  "release_index_id": "06c397df9822f784a13aafaea60adfc227b73cb2b34d55dd52d50c83a2c5384a",
+  "release_index_snapshot": {
+    "path": "site/data/protocol/release_indices/release_index_003.json",
+    "sha256": "c8a4a2400fa62b165afcebeb55828436c25bab58c3a797b3aa25a040bd993a2f"
+  },
+  "released_item_count": 300,
+  "schema_version": "tbam.human_staged_seal.v1",
+  "seal_id": "2f1439e3bbb280e3f729b7cca33ec43b55b972fdb4eccda6d9af55dba4aa6a59",
+  "status": "frozen_staged_collection_wave1",
+  "study_id": "tbam_e9_best_models_staged_pages_v1"
+}

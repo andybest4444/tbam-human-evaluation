@@ -6,7 +6,7 @@
   const nativeFetch = window.fetch.bind(window);
   const namespace = "tbam.pages.local.v2";
   const expectedMasterProtocolId = "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d";
-  const expectedReleaseIndexId = "212230a7565da1626c07649f3805ce50526be262ada0dfd927c095b54cdc9970";
+  const expectedReleaseIndexId = "06c397df9822f784a13aafaea60adfc227b73cb2b34d55dd52d50c83a2c5384a";
   const useEnglishConsent = true;
   const expectedStudyId =
     "tbam_e9_best_models_staged_pages_v1";

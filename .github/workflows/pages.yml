@@ -7,6 +7,10 @@ on:
       - "site/**"
       - "src/**"
       - "verify_site.py"
+      - "verify_release_chain.py"
+      - "build_incremental_releases.py"
+      - "build_incremental_releases_wave3.py"
+      - "incremental_release_selftest.py"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -28,7 +32,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/configure-pages@v5
-      - name: Verify frozen public bundle
+      - name: Verify cumulative frozen public bundle
         run: python3 verify_site.py --verify-only
       - uses: actions/upload-pages-artifact@v4
         with:

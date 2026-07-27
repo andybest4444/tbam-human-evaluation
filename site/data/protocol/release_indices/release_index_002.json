@@ -1,0 +1,30 @@
+{
+  "cumulative_item_count": 150,
+  "current_release_id": "291c3b768935ea8d1c24536b57b96110a10cb9754ef291bfbfa75e9eeb4d90e1",
+  "current_wave": 2,
+  "generated_utc": "2026-07-27T20:42:07.311702+00:00",
+  "master_protocol_id": "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d",
+  "release_index_id": "86397ebd5a7efbae490f6c0464385d844f99c32d36e4d0dc521b1f9cc53bc1b2",
+  "release_rule_id": "cumulative_append_only_artifact_binding_v1",
+  "releases": [
+    {
+      "cumulative_item_count": 50,
+      "new_item_count": 50,
+      "path": "data/releases/release_001.json",
+      "previous_release_id": null,
+      "release_id": "4e506991e37db574e9c9a0a7c1690246df3aa3aa3d9b8e9923684b04675eca79",
+      "wave_number": 1
+    },
+    {
+      "cumulative_item_count": 150,
+      "new_item_count": 100,
+      "path": "data/releases/release_002.json",
+      "previous_release_id": "4e506991e37db574e9c9a0a7c1690246df3aa3aa3d9b8e9923684b04675eca79",
+      "release_id": "291c3b768935ea8d1c24536b57b96110a10cb9754ef291bfbfa75e9eeb4d90e1",
+      "wave_number": 2
+    }
+  ],
+  "schema_version": "tbam.human_staged_release_index.v1",
+  "status": "frozen_staged_collection_wave1",
+  "study_id": "tbam_e9_best_models_staged_pages_v1"
+}

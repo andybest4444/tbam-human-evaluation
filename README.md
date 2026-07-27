@@ -1,6 +1,6 @@
 # TBAM staged human evaluation
 
-Status: **Wave 1 is frozen, verified, and open for collection.**
+Status: **Wave 3 is frozen, verified, and open for collection.**
 
 Live site:
 <https://andybest4444.github.io/tbam-human-evaluation/>
@@ -31,12 +31,12 @@ The complete logical design was frozen before collection began:
 - five complete participant-slot orderings;
 - immutable private A/B orientations.
 
-Wave 1 releases 50 verified items, one for every retained map. The other 250
-items remain unavailable until their final stimuli are independently verified.
-Later waves must be cumulative and append-only: they may add items but cannot
-remove or modify anything already released. Participant progress is bound to
-the stable master protocol, so a later wave appears in the same catalog without
-invalidating earlier answers.
+The current cumulative Wave 3 release contains all 300 verified items: the 50
+immutable Wave-1 items plus 250 append-only items released in Waves 2 and 3.
+Each later wave is cumulative and cannot remove or modify anything released
+earlier. Participant progress remains bound to the stable master protocol, so
+the added items appear in the same catalog without invalidating earlier
+answers.
 
 Frozen identifiers:
 
@@ -62,9 +62,10 @@ https://andybest4444.github.io/tbam-human-evaluation/?slot=3
 https://andybest4444.github.io/tbam-human-evaluation/?slot=4
 ```
 
-Each participant currently sees all 50 Wave-1 items in a frozen slot-specific
-order. If all five slots are completed, every released item receives five
-judgments.
+Each participant currently sees all 300 cumulative items in a frozen
+slot-specific order. The first 50 are the unchanged Wave-1 items and the
+remaining 250 were appended in Waves 2 and 3. If all five slots are completed,
+every released item receives five judgments.
 
 The participant should:
 
@@ -98,6 +99,43 @@ python3 verify_site.py --verify-only
 The verifier checks the protocol and release digests, public seals, complete
 assignment structure, exact released-artifact hashes, artifact count, and
 absence of reserved internal identifiers or disallowed data/model/video files.
+
+## Append-only PPO release pipeline
+
+These commands run from the complete TBAM workspace, not from a standalone
+checkout of this Pages repository. Do not rerun `build_staged_protocol.py`:
+it is the historical Wave 1 builder.
+Wave 1, its 50 judge inputs, and all of its seals are immutable. The final
+MAPPO-with-AgentID and JointPPO stimuli must use
+`build_incremental_releases_wave3.py`, which fails closed until the complete
+validation-only 180-record selection and ten full-suite trajectory runs exist.
+
+```bash
+# Safe at any time; read-only and expected to report blocked until inputs exist.
+python3 build_incremental_releases_wave3.py check-inputs
+
+# Once the authoritative 180-record selection exists:
+python3 build_incremental_releases_wave3.py freeze-amendment --dry-run
+python3 build_incremental_releases_wave3.py freeze-amendment
+python3 build_incremental_releases_wave3.py plan-trajectories --dry-run --print-commands
+python3 build_incremental_releases_wave3.py plan-trajectories
+
+# Run every command in TASK_MANIFEST.json, then hash and validate the outputs.
+python3 build_incremental_releases_wave3.py collect-trajectories
+python3 build_incremental_releases_wave3.py check-inputs
+
+# Build a new candidate and separate private provenance bundle. This command
+# refuses to write into site/ and never overwrites an existing candidate.
+python3 build_incremental_releases_wave3.py build
+python3 verify_site.py --site .site-staged-wave3-candidate --verify-only
+python3 incremental_release_selftest.py
+```
+
+Promotion is a separate, deliberate review step. The production storage key
+uses only the unchanged study and master protocol identifiers, so adding the
+remaining 250 stable item IDs preserves existing usernames, A/B judgments,
+tie judgments, and drafts. New item states are initialized lazily. The
+currently active study must never be added to `retiredVersions`.
 
 Preview through HTTP:
 
