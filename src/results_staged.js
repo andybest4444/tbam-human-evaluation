@@ -3,7 +3,12 @@
 const MANIFEST_URL = "./data/pages_manifest.json";
 const MANIFEST_SCHEMA = "tbam.github_pages_bundle.v1";
 const PAGES_EXPORT_SCHEMA = "tbam.pages_human_rater_export.v2";
-const JUDGMENT_SCHEMA = "tbam.blind_pairwise_choice.v1";
+const LEGACY_JUDGMENT_SCHEMA = "tbam.blind_pairwise_choice.v1";
+const TIE_JUDGMENT_SCHEMA = "tbam.blind_pairwise_choice.v2";
+const JUDGMENT_SCHEMAS = new Set([
+  LEGACY_JUDGMENT_SCHEMA,
+  TIE_JUDGMENT_SCHEMA,
+]);
 const MERGED_EXPORT_SCHEMA = "tbam.merged_pairwise_choices.v1";
 const EXPECTED_STUDY_ID =
   "tbam_e9_best_models_staged_pages_v1";
@@ -54,7 +59,7 @@ const JUDGMENT_FIELDS = [
   "duration_seconds",
 ];
 const ARTIFACT_HASH_FIELDS = ["judge_input"];
-const PAIRWISE_CHOICES = new Set(["A", "B"]);
+const PAIRWISE_CHOICES = new Set(["A", "B", "tie"]);
 const HASH_PATTERN = /^[a-f0-9]{64}$/i;
 const ID_PATTERN = /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}$/;
 const ISO_TIMESTAMP_PATTERN =
@@ -555,7 +560,7 @@ function validateAssignmentItemIds(actual, expected) {
 function validateJudgment(judgment, expectedRater, index) {
   const label = `judgments[${index}]`;
   assertExactKeys(judgment, JUDGMENT_FIELDS, label);
-  if (judgment.schema_version !== JUDGMENT_SCHEMA) {
+  if (!JUDGMENT_SCHEMAS.has(judgment.schema_version)) {
     throw new Error(`${label}.schema_version 不受支持`);
   }
   if (judgment.study_id !== state.manifest.study_id) {
@@ -599,7 +604,13 @@ function validateJudgment(judgment, expectedRater, index) {
   }
 
   if (!PAIRWISE_CHOICES.has(judgment.choice)) {
-    throw new Error(`${label}.choice 必须为 A 或 B`);
+    throw new Error(`${label}.choice 必须为 A、B 或 tie`);
+  }
+  if (
+    judgment.schema_version === LEGACY_JUDGMENT_SCHEMA &&
+    judgment.choice === "tie"
+  ) {
+    throw new Error(`${label} 的旧版 schema 不允许 tie`);
   }
 
   const startedTime = parseTimestamp(
@@ -756,12 +767,15 @@ function buildItemRows(judgments) {
     total: 0,
     choiceA: 0,
     choiceB: 0,
+    choiceTie: 0,
   }));
   const byId = new Map(rows.map((row) => [row.itemId, row]));
   for (const judgment of judgments) {
     const row = byId.get(judgment.item_id);
     row.total += 1;
-    row[`choice${judgment.choice}`] += 1;
+    if (judgment.choice === "A") row.choiceA += 1;
+    else if (judgment.choice === "B") row.choiceB += 1;
+    else row.choiceTie += 1;
   }
   return rows.sort(
     (left, right) =>
@@ -865,7 +879,7 @@ function renderItems() {
   const body = elements["item-body"];
   body.replaceChildren();
   if (state.latestExports.length === 0) {
-    body.appendChild(emptyTableRow(5, "导入结果后显示项目计数。"));
+    body.appendChild(emptyTableRow(6, "导入结果后显示项目计数。"));
     return;
   }
   for (const row of state.itemRows) {
@@ -875,6 +889,7 @@ function renderItems() {
     tr.appendChild(textCell(row.total, "number-cell"));
     tr.appendChild(textCell(row.choiceA, "number-cell"));
     tr.appendChild(textCell(row.choiceB, "number-cell"));
+    tr.appendChild(textCell(row.choiceTie, "number-cell"));
     body.appendChild(tr);
   }
 }
@@ -1006,6 +1021,7 @@ function downloadItemSummary() {
     "judgment_count",
     "choice_A",
     "choice_B",
+    "choice_tie",
   ];
   const rows = state.itemRows.map((row) => [
     row.itemId,
@@ -1013,6 +1029,7 @@ function downloadItemSummary() {
     row.total,
     row.choiceA,
     row.choiceB,
+    row.choiceTie,
   ]);
   downloadCsv(`tbam_item_summary_${dateStamp()}.csv`, headers, rows);
 }

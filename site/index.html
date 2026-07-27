@@ -10,9 +10,9 @@
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="#123c3b">
     <title>TBAM 匿名路线人工评判 · Internal Evaluation</title>
-    <link rel="stylesheet" href="styles.css?v=e9-best-models-staged-wave1-v1">
-    <script src="static_api.js?v=e9-best-models-staged-wave1-v1" defer></script>
-    <script src="app.js?v=e9-best-models-staged-wave1-v1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=e9-best-models-staged-wave1-tie-v2">
+    <script src="static_api.js?v=e9-best-models-staged-wave1-tie-v2" defer></script>
+    <script src="app.js?v=e9-best-models-staged-wave1-tie-v2" defer></script>
   </head>
   <body>
     <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -85,9 +85,10 @@
 
             <section class="start-rubric" aria-labelledby="start-rubric-title">
               <p class="kicker">所有项目只有一个问题</p>
-              <h2 id="start-rubric-title">路线 A 和路线 B，哪条整体更好？</h2>
+              <h2 id="start-rubric-title">路线 A、路线 B，或两者平局？</h2>
               <p>
-                根据任务指令和两张匿名路线图，必须选择 A 或 B。
+                根据任务指令和两张匿名路线图，选择 A、B 或平局。
+                如果两条路线整体相当，可以选择平局；既有选择和进度保持不变。
                 不区分路线是否完成，不做分项评分，也不猜测生成方法。
               </p>
             </section>
@@ -149,8 +150,8 @@
           <div class="page-heading">
             <div>
               <p class="kicker">开始前 · 约 1 分钟</p>
-              <h1>每项只做一次 A/B 二选一</h1>
-              <p>不判断是否完成，不做分项评分，也没有平局选项。</p>
+              <h1>每项做一次 A / B / 平局判断</h1>
+              <p>不判断是否完成，不做分项评分；整体相当时可以选择平局。</p>
             </div>
             <span class="step-chip">说明 1 / 1</span>
           </div>
@@ -170,10 +171,10 @@
                 </div>
                 <div>
                   <p class="kicker">唯一问题</p>
-                  <h2>路线 A 和路线 B，哪条整体更好？</h2>
+                  <h2>路线 A、路线 B，或两者平局？</h2>
                   <p>
                     两张图使用相同地图、任务指令、图例和渲染规则。
-                    结合任务指令与可见路线整体判断，必须选择 A 或 B；
+                    结合任务指令与可见路线整体判断，选择 A、B 或平局；
                     A/B 只是匿名位置，不代表具体方法。
                   </p>
                 </div>
@@ -186,7 +187,7 @@
               <label class="check-card">
                 <input type="checkbox" class="tutorial-check">
                 <span>
-                  <strong>我会直接选择 A 或 B</strong>
+                  <strong>我会选择 A、B 或平局</strong>
                   不区分是否完成，不做分项评分，不猜测生成方法。
                 </span>
               </label>

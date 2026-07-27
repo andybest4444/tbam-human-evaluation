@@ -158,7 +158,8 @@ function renderConfig() {
     ["formal", "formal_collection"].includes(config.study_mode)
       ? "INTERNAL EVALUATION"
       : "EVALUATION";
-  $("#consent-copy").textContent = config.consent_text;
+  $("#consent-copy").textContent =
+    `${config.consent_text}\n\n评判规则修订：现在允许在两条路线整体相当时选择平局。本修订不清空或改写任何既有选择与进度。`;
   $("#registration-note").classList.toggle("hidden", config.registration_open);
   $("#register-tab").disabled = !config.registration_open;
   $("#register-tab").title = config.registration_open
@@ -359,12 +360,12 @@ function ratingSection() {
       <header class="rating-heading">
         <span class="endpoint-number">选择</span>
         <div>
-          <h2>路线 A 和路线 B，哪条整体更好？</h2>
-          <p>结合任务指令和两张匿名路线图，必须选择一条；不区分是否完成，不做分项评分。</p>
+          <h2>路线 A、路线 B，或两者平局？</h2>
+          <p>结合任务指令和两张匿名路线图，选择整体更好的路线；如果整体相当，可以选择平局。不区分是否完成，不做分项评分。</p>
         </div>
-        <span class="endpoint-tag">A/B 二选一</span>
+        <span class="endpoint-tag">A / B / 平局</span>
       </header>
-      <div class="pairwise-choice-group" role="radiogroup" aria-label="选择整体更好的路线">
+      <div class="pairwise-choice-group" role="radiogroup" aria-label="选择路线 A、路线 B，或平局">
         <label class="pairwise-choice-card">
           <input type="radio" name="pairwise-choice" value="A" data-rating-field>
           <span><strong>A</strong>选择路线 A</span>
@@ -372,6 +373,10 @@ function ratingSection() {
         <label class="pairwise-choice-card">
           <input type="radio" name="pairwise-choice" value="B" data-rating-field>
           <span><strong>B</strong>选择路线 B</span>
+        </label>
+        <label class="pairwise-choice-card">
+          <input type="radio" name="pairwise-choice" value="tie" data-rating-field>
+          <span><strong>=</strong>选择平局</span>
         </label>
       </div>
     </section>
@@ -392,7 +397,7 @@ function applyDraft(draft) {
   const choice = draft?.payload?.choice;
   state.activeSeconds = Number(draft?.active_seconds || 0);
   state.draftRevision = Number(draft?.revision || 0);
-  if (choice === "A" || choice === "B") {
+  if (choice === "A" || choice === "B" || choice === "tie") {
     const input = document.querySelector(
       `input[name="pairwise-choice"][value="${choice}"]`,
     );
@@ -409,11 +414,11 @@ function draftPayload() {
 
 function finalChoice() {
   const choice = draftPayload().choice;
-  if (choice !== "A" && choice !== "B") {
+  if (choice !== "A" && choice !== "B" && choice !== "tie") {
     document
       .querySelector("[data-choice-section]")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    throw new Error("请选择路线 A 或路线 B。");
+    throw new Error("请选择路线 A、路线 B 或平局。");
   }
   return choice;
 }
@@ -1184,7 +1189,7 @@ function renderAdminTable() {
     $("#admin-table-head").innerHTML = `
       <tr>
         <th>地图</th><th>匿名项目</th><th>覆盖</th><th>已分配</th>
-        <th>选择 A</th><th>选择 B</th>
+        <th>选择 A</th><th>选择 B</th><th>平局</th>
       </tr>`;
     $("#admin-table-body").innerHTML = filtered
       .map(
@@ -1197,7 +1202,7 @@ function renderAdminTable() {
               ${row.submitted}/${row.target}
             </td>
             <td>${row.assigned}/${row.target}</td>
-            <td>${row.choice_A ?? "封存"}</td><td>${row.choice_B ?? "封存"}</td>
+            <td>${row.choice_A ?? "封存"}</td><td>${row.choice_B ?? "封存"}</td><td>${row.choice_tie ?? "封存"}</td>
           </tr>`,
       )
       .join("");

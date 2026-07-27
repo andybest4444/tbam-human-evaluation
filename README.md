@@ -5,11 +5,21 @@ Status: **Wave 1 is frozen, verified, and open for collection.**
 Live site:
 <https://andybest4444.github.io/tbam-human-evaluation/>
 
-This is a blinded, browser-local A/B route-evaluation study. Each item shows
-two complete route maps and asks only which route is better overall. The
-interface supports Chinese and English, saves progress in the current browser,
-allows a submitted choice to be revised, and advances automatically after each
-submission.
+This is a blinded, browser-local route-evaluation study. Each item shows two
+complete route maps and asks whether Route A is better overall, Route B is
+better overall, or the two are tied. The interface supports Chinese and
+English, saves progress in the current browser, allows a submitted choice to
+be revised, and advances automatically after each submission.
+
+## Tie-option amendment
+
+The interface added a Tie option on 2026-07-27 without changing the study ID,
+master protocol ID, storage namespace, released items, or browser-store schema.
+Existing progress and `tbam.blind_pairwise_choice.v1` A/B judgments remain
+unchanged. Any judgment submitted after this interface update uses
+`tbam.blind_pairwise_choice.v2`, whose allowed choices are `A`, `B`, and
+`tie`. Keeping the two judgment schema versions distinct makes the change in
+available response options explicit during analysis.
 
 ## Frozen staged design
 
@@ -60,7 +70,7 @@ The participant should:
 
 1. open only their assigned slot link;
 2. choose a pseudonymous username and local PIN;
-3. answer the released A/B items, over one or more sessions;
+3. answer the released A/B/Tie items, over one or more sessions;
 4. download their result/progress JSON and return it to the researcher.
 
 The username and PIN restore progress only in the same browser. To move to a

@@ -10,9 +10,9 @@
     <meta name="color-scheme" content="light">
     <meta name="theme-color" content="#123c3b">
     <title>TBAM Anonymous Route Evaluation · Internal Evaluation</title>
-    <link rel="stylesheet" href="styles.css?v=e9-best-models-staged-wave1-v1">
-    <script src="static_api-en.js?v=e9-best-models-staged-wave1-v1" defer></script>
-    <script src="app-en.js?v=e9-best-models-staged-wave1-v1" defer></script>
+    <link rel="stylesheet" href="styles.css?v=e9-best-models-staged-wave1-tie-v2">
+    <script src="static_api-en.js?v=e9-best-models-staged-wave1-tie-v2" defer></script>
+    <script src="app-en.js?v=e9-best-models-staged-wave1-tie-v2" defer></script>
   </head>
   <body>
     <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -85,9 +85,10 @@
 
             <section class="start-rubric" aria-labelledby="start-rubric-title">
               <p class="kicker">Every item asks one question</p>
-              <h2 id="start-rubric-title">Which route is better overall, Route A or Route B?</h2>
+              <h2 id="start-rubric-title">Which is better overall: Route A, Route B, or a tie?</h2>
               <p>
-                Using the task instruction and the two anonymous route maps, you must choose A or B.
+                Using the task instruction and the two anonymous route maps, choose A, B, or Tie.
+                If the routes are equally good overall, choose Tie; existing choices and progress remain unchanged.
                 Do not separately judge completion, assign dimension scores, or guess the generating method.
               </p>
             </section>
@@ -149,8 +150,8 @@
           <div class="page-heading">
             <div>
               <p class="kicker">Before you begin · about 1 minute</p>
-              <h1>Make one A/B choice for each item</h1>
-              <p>Do not separately judge completion, assign dimension scores, or use a tie option.</p>
+              <h1>Make one A / B / Tie judgment for each item</h1>
+              <p>Do not separately judge completion or assign dimension scores; choose Tie when the routes are equally good overall.</p>
             </div>
             <span class="step-chip">Instructions 1 / 1</span>
           </div>
@@ -170,10 +171,10 @@
                 </div>
                 <div>
                   <p class="kicker">Only question</p>
-                  <h2>Which route is better overall, Route A or Route B?</h2>
+                  <h2>Which is better overall: Route A, Route B, or a tie?</h2>
                   <p>
                     Both panels use the same map, task instruction, legend, and rendering rules.
-                    Judge the visible routes as a whole against the task instruction and choose A or B;
+                    Judge the visible routes as a whole against the task instruction and choose A, B, or Tie;
                     A and B are anonymous positions and do not identify methods.
                   </p>
                 </div>
@@ -186,7 +187,7 @@
               <label class="check-card">
                 <input type="checkbox" class="tutorial-check">
                 <span>
-                  <strong>I will choose A or B directly</strong>
+                  <strong>I will choose A, B, or Tie</strong>
                   I will not separately judge completion, assign dimension scores, or guess the method.
                 </span>
               </label>

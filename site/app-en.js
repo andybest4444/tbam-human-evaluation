@@ -158,7 +158,8 @@ function renderConfig() {
     ["formal", "formal_collection"].includes(config.study_mode)
       ? "INTERNAL EVALUATION"
       : "EVALUATION";
-  $("#consent-copy").textContent = config.consent_text;
+  $("#consent-copy").textContent =
+    `${config.consent_text}\n\nEvaluation-rule amendment: You may now choose Tie when the two routes are equally good overall. This amendment does not clear or rewrite any existing choices or progress.`;
   $("#registration-note").classList.toggle("hidden", config.registration_open);
   $("#register-tab").disabled = !config.registration_open;
   $("#register-tab").title = config.registration_open
@@ -359,12 +360,12 @@ function ratingSection() {
       <header class="rating-heading">
         <span class="endpoint-number">Choice</span>
         <div>
-          <h2>Which route is better overall, Route A or Route B?</h2>
-          <p>Using the task instruction and the two anonymous route maps, choose one route overall. Do not separately judge completion or assign dimension scores.</p>
+          <h2>Which is better overall: Route A, Route B, or a tie?</h2>
+          <p>Using the task instruction and the two anonymous route maps, choose the better route overall, or choose Tie if they are equally good. Do not separately judge completion or assign dimension scores.</p>
         </div>
-        <span class="endpoint-tag">A/B forced choice</span>
+        <span class="endpoint-tag">A / B / Tie</span>
       </header>
-      <div class="pairwise-choice-group" role="radiogroup" aria-label="Choose the better route overall">
+      <div class="pairwise-choice-group" role="radiogroup" aria-label="Choose Route A, Route B, or Tie">
         <label class="pairwise-choice-card">
           <input type="radio" name="pairwise-choice" value="A" data-rating-field>
           <span><strong>A</strong>Choose Route A</span>
@@ -372,6 +373,10 @@ function ratingSection() {
         <label class="pairwise-choice-card">
           <input type="radio" name="pairwise-choice" value="B" data-rating-field>
           <span><strong>B</strong>Choose Route B</span>
+        </label>
+        <label class="pairwise-choice-card">
+          <input type="radio" name="pairwise-choice" value="tie" data-rating-field>
+          <span><strong>=</strong>Choose Tie</span>
         </label>
       </div>
     </section>
@@ -392,7 +397,7 @@ function applyDraft(draft) {
   const choice = draft?.payload?.choice;
   state.activeSeconds = Number(draft?.active_seconds || 0);
   state.draftRevision = Number(draft?.revision || 0);
-  if (choice === "A" || choice === "B") {
+  if (choice === "A" || choice === "B" || choice === "tie") {
     const input = document.querySelector(
       `input[name="pairwise-choice"][value="${choice}"]`,
     );
@@ -409,11 +414,11 @@ function draftPayload() {
 
 function finalChoice() {
   const choice = draftPayload().choice;
-  if (choice !== "A" && choice !== "B") {
+  if (choice !== "A" && choice !== "B" && choice !== "tie") {
     document
       .querySelector("[data-choice-section]")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    throw new Error("Please choose Route A or Route B.");
+    throw new Error("Please choose Route A, Route B, or Tie.");
   }
   return choice;
 }
@@ -1184,7 +1189,7 @@ function renderAdminTable() {
     $("#admin-table-head").innerHTML = `
       <tr>
         <th>Map</th><th>Anonymous item</th><th>Coverage</th><th>Assigned</th>
-        <th>Choice A</th><th>Choice B</th>
+        <th>Choice A</th><th>Choice B</th><th>Tie</th>
       </tr>`;
     $("#admin-table-body").innerHTML = filtered
       .map(
@@ -1197,7 +1202,7 @@ function renderAdminTable() {
               ${row.submitted}/${row.target}
             </td>
             <td>${row.assigned}/${row.target}</td>
-            <td>${row.choice_A ?? "sealed"}</td><td>${row.choice_B ?? "sealed"}</td>
+            <td>${row.choice_A ?? "sealed"}</td><td>${row.choice_B ?? "sealed"}</td><td>${row.choice_tie ?? "sealed"}</td>
           </tr>`,
       )
       .join("");

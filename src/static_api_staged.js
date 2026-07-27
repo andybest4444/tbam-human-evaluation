@@ -42,6 +42,8 @@
   const retiredPurgeMarker =
     `${namespace}:formal-v3-retired-progress-purged:v1`;
   const encoder = new TextEncoder();
+  const legacyJudgmentSchema = "tbam.blind_pairwise_choice.v1";
+  const tieJudgmentSchema = "tbam.blind_pairwise_choice.v2";
   let manifestPromise;
 
   function purgeRetiredProgress() {
@@ -626,8 +628,11 @@
   }
 
   function validateChoice(choice) {
-    if (choice !== "A" && choice !== "B") {
-      throw new LocalApiError(400, "必须选择路线 A 或路线 B。");
+    if (choice !== "A" && choice !== "B" && choice !== "tie") {
+      throw new LocalApiError(
+        400,
+        "必须选择路线 A、路线 B 或平局。",
+      );
     }
     return choice;
   }
@@ -638,7 +643,7 @@
       typeof payload !== "object" ||
       Array.isArray(payload) ||
       Object.keys(payload).join(",") !== "choice" ||
-      ![null, "A", "B"].includes(payload.choice)
+      ![null, "A", "B", "tie"].includes(payload.choice)
     ) {
       throw new LocalApiError(400, "草稿选择无效。");
     }
@@ -748,7 +753,7 @@
     }
     const completed = now();
     return {
-      schema_version: "tbam.blind_pairwise_choice.v1",
+      schema_version: tieJudgmentSchema,
       study_id: manifest.study_id,
       item_id: item.item_id,
       judge_type: "human",
@@ -813,7 +818,9 @@
       typeof record !== "object" ||
       Array.isArray(record) ||
       Object.keys(record).sort().join(",") !== required.join(",") ||
-      record.schema_version !== "tbam.blind_pairwise_choice.v1" ||
+      ![legacyJudgmentSchema, tieJudgmentSchema].includes(
+        record.schema_version,
+      ) ||
       record.study_id !== manifest.study_id ||
       record.item_id !== item.item_id ||
       record.judge_type !== "human" ||
@@ -837,6 +844,12 @@
       throw new Error(`备份中的制品哈希不匹配：${item.item_id}`);
     }
     validateChoice(record.choice);
+    if (
+      record.schema_version === legacyJudgmentSchema &&
+      record.choice === "tie"
+    ) {
+      throw new Error(`备份中的旧版判断记录不能包含平局：${item.item_id}`);
+    }
     if (
       !validTimestamp(record.started_utc) ||
       !validTimestamp(record.completed_utc) ||

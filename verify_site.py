@@ -12,6 +12,13 @@ from typing import Any
 
 
 EXPECTED_STATUS = "frozen_staged_collection_wave1"
+EXPECTED_STUDY_ID = "tbam_e9_best_models_staged_pages_v1"
+EXPECTED_MASTER_PROTOCOL_ID = (
+    "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d"
+)
+EXPECTED_PRESENTATION_MEDIUM = "static_route_maps_bilingual_staged_pages_v1"
+EXPECTED_CONSENT_VERSION = "pages-e9-best-models-staged-consent-v1"
+EXPECTED_ASSET_VERSION = "e9-best-models-staged-wave1-tie-v2"
 EXPECTED_MASTER_ITEMS = 300
 EXPECTED_RELEASED_ITEMS = 50
 EXPECTED_MAPS = 50
@@ -136,6 +143,24 @@ def verify(site: Path) -> dict[str, Any]:
         "unexpected collection status",
     )
     require(
+        master.get("study_id") == EXPECTED_STUDY_ID
+        and release.get("study_id") == EXPECTED_STUDY_ID
+        and index.get("study_id") == EXPECTED_STUDY_ID
+        and pages.get("study_id") == EXPECTED_STUDY_ID,
+        "study ID changed; existing browser progress would not be preserved",
+    )
+    require(
+        master_id == EXPECTED_MASTER_PROTOCOL_ID,
+        "master protocol ID changed; existing browser progress would not be preserved",
+    )
+    require(
+        master.get("presentation_medium") == EXPECTED_PRESENTATION_MEDIUM
+        and pages.get("presentation_medium") == EXPECTED_PRESENTATION_MEDIUM
+        and master.get("consent_version") == EXPECTED_CONSENT_VERSION
+        and pages.get("consent_version") == EXPECTED_CONSENT_VERSION,
+        "progress-bound presentation or consent identifier changed",
+    )
+    require(
         release.get("master_protocol_id") == master_id
         and index.get("master_protocol_id") == master_id
         and index.get("current_release_id") == release_id
@@ -237,6 +262,60 @@ def verify(site: Path) -> dict[str, Any]:
                     not in FORBIDDEN_TOKEN_DIGESTS,
                     f"reserved internal identifier found in: {path}",
                 )
+
+    runtime_requirements = {
+        "index.html": (
+            f"styles.css?v={EXPECTED_ASSET_VERSION}",
+            "既有选择和进度保持不变",
+        ),
+        "index-en.html": (
+            f"styles.css?v={EXPECTED_ASSET_VERSION}",
+            "existing choices and progress remain unchanged",
+        ),
+        "app.js": (
+            'value="tie"',
+            'choice === "tie"',
+            'choice !== "tie"',
+            "row.choice_tie",
+        ),
+        "app-en.js": (
+            'value="tie"',
+            "Choose Tie",
+            "row.choice_tie",
+        ),
+        "static_api.js": (
+            'const namespace = "tbam.pages.local.v2"',
+            '"tbam.blind_pairwise_choice.v1"',
+            '"tbam.blind_pairwise_choice.v2"',
+            '[null, "A", "B", "tie"]',
+        ),
+        "static_api-en.js": (
+            'const namespace = "tbam.pages.local.v2"',
+            '"tbam.blind_pairwise_choice.v1"',
+            '"tbam.blind_pairwise_choice.v2"',
+            '[null, "A", "B", "tie"]',
+        ),
+        "results.html": (
+            f"results.js?v={EXPECTED_ASSET_VERSION}",
+            '<th scope="col">平局</th>',
+        ),
+        "results.js": (
+            'new Set(["A", "B", "tie"])',
+            "LEGACY_JUDGMENT_SCHEMA",
+            "TIE_JUDGMENT_SCHEMA",
+            '"choice_tie"',
+        ),
+        "styles.css": (
+            "grid-template-columns: repeat(3, minmax(0, 1fr));",
+        ),
+    }
+    for name, fragments in runtime_requirements.items():
+        runtime = (site / name).read_text(encoding="utf-8")
+        for fragment in fragments:
+            require(
+                fragment in runtime,
+                f"tie-compatible runtime requirement missing from {name}: {fragment}",
+            )
 
     return {
         "status": "verified_frozen_staged_wave1",

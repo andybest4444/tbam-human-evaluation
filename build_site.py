@@ -49,7 +49,7 @@ COLLECTION_STATUS = "collection_paused_for_model_selection_review"
 STUDY_MODE = "paused_review"
 PRESENTATION_MEDIUM = "static_route_maps_bilingual_variable_scale_pages_v1"
 ASSIGNMENT_RULE_ID = "complete_catalog_round_robin_v2"
-ASSET_VERSION = "e9-human-pairwise-paused-v4"
+ASSET_VERSION = "e9-human-pairwise-paused-v4-tie-v2"
 CONSENT_VERSION = "pages-e9-collection-paused-notice-v4"
 RATER_SLOT_MIN = 0
 RATER_SLOT_MAX = 4
@@ -99,6 +99,10 @@ SOURCE_MIRROR_FILES = (
 )
 ENGLISH_TRANSLATIONS = {
     "备份中的 ${field} 无效": "Invalid ${field} in backup",
+    "备份中的旧版判断记录不能包含平局：${item.item_id}": (
+        "A legacy judgment in the backup cannot contain a tie: "
+        "${item.item_id}"
+    ),
     "当前浏览器恢复本地进度": (
         "resume local progress in this browser"
     ),
@@ -162,17 +166,20 @@ ENGLISH_TRANSLATIONS = {
         "Thank you for completing the catalog. You may still export "
         "your anonymous backup"
     ),
-    "结合任务指令和两张匿名路线图，必须选择一条；"
-    "不区分是否完成，不做分项评分": (
+    "结合任务指令和两张匿名路线图，选择整体更好的路线；"
+    "如果整体相当，可以选择平局。不区分是否完成，不做分项评分": (
         "Using the task instruction and the two anonymous route maps, "
-        "choose one route overall. Do not separately judge completion "
-        "or assign dimension scores"
+        "choose the better route overall, or choose Tie if they are "
+        "equally good. Do not separately judge completion or assign "
+        "dimension scores"
     ),
-    "路线 A 和路线 B，哪条整体更好": (
-        "Which route is better overall, Route A or Route B"
+    "路线 A、路线 B，或两者平局": (
+        "Which is better overall: Route A, Route B, or a tie"
     ),
-    "选择整体更好的路线": "Choose the better route overall",
-    "请选择路线 A 或路线 B": "Please choose Route A or Route B",
+    "选择路线 A、路线 B，或平局": "Choose Route A, Route B, or Tie",
+    "请选择路线 A、路线 B 或平局": (
+        "Please choose Route A, Route B, or Tie"
+    ),
     "有尚未同步的修改": "Unsaved changes",
     "正在同步草稿": "Saving draft",
     "草稿已同步": "Draft saved",
@@ -267,9 +274,19 @@ ENGLISH_TRANSLATIONS = {
     ),
     "在隐蔽区域聚集": "and group together in concealed areas",
     "所有项目只有一个问题": "Every item asks one question",
-    "根据任务指令和两张匿名路线图，必须选择 A 或 B": (
+    "根据任务指令和两张匿名路线图，选择 A、B 或平局": (
         "Using the task instruction and the two anonymous route maps, "
-        "you must choose A or B"
+        "choose A, B, or Tie"
+    ),
+    "如果两条路线整体相当，可以选择平局；既有选择和进度保持不变": (
+        "If the routes are equally good overall, choose Tie; existing "
+        "choices and progress remain unchanged"
+    ),
+    "评判规则修订：现在允许在两条路线整体相当时选择平局。"
+    "本修订不清空或改写任何既有选择与进度。": (
+        "Evaluation-rule amendment: You may now choose Tie when the two "
+        "routes are equally good overall. This amendment does not clear "
+        "or rewrite any existing choices or progress."
     ),
     "不区分路线是否完成，不做分项评分，也不猜测生成方法": (
         "Do not separately judge completion, assign dimension scores, "
@@ -298,10 +315,12 @@ ENGLISH_TRANSLATIONS = {
     ),
     "研究管理员入口": "Research administrator",
     "开始前 · 约 1 分钟": "Before you begin · about 1 minute",
-    "每项只做一次 A/B 二选一": "Make one A/B choice for each item",
-    "不判断是否完成，不做分项评分，也没有平局选项": (
-        "Do not separately judge completion, assign dimension scores, "
-        "or use a tie option"
+    "每项做一次 A / B / 平局判断": (
+        "Make one A / B / Tie judgment for each item"
+    ),
+    "不判断是否完成，不做分项评分；整体相当时可以选择平局": (
+        "Do not separately judge completion or assign dimension scores; "
+        "choose Tie when the routes are equally good overall"
     ),
     "说明 1 / 1": "Instructions 1 / 1",
     "路线图例示意": "Route-map legend example",
@@ -310,16 +329,16 @@ ENGLISH_TRANSLATIONS = {
         "Both panels use the same map, task instruction, legend, and "
         "rendering rules"
     ),
-    "结合任务指令与可见路线整体判断，必须选择 A 或 B；": (
+    "结合任务指令与可见路线整体判断，选择 A、B 或平局；": (
         "Judge the visible routes as a whole against the task instruction "
-        "and choose A or B;"
+        "and choose A, B, or Tie;"
     ),
     "A/B 只是匿名位置，不代表具体方法": (
         "A and B are anonymous positions and do not identify methods"
     ),
     "确认理解": "Confirm understanding",
     "开始评判前": "Before starting",
-    "我会直接选择 A 或 B": "I will choose A or B directly",
+    "我会选择 A、B 或平局": "I will choose A, B, or Tie",
     "不区分是否完成，不做分项评分，不猜测生成方法": (
         "I will not separately judge completion, assign dimension scores, "
         "or guess the method"
@@ -400,7 +419,9 @@ ENGLISH_TRANSLATIONS = {
     "评判任务": "Evaluation",
     "进行中": "In progress",
     "选择": "Choice",
-    "A/B 二选一": "A/B forced choice",
+    "A / B / 平局": "A / B / Tie",
+    "选择平局": "Choose Tie",
+    "平局": "Tie",
     "有效作答时间无效": "Invalid active response time",
     "浏览器本地存储操作失败": "Browser-local storage operation failed",
     "Pages manifest 请求失败": "Pages manifest request failed",
@@ -453,7 +474,9 @@ ENGLISH_TRANSLATIONS = {
         "This item is not assigned to this slot"
     ),
     "请求数据不是有效 JSON": "The request body is not valid JSON",
-    "必须选择路线 A 或路线 B": "You must choose Route A or Route B",
+    "必须选择路线 A、路线 B 或平局": (
+        "You must choose Route A, Route B, or Tie"
+    ),
     "草稿选择无效": "Invalid draft choice",
     "请先确认内部评判说明与参与同意": (
         "Accept the internal evaluation notice and consent before continuing"
@@ -614,9 +637,10 @@ ENGLISH_TRANSLATIONS = {
 START_RUBRIC_HTML = """
             <section class="start-rubric" aria-labelledby="start-rubric-title">
               <p class="kicker">所有项目只有一个问题</p>
-              <h2 id="start-rubric-title">路线 A 和路线 B，哪条整体更好？</h2>
+              <h2 id="start-rubric-title">路线 A、路线 B，或两者平局？</h2>
               <p>
-                根据任务指令和两张匿名路线图，必须选择 A 或 B。
+                根据任务指令和两张匿名路线图，选择 A、B 或平局。
+                如果两条路线整体相当，可以选择平局；既有选择和进度保持不变。
                 不区分路线是否完成，不做分项评分，也不猜测生成方法。
               </p>
             </section>
@@ -677,7 +701,7 @@ START_RUBRIC_CSS = """
 
 .pairwise-choice-group {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   padding: 24px;
 }
@@ -814,8 +838,8 @@ SIMPLE_TUTORIAL_HTML = """
           <div class="page-heading">
             <div>
               <p class="kicker">开始前 · 约 1 分钟</p>
-              <h1>每项只做一次 A/B 二选一</h1>
-              <p>不判断是否完成，不做分项评分，也没有平局选项。</p>
+              <h1>每项做一次 A / B / 平局判断</h1>
+              <p>不判断是否完成，不做分项评分；整体相当时可以选择平局。</p>
             </div>
             <span class="step-chip">说明 1 / 1</span>
           </div>
@@ -835,10 +859,10 @@ SIMPLE_TUTORIAL_HTML = """
                 </div>
                 <div>
                   <p class="kicker">唯一问题</p>
-                  <h2>路线 A 和路线 B，哪条整体更好？</h2>
+                  <h2>路线 A、路线 B，或两者平局？</h2>
                   <p>
                     两张图使用相同地图、任务指令、图例和渲染规则。
-                    结合任务指令与可见路线整体判断，必须选择 A 或 B；
+                    结合任务指令与可见路线整体判断，选择 A、B 或平局；
                     A/B 只是匿名位置，不代表具体方法。
                   </p>
                 </div>
@@ -851,7 +875,7 @@ SIMPLE_TUTORIAL_HTML = """
               <label class="check-card">
                 <input type="checkbox" class="tutorial-check">
                 <span>
-                  <strong>我会直接选择 A 或 B</strong>
+                  <strong>我会选择 A、B 或平局</strong>
                   不区分是否完成，不做分项评分，不猜测生成方法。
                 </span>
               </label>
@@ -872,12 +896,12 @@ function ratingSection() {
       <header class="rating-heading">
         <span class="endpoint-number">选择</span>
         <div>
-          <h2>路线 A 和路线 B，哪条整体更好？</h2>
-          <p>结合任务指令和两张匿名路线图，必须选择一条；不区分是否完成，不做分项评分。</p>
+          <h2>路线 A、路线 B，或两者平局？</h2>
+          <p>结合任务指令和两张匿名路线图，选择整体更好的路线；如果整体相当，可以选择平局。不区分是否完成，不做分项评分。</p>
         </div>
-        <span class="endpoint-tag">A/B 二选一</span>
+        <span class="endpoint-tag">A / B / 平局</span>
       </header>
-      <div class="pairwise-choice-group" role="radiogroup" aria-label="选择整体更好的路线">
+      <div class="pairwise-choice-group" role="radiogroup" aria-label="选择路线 A、路线 B，或平局">
         <label class="pairwise-choice-card">
           <input type="radio" name="pairwise-choice" value="A" data-rating-field>
           <span><strong>A</strong>选择路线 A</span>
@@ -885,6 +909,10 @@ function ratingSection() {
         <label class="pairwise-choice-card">
           <input type="radio" name="pairwise-choice" value="B" data-rating-field>
           <span><strong>B</strong>选择路线 B</span>
+        </label>
+        <label class="pairwise-choice-card">
+          <input type="radio" name="pairwise-choice" value="tie" data-rating-field>
+          <span><strong>=</strong>选择平局</span>
         </label>
       </div>
     </section>
@@ -897,7 +925,7 @@ function applyDraft(draft) {
   const choice = draft?.payload?.choice;
   state.activeSeconds = Number(draft?.active_seconds || 0);
   state.draftRevision = Number(draft?.revision || 0);
-  if (choice === "A" || choice === "B") {
+  if (choice === "A" || choice === "B" || choice === "tie") {
     const input = document.querySelector(
       `input[name="pairwise-choice"][value="${choice}"]`,
     );
@@ -914,11 +942,11 @@ function draftPayload() {
 
 function finalChoice() {
   const choice = draftPayload().choice;
-  if (choice !== "A" && choice !== "B") {
+  if (choice !== "A" && choice !== "B" && choice !== "tie") {
     document
       .querySelector("[data-choice-section]")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
-    throw new Error("请选择路线 A 或路线 B。");
+    throw new Error("请选择路线 A、路线 B 或平局。");
   }
   return choice;
 }
@@ -1714,6 +1742,11 @@ def transformed_app(portal: Path) -> str:
             "已提交项目仍可重新修改。`"
         ),
         '"已恢复服务器进度。"': '"已恢复此浏览器中的进度。"',
+        '$("#consent-copy").textContent = config.consent_text;': (
+            '$("#consent-copy").textContent =\n'
+            '    `${config.consent_text}\\n\\n评判规则修订：现在允许在两条路线整体相当时选择平局。'
+            '本修订不清空或改写任何既有选择与进度。`;'
+        ),
         '"进度已保存在服务器，您可以继续下一项或稍后回来。"': (
             '"进度已保存在此浏览器，您可以继续下一项或稍后回来。"'
         ),
@@ -1788,10 +1821,10 @@ def transformed_app(portal: Path) -> str:
     source = source.replace(rating_render_before, rating_render_after, 1)
     admin_head_before = """        <th>Overall A</th><th>Overall B</th><th>平局</th>
         <th>条件 A</th><th>条件 B</th><th>条件平局</th>"""
-    admin_head_after = """        <th>选择 A</th><th>选择 B</th>"""
+    admin_head_after = """        <th>选择 A</th><th>选择 B</th><th>平局</th>"""
     admin_cells_before = """            <td>${row.all_A ?? "封存"}</td><td>${row.all_B ?? "封存"}</td><td>${row.all_tie ?? "封存"}</td>
             <td>${row.conditional_A ?? "封存"}</td><td>${row.conditional_B ?? "封存"}</td><td>${row.conditional_tie ?? "封存"}</td>"""
-    admin_cells_after = """            <td>${row.choice_A ?? "封存"}</td><td>${row.choice_B ?? "封存"}</td>"""
+    admin_cells_after = """            <td>${row.choice_A ?? "封存"}</td><td>${row.choice_B ?? "封存"}</td><td>${row.choice_tie ?? "封存"}</td>"""
     if (
         source.count(admin_head_before) != 1
         or source.count(admin_cells_before) != 1
