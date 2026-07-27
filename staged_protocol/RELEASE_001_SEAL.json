@@ -1,0 +1,19 @@
+{
+  "generated_utc": "2026-07-27T03:00:06.069237+00:00",
+  "master_protocol_id": "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d",
+  "release": {
+    "path": "staged_protocol/release_001.json",
+    "sha256": "5002bce380fc71954f81530105965a178df68e4c314636c61fad9029600f1285"
+  },
+  "release_id": "4e506991e37db574e9c9a0a7c1690246df3aa3aa3d9b8e9923684b04675eca79",
+  "release_index": {
+    "path": "staged_protocol/release_index.json",
+    "sha256": "71bddc88527d00fb95654b6e2052679d55bb113d743aee41712c38ce2fc2fa95"
+  },
+  "release_index_id": "212230a7565da1626c07649f3805ce50526be262ada0dfd927c095b54cdc9970",
+  "released_item_count": 50,
+  "schema_version": "tbam.human_staged_protocol_seal.v1",
+  "seal_id": "f746f81a1077e702cf6c61e6c83f8533e2436a43c9bfb4ce496936b8d7ff5efa",
+  "status": "frozen_staged_collection_wave1",
+  "study_id": "tbam_e9_best_models_staged_pages_v1"
+}

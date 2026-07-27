@@ -5,9 +5,9 @@
   const siteBase = new URL("./", scriptUrl);
   const nativeFetch = window.fetch.bind(window);
   const namespace = "tbam.pages.local.v2";
-  const expectedMasterProtocolId = "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d";
-  const expectedReleaseIndexId = "212230a7565da1626c07649f3805ce50526be262ada0dfd927c095b54cdc9970";
-  const useEnglishConsent = false;
+  const expectedMasterProtocolId = "__MASTER_PROTOCOL_ID__";
+  const expectedReleaseIndexId = "__RELEASE_INDEX_ID__";
+  const useEnglishConsent = __USE_ENGLISH_CONSENT__;
   const expectedStudyId =
     "tbam_e9_best_models_staged_pages_v1";
   const expectedDesignId = "e9_human_pairwise_v2";

@@ -6,7 +6,7 @@ on:
     paths:
       - "site/**"
       - "src/**"
-      - "build_site.py"
+      - "verify_site.py"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/configure-pages@v5
       - name: Verify frozen public bundle
-        run: python3 build_site.py --verify-only
+        run: python3 verify_site.py --verify-only
       - uses: actions/upload-pages-artifact@v4
         with:
           path: ./site

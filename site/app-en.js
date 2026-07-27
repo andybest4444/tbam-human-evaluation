@@ -143,7 +143,7 @@ function renderConfig() {
   const catalogDescription = $("#catalog-description");
   if (catalogDescription) {
     catalogDescription.textContent =
-      `The catalog contains ${itemCount} items. You may complete it over multiple sessions and revise submitted choices.`;
+      `The current release contains ${itemCount} items. Later waves will be appended to this same catalog and progress.`;
   }
   const catalogSizeLabel = $("#catalog-size-label");
   if (catalogSizeLabel) {
@@ -325,7 +325,7 @@ function updateDashboardStats() {
     button.disabled = true;
     button.textContent = `${total} items complete`;
     $("#progress-message").textContent =
-      "Thank you for completing the catalog. You may still export your anonymous backup.";
+      "All currently released items are complete. Later waves will be appended to the same progress; export a result backup now.";
   }
 }
 

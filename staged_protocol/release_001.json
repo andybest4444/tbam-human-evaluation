@@ -1,21 +1,63 @@
 {
-  "assignment_rule_id": "complete_master_catalog_round_robin_5slots_v1",
-  "built_utc": "2026-07-27T03:00:06.069237+00:00",
-  "bundle_id": "212230a7565da1626c07649f3805ce50526be262ada0dfd927c095b54cdc9970",
-  "collection_protocol_id": "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d",
-  "consent_text_sha256": "3ccf9ed3c35102d5646dfba2c8564867c612736013187c59c0dfebd0912d59e8",
-  "consent_version": "pages-e9-best-models-staged-consent-v1",
-  "current_release_id": "4e506991e37db574e9c9a0a7c1690246df3aa3aa3d9b8e9923684b04675eca79",
-  "current_wave": 1,
-  "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
-  "full_item_count": 300,
-  "item_count": 50,
+  "cumulative_item_count": 50,
+  "cumulative_item_ids": [
+    "item_60e09f5652177a3c",
+    "item_4c2b083ea088ed57",
+    "item_dcc58360e85499f1",
+    "item_a537bb5606e91ef6",
+    "item_efc1ea041a95697d",
+    "item_86ee6af51cf51dcb",
+    "item_f2279a0700243c0f",
+    "item_9a0cbef662c047d8",
+    "item_04fa977d9969de03",
+    "item_d10b736278e579d0",
+    "item_2579c9193db39f20",
+    "item_f96ebccdf8bd7047",
+    "item_bb7875e31833165e",
+    "item_e6a29bd2160e343f",
+    "item_4d9e436bffcdff9a",
+    "item_3435c92490ef92f5",
+    "item_bfb00838f1e294ae",
+    "item_6a91f07616efd6d8",
+    "item_ff4cb6dd001930ad",
+    "item_1dad1da411dd62a3",
+    "item_e2fa06480eb81779",
+    "item_e5ecc8ed5211d3eb",
+    "item_79de1a40549e636a",
+    "item_e731dcb25da2d495",
+    "item_05f17730b090c557",
+    "item_074901e4f5a9e9bc",
+    "item_262546d14ef913a9",
+    "item_3884f56fb96113ae",
+    "item_fe8af812b8ec6d3e",
+    "item_743f5b2d38361190",
+    "item_b95187c777c532e8",
+    "item_59376f7eac1d5616",
+    "item_61aa31d5b4eaca3a",
+    "item_866697cbe7b74afd",
+    "item_9bf6838f1f0806ba",
+    "item_e7fd1f815495d972",
+    "item_4857eafcb7015ab7",
+    "item_c4f2ae5a06ef144f",
+    "item_5bb184b4df5a0f75",
+    "item_893b26d3e19114a6",
+    "item_e68bec11a54c399e",
+    "item_6a8b5ffbfa39b799",
+    "item_8b5bf83a9b7717fc",
+    "item_97035d8f3d6e93ec",
+    "item_8e0067bf9e34f0f4",
+    "item_eaf0b0a15c2fe30c",
+    "item_5e884858d6d7ee1f",
+    "item_28aeb793d2003c03",
+    "item_c8e325a3780990ed",
+    "item_b8ffe7b5363c1efa"
+  ],
+  "generated_utc": "2026-07-27T03:00:06.069237+00:00",
   "items": [
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_01",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "391b57995f7984e78e3672191a1ec01c319236ac5e41d6814f5ff5e51ffd91d8"
@@ -23,17 +65,14 @@
       "item_id": "item_60e09f5652177a3c",
       "item_index": 0,
       "judge_input_path": "data/items/item_60e09f5652177a3c/judge_input.json",
-      "map_index": 0,
       "map_size": 8,
       "master_map_index": 0,
-      "public_item_sha256": "59506d0ed3c613b7c8c936b36c722ebe490bbb2289de7aa7768b7adcc3acd5ce",
       "source_public_item_sha256": "59506d0ed3c613b7c8c936b36c722ebe490bbb2289de7aa7768b7adcc3acd5ce"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_02",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "8c517e21476a908fafda2a114b6e34078b1c0be8249c0bc5263e21bddb5e682b"
@@ -41,17 +80,14 @@
       "item_id": "item_4c2b083ea088ed57",
       "item_index": 0,
       "judge_input_path": "data/items/item_4c2b083ea088ed57/judge_input.json",
-      "map_index": 1,
       "map_size": 8,
       "master_map_index": 1,
-      "public_item_sha256": "e42c7cc501dad197ddb2e90caaf89a7661da660e771a66c73d28b90a4be2743c",
       "source_public_item_sha256": "e42c7cc501dad197ddb2e90caaf89a7661da660e771a66c73d28b90a4be2743c"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_03",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "8925aefa204b3739e52eb94f0a6501c9a7d11b184c49c16379179a487645a3b2"
@@ -59,17 +95,14 @@
       "item_id": "item_dcc58360e85499f1",
       "item_index": 0,
       "judge_input_path": "data/items/item_dcc58360e85499f1/judge_input.json",
-      "map_index": 2,
       "map_size": 8,
       "master_map_index": 2,
-      "public_item_sha256": "1a694bc9d4f1d96e5c7ef99a1fea181fe0ed6acbfb59c9b5b3c5e37c4e23f768",
       "source_public_item_sha256": "1a694bc9d4f1d96e5c7ef99a1fea181fe0ed6acbfb59c9b5b3c5e37c4e23f768"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_04",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "7263f038b885de696c6d8b3ae4a3acf5ece3c395c7865515ec52deb33dfec2a6"
@@ -77,17 +110,14 @@
       "item_id": "item_a537bb5606e91ef6",
       "item_index": 0,
       "judge_input_path": "data/items/item_a537bb5606e91ef6/judge_input.json",
-      "map_index": 3,
       "map_size": 8,
       "master_map_index": 3,
-      "public_item_sha256": "32febb5c122ab7538940e3dbde7a3d4e434c05d0c622cb6e3223f33195dc6766",
       "source_public_item_sha256": "32febb5c122ab7538940e3dbde7a3d4e434c05d0c622cb6e3223f33195dc6766"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_05",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "d9f2d6bba3baabb8f524b51196b15c620a58ecafdba06a35f27da68731432c47"
@@ -95,17 +125,14 @@
       "item_id": "item_efc1ea041a95697d",
       "item_index": 0,
       "judge_input_path": "data/items/item_efc1ea041a95697d/judge_input.json",
-      "map_index": 4,
       "map_size": 8,
       "master_map_index": 4,
-      "public_item_sha256": "4aef8deb0f041f7b2ecdc95d3f15a820e4bf4fcd2e4d96d8f645a645a18bd73e",
       "source_public_item_sha256": "4aef8deb0f041f7b2ecdc95d3f15a820e4bf4fcd2e4d96d8f645a645a18bd73e"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_06",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "dbdab3598522ee4fe298ea084dcf3456ed044251c02789e9b3ca71d0eff06351"
@@ -113,17 +140,14 @@
       "item_id": "item_86ee6af51cf51dcb",
       "item_index": 0,
       "judge_input_path": "data/items/item_86ee6af51cf51dcb/judge_input.json",
-      "map_index": 5,
       "map_size": 8,
       "master_map_index": 5,
-      "public_item_sha256": "d50b67a6b6e61aba303b5f8ab8e9d665d457a187bfcb719505a93ff985b16014",
       "source_public_item_sha256": "d50b67a6b6e61aba303b5f8ab8e9d665d457a187bfcb719505a93ff985b16014"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_07",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "783d9af29b969065f9dc6dc53095e346b9c90fca1394441dfaa5d348d293f95d"
@@ -131,17 +155,14 @@
       "item_id": "item_f2279a0700243c0f",
       "item_index": 0,
       "judge_input_path": "data/items/item_f2279a0700243c0f/judge_input.json",
-      "map_index": 6,
       "map_size": 8,
       "master_map_index": 6,
-      "public_item_sha256": "16604fd7d261ef484777bbb82b636a533e24e2aa6bd0461ae78671a6852cd54a",
       "source_public_item_sha256": "16604fd7d261ef484777bbb82b636a533e24e2aa6bd0461ae78671a6852cd54a"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_08",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "9514afaf1df9fa967cd89a793b40ec817e0c15b297739a20fc8238fa2a170d2e"
@@ -149,17 +170,14 @@
       "item_id": "item_9a0cbef662c047d8",
       "item_index": 0,
       "judge_input_path": "data/items/item_9a0cbef662c047d8/judge_input.json",
-      "map_index": 7,
       "map_size": 8,
       "master_map_index": 7,
-      "public_item_sha256": "31e9a4f4c5f51d5ab3867828b74921a3578a1ee2286be915526567ebe73b0d2e",
       "source_public_item_sha256": "31e9a4f4c5f51d5ab3867828b74921a3578a1ee2286be915526567ebe73b0d2e"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_09",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "d675d7f496e6805313d8e4a549f7190925c238227151ad843be546c60acab8d9"
@@ -167,17 +185,14 @@
       "item_id": "item_04fa977d9969de03",
       "item_index": 0,
       "judge_input_path": "data/items/item_04fa977d9969de03/judge_input.json",
-      "map_index": 8,
       "map_size": 8,
       "master_map_index": 8,
-      "public_item_sha256": "5ba65d6f7a78f9db2092298c1424f3e47e5b3afaf526a5a43762c1ad784a7ef3",
       "source_public_item_sha256": "5ba65d6f7a78f9db2092298c1424f3e47e5b3afaf526a5a43762c1ad784a7ef3"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_01_10",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 48,
       "input_artifact_sha256": {
         "judge_input": "013a43721f2b9606903957fc177f3e8cb6f99634d004f18867c4595d4f393fcc"
@@ -185,17 +200,14 @@
       "item_id": "item_d10b736278e579d0",
       "item_index": 0,
       "judge_input_path": "data/items/item_d10b736278e579d0/judge_input.json",
-      "map_index": 9,
       "map_size": 8,
       "master_map_index": 9,
-      "public_item_sha256": "7299b93a2533c8d92c798f53d4c7d07e263fc0cca40f6cdbf603f951113b4c53",
       "source_public_item_sha256": "7299b93a2533c8d92c798f53d4c7d07e263fc0cca40f6cdbf603f951113b4c53"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_01",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "621606fe2037e9646cc292343bc6789a90a47eae86901fa2d448ee2807f9cb5e"
@@ -203,17 +215,14 @@
       "item_id": "item_2579c9193db39f20",
       "item_index": 0,
       "judge_input_path": "data/items/item_2579c9193db39f20/judge_input.json",
-      "map_index": 10,
       "map_size": 16,
       "master_map_index": 10,
-      "public_item_sha256": "c9e8b8168eac741fa28265054b661571ca3fc5f6957c50b16c0df885d48f5566",
       "source_public_item_sha256": "c9e8b8168eac741fa28265054b661571ca3fc5f6957c50b16c0df885d48f5566"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_02",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "ddf1d41cbde9a897aa35278f6216358d8a3fb5d9b033fe3cd5f85c9a9ee8b35d"
@@ -221,17 +230,14 @@
       "item_id": "item_f96ebccdf8bd7047",
       "item_index": 0,
       "judge_input_path": "data/items/item_f96ebccdf8bd7047/judge_input.json",
-      "map_index": 11,
       "map_size": 16,
       "master_map_index": 11,
-      "public_item_sha256": "755aa756ddbc64e4912bab96a2ffb56149442546810ab5703032f4e164a6d57d",
       "source_public_item_sha256": "755aa756ddbc64e4912bab96a2ffb56149442546810ab5703032f4e164a6d57d"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_03",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "ce199346ac13b2735fdae244a652ad9cdeaf2ac60c7036bc8c1ea090cd36a84c"
@@ -239,17 +245,14 @@
       "item_id": "item_bb7875e31833165e",
       "item_index": 0,
       "judge_input_path": "data/items/item_bb7875e31833165e/judge_input.json",
-      "map_index": 12,
       "map_size": 16,
       "master_map_index": 12,
-      "public_item_sha256": "fae5f3294a93d09e0db4156aa3354d907bb68e0d02e4fdb8cb988c0193f5bc28",
       "source_public_item_sha256": "fae5f3294a93d09e0db4156aa3354d907bb68e0d02e4fdb8cb988c0193f5bc28"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_04",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "bbd3e93a85b9da1439f79d6c2f3259fa4c42062ccf5fc198b56c1ba0ca557289"
@@ -257,17 +260,14 @@
       "item_id": "item_e6a29bd2160e343f",
       "item_index": 0,
       "judge_input_path": "data/items/item_e6a29bd2160e343f/judge_input.json",
-      "map_index": 13,
       "map_size": 16,
       "master_map_index": 13,
-      "public_item_sha256": "ff0d3114bcc28898f0f4c9c897ee1158b92aff49a07adfef9ec1062ab37c14f6",
       "source_public_item_sha256": "ff0d3114bcc28898f0f4c9c897ee1158b92aff49a07adfef9ec1062ab37c14f6"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_05",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "31fb846b3fd20e3a5e4a709fdc3d538b039cdc2f0a281502ea73f17654ce586e"
@@ -275,17 +275,14 @@
       "item_id": "item_4d9e436bffcdff9a",
       "item_index": 0,
       "judge_input_path": "data/items/item_4d9e436bffcdff9a/judge_input.json",
-      "map_index": 14,
       "map_size": 16,
       "master_map_index": 14,
-      "public_item_sha256": "0cfafd7067711287d1cfc99055db129f2d558ae50e7393312ee08e0de79bc4c8",
       "source_public_item_sha256": "0cfafd7067711287d1cfc99055db129f2d558ae50e7393312ee08e0de79bc4c8"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_06",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "c1256a8791afab025ade7fca20af63ec1371eaed5e23d6253a0ec8158441d1a3"
@@ -293,17 +290,14 @@
       "item_id": "item_3435c92490ef92f5",
       "item_index": 0,
       "judge_input_path": "data/items/item_3435c92490ef92f5/judge_input.json",
-      "map_index": 15,
       "map_size": 16,
       "master_map_index": 15,
-      "public_item_sha256": "07345b0236959c5e4a820a7981c4ef0d3c6c70ce960d9c6516af193b424ddeb2",
       "source_public_item_sha256": "07345b0236959c5e4a820a7981c4ef0d3c6c70ce960d9c6516af193b424ddeb2"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_07",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "62c22f4930440fcd3286f6bd69c26362474770055833bf12060a9b4fc1179f03"
@@ -311,17 +305,14 @@
       "item_id": "item_bfb00838f1e294ae",
       "item_index": 0,
       "judge_input_path": "data/items/item_bfb00838f1e294ae/judge_input.json",
-      "map_index": 16,
       "map_size": 16,
       "master_map_index": 16,
-      "public_item_sha256": "014c2341c06357d83d03e07699da87f2735c3ec796b1181a2b2673d9d0966e33",
       "source_public_item_sha256": "014c2341c06357d83d03e07699da87f2735c3ec796b1181a2b2673d9d0966e33"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_08",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "7c2de078c9175bacf2789e63ab482f405dc24b77b8b4fd4feaf69ed100dd06a8"
@@ -329,17 +320,14 @@
       "item_id": "item_6a91f07616efd6d8",
       "item_index": 0,
       "judge_input_path": "data/items/item_6a91f07616efd6d8/judge_input.json",
-      "map_index": 17,
       "map_size": 16,
       "master_map_index": 17,
-      "public_item_sha256": "870170f95de83fa14c8a37495d6cd31b3b2a15bf2d087025fe5a01e8d2d994e0",
       "source_public_item_sha256": "870170f95de83fa14c8a37495d6cd31b3b2a15bf2d087025fe5a01e8d2d994e0"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_09",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "728206431671801ca5abbde5cb9a574c545b1aa632eaa2d6819c3c90ded163ee"
@@ -347,17 +335,14 @@
       "item_id": "item_ff4cb6dd001930ad",
       "item_index": 0,
       "judge_input_path": "data/items/item_ff4cb6dd001930ad/judge_input.json",
-      "map_index": 18,
       "map_size": 16,
       "master_map_index": 18,
-      "public_item_sha256": "1ead43fb32b44fa751c64f5f21a6688c086e0e81040d8f19839135b6ed6711ab",
       "source_public_item_sha256": "1ead43fb32b44fa751c64f5f21a6688c086e0e81040d8f19839135b6ed6711ab"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_02_10",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "c8b20c6647558f08f877d50b40cc0a1b562b362cb6459c8497852afacb97a7f7"
@@ -365,17 +350,14 @@
       "item_id": "item_1dad1da411dd62a3",
       "item_index": 0,
       "judge_input_path": "data/items/item_1dad1da411dd62a3/judge_input.json",
-      "map_index": 19,
       "map_size": 16,
       "master_map_index": 19,
-      "public_item_sha256": "1f8aa6b7f2dea0e9984c215f3b019ab8c7caaded68afbe8518debc72af82e978",
       "source_public_item_sha256": "1f8aa6b7f2dea0e9984c215f3b019ab8c7caaded68afbe8518debc72af82e978"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_01",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "d38a6dcc67bfc9b212e54f6098c422622b1d53f3c3c9e42dced2827d694366fd"
@@ -383,17 +365,14 @@
       "item_id": "item_e2fa06480eb81779",
       "item_index": 0,
       "judge_input_path": "data/items/item_e2fa06480eb81779/judge_input.json",
-      "map_index": 20,
       "map_size": 24,
       "master_map_index": 20,
-      "public_item_sha256": "93f9c99ad7edf7b8e31dc4171250d3df96940d4a5e1136ee16edb1a5178d9845",
       "source_public_item_sha256": "93f9c99ad7edf7b8e31dc4171250d3df96940d4a5e1136ee16edb1a5178d9845"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_02",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "b87bac51d5da1b6e6129923504237903773f2653c1724d940f151293c4d63563"
@@ -401,17 +380,14 @@
       "item_id": "item_e5ecc8ed5211d3eb",
       "item_index": 0,
       "judge_input_path": "data/items/item_e5ecc8ed5211d3eb/judge_input.json",
-      "map_index": 21,
       "map_size": 24,
       "master_map_index": 21,
-      "public_item_sha256": "ec2125981003df3ae4b8b62fe673c606610d38a151a82b30b508eb873e2c0e62",
       "source_public_item_sha256": "ec2125981003df3ae4b8b62fe673c606610d38a151a82b30b508eb873e2c0e62"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_03",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "3aca61ca5e43acc23d356be7216c13e85364c40215453019ed839470664f5919"
@@ -419,17 +395,14 @@
       "item_id": "item_79de1a40549e636a",
       "item_index": 0,
       "judge_input_path": "data/items/item_79de1a40549e636a/judge_input.json",
-      "map_index": 22,
       "map_size": 24,
       "master_map_index": 22,
-      "public_item_sha256": "d5aaab5f032dc29eb89f6d2a0f2827b6c26b7d1255a6a069e20b448aef79ce90",
       "source_public_item_sha256": "d5aaab5f032dc29eb89f6d2a0f2827b6c26b7d1255a6a069e20b448aef79ce90"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_04",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "1d31274e5ba0d85c29c294c51a9fe531f9692362d79beab2bec9e8b2d4e6c2a7"
@@ -437,17 +410,14 @@
       "item_id": "item_e731dcb25da2d495",
       "item_index": 0,
       "judge_input_path": "data/items/item_e731dcb25da2d495/judge_input.json",
-      "map_index": 23,
       "map_size": 24,
       "master_map_index": 23,
-      "public_item_sha256": "43cb090ee516afe0411550820d92e4173f1576d6e81536e9451b69c62919efe8",
       "source_public_item_sha256": "43cb090ee516afe0411550820d92e4173f1576d6e81536e9451b69c62919efe8"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_05",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "a28192e9bd313985c2c9c4927c6e71d6cf331a4b0e9836e769be7c08e2b14ea2"
@@ -455,17 +425,14 @@
       "item_id": "item_05f17730b090c557",
       "item_index": 0,
       "judge_input_path": "data/items/item_05f17730b090c557/judge_input.json",
-      "map_index": 24,
       "map_size": 24,
       "master_map_index": 24,
-      "public_item_sha256": "415f46cf53252595249cb1d04ab32963c91b87938dd2d00debf14e9ce936e097",
       "source_public_item_sha256": "415f46cf53252595249cb1d04ab32963c91b87938dd2d00debf14e9ce936e097"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_06",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "165965d229571ee8dfac2196df40d0a19dd205bb3b9eb962ff7410fc931ddfc1"
@@ -473,17 +440,14 @@
       "item_id": "item_074901e4f5a9e9bc",
       "item_index": 0,
       "judge_input_path": "data/items/item_074901e4f5a9e9bc/judge_input.json",
-      "map_index": 25,
       "map_size": 24,
       "master_map_index": 25,
-      "public_item_sha256": "05a4ddb3e0c6f117fb7a3c7884925fa1c156f57792d70cbb817acfb578d3536e",
       "source_public_item_sha256": "05a4ddb3e0c6f117fb7a3c7884925fa1c156f57792d70cbb817acfb578d3536e"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_07",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "4b3051f796f856686cf2a0d124a5b7a0fd5625d632e7b92c943104fe5b623539"
@@ -491,17 +455,14 @@
       "item_id": "item_262546d14ef913a9",
       "item_index": 0,
       "judge_input_path": "data/items/item_262546d14ef913a9/judge_input.json",
-      "map_index": 26,
       "map_size": 24,
       "master_map_index": 26,
-      "public_item_sha256": "61066da5b6a6f3abf80521f1d78bcdee87c2d95699280b2f9ca68af05e6c5cc8",
       "source_public_item_sha256": "61066da5b6a6f3abf80521f1d78bcdee87c2d95699280b2f9ca68af05e6c5cc8"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_08",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "1f9ff6d8d4eceaa19bd7798f58e75a23d726e8cd84f0db4cd890ef2f9e40638e"
@@ -509,17 +470,14 @@
       "item_id": "item_3884f56fb96113ae",
       "item_index": 0,
       "judge_input_path": "data/items/item_3884f56fb96113ae/judge_input.json",
-      "map_index": 27,
       "map_size": 24,
       "master_map_index": 27,
-      "public_item_sha256": "2ce71e16efb5cf4c60672231c45d83682f92f4d77e84c1657264588b9a4408f8",
       "source_public_item_sha256": "2ce71e16efb5cf4c60672231c45d83682f92f4d77e84c1657264588b9a4408f8"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_09",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "84b8a48ea77e265db627a49c7890775742cecfce1f84d6016c9958ec0a796c72"
@@ -527,17 +485,14 @@
       "item_id": "item_fe8af812b8ec6d3e",
       "item_index": 0,
       "judge_input_path": "data/items/item_fe8af812b8ec6d3e/judge_input.json",
-      "map_index": 28,
       "map_size": 24,
       "master_map_index": 28,
-      "public_item_sha256": "9b977f18bdfc35947e02688c5c8bb6d6464dae4a94496c7ac27f6a58f0d4eb8b",
       "source_public_item_sha256": "9b977f18bdfc35947e02688c5c8bb6d6464dae4a94496c7ac27f6a58f0d4eb8b"
     },
     {
       "agent_count": 3,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_03_10",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 144,
       "input_artifact_sha256": {
         "judge_input": "638bf0d9a983f50f9c9c1cabb60d1ec77438d8b5a6a11ae0ee97a004d53e1875"
@@ -545,17 +500,14 @@
       "item_id": "item_743f5b2d38361190",
       "item_index": 0,
       "judge_input_path": "data/items/item_743f5b2d38361190/judge_input.json",
-      "map_index": 29,
       "map_size": 24,
       "master_map_index": 29,
-      "public_item_sha256": "303ee8540c2cf642d853d11771f0d8499d058b144766a1c9e2cf40df58bfc82b",
       "source_public_item_sha256": "303ee8540c2cf642d853d11771f0d8499d058b144766a1c9e2cf40df58bfc82b"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_01",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "da4d5f4c784da4407ea29d177246d594fe1580f82e775aeef1ace0479221d3f4"
@@ -563,17 +515,14 @@
       "item_id": "item_b95187c777c532e8",
       "item_index": 0,
       "judge_input_path": "data/items/item_b95187c777c532e8/judge_input.json",
-      "map_index": 30,
       "map_size": 16,
       "master_map_index": 30,
-      "public_item_sha256": "721f4fdac5da9bd9bfa8b64ae24914682ae338695c1950e902700da84d4a4090",
       "source_public_item_sha256": "721f4fdac5da9bd9bfa8b64ae24914682ae338695c1950e902700da84d4a4090"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_02",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "f25f9018bb1f7b2ce63abd79f31c39421345c9617deab52cd5c21841c7f02d28"
@@ -581,17 +530,14 @@
       "item_id": "item_59376f7eac1d5616",
       "item_index": 0,
       "judge_input_path": "data/items/item_59376f7eac1d5616/judge_input.json",
-      "map_index": 31,
       "map_size": 16,
       "master_map_index": 31,
-      "public_item_sha256": "4bcf3285a1eef01acccdcdbec079ee4f33a6566c9fa27c4eb1ad96a4e22f6ef1",
       "source_public_item_sha256": "4bcf3285a1eef01acccdcdbec079ee4f33a6566c9fa27c4eb1ad96a4e22f6ef1"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_03",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "ecbf4c080eeba66d4b3a7b2542bd9ae08f31cf785ab2513f0f5e7ef0ce1d2ba2"
@@ -599,17 +545,14 @@
       "item_id": "item_61aa31d5b4eaca3a",
       "item_index": 0,
       "judge_input_path": "data/items/item_61aa31d5b4eaca3a/judge_input.json",
-      "map_index": 32,
       "map_size": 16,
       "master_map_index": 32,
-      "public_item_sha256": "c0b1aacd3de45985076326399e72b75a20f296284e03ab81bb3ba2e3117b489e",
       "source_public_item_sha256": "c0b1aacd3de45985076326399e72b75a20f296284e03ab81bb3ba2e3117b489e"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_04",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "6ac5de46fad1642a90f5878638d21c5d32c275aae0e7734ba9cf1163d9afee6d"
@@ -617,17 +560,14 @@
       "item_id": "item_866697cbe7b74afd",
       "item_index": 0,
       "judge_input_path": "data/items/item_866697cbe7b74afd/judge_input.json",
-      "map_index": 33,
       "map_size": 16,
       "master_map_index": 33,
-      "public_item_sha256": "cbbeaf6ff02382a8c814eacbd2a42efcffef4aef9e51d24c897f8d1eec169936",
       "source_public_item_sha256": "cbbeaf6ff02382a8c814eacbd2a42efcffef4aef9e51d24c897f8d1eec169936"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_05",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "77ae9c05ba76b039fd9852d155823105a1b7a4bebc797ba31f74088f3a71bb59"
@@ -635,17 +575,14 @@
       "item_id": "item_9bf6838f1f0806ba",
       "item_index": 0,
       "judge_input_path": "data/items/item_9bf6838f1f0806ba/judge_input.json",
-      "map_index": 34,
       "map_size": 16,
       "master_map_index": 34,
-      "public_item_sha256": "5f2e69c11bb31a341e2fad233ea02a7231354467799f9a23e500919756a86849",
       "source_public_item_sha256": "5f2e69c11bb31a341e2fad233ea02a7231354467799f9a23e500919756a86849"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_06",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "71027e015e7757692fc8327c0d0974c72331bba126c310582c2f0bf51e125244"
@@ -653,17 +590,14 @@
       "item_id": "item_e7fd1f815495d972",
       "item_index": 0,
       "judge_input_path": "data/items/item_e7fd1f815495d972/judge_input.json",
-      "map_index": 35,
       "map_size": 16,
       "master_map_index": 35,
-      "public_item_sha256": "6900a2653e09d6ad9db479a3f2bd21e67d5db5368cb6de37fba9cb59bb5db460",
       "source_public_item_sha256": "6900a2653e09d6ad9db479a3f2bd21e67d5db5368cb6de37fba9cb59bb5db460"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_07",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "f2ef2791e53fa74c0fcaee0a9aa49c3c67481382e5556a15185826e5657661e5"
@@ -671,17 +605,14 @@
       "item_id": "item_4857eafcb7015ab7",
       "item_index": 0,
       "judge_input_path": "data/items/item_4857eafcb7015ab7/judge_input.json",
-      "map_index": 36,
       "map_size": 16,
       "master_map_index": 36,
-      "public_item_sha256": "a843e095594108232ca7ce8923c08782c1d76a610a754b4813430442a4e4ea8c",
       "source_public_item_sha256": "a843e095594108232ca7ce8923c08782c1d76a610a754b4813430442a4e4ea8c"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_08",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "f2eea4e1d7ee43f4695b18c470f172eab368f8ed21c7013997fbd449180f33a5"
@@ -689,17 +620,14 @@
       "item_id": "item_c4f2ae5a06ef144f",
       "item_index": 0,
       "judge_input_path": "data/items/item_c4f2ae5a06ef144f/judge_input.json",
-      "map_index": 37,
       "map_size": 16,
       "master_map_index": 37,
-      "public_item_sha256": "8a79515b2ed10b4c8dbb192b0a462d3e4879adf3c9e95488a0bd21b59ed2c17f",
       "source_public_item_sha256": "8a79515b2ed10b4c8dbb192b0a462d3e4879adf3c9e95488a0bd21b59ed2c17f"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_09",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "8aff3a79e3042e266c136ba69c382c70ad33a114264d7567c3196c9a7095735b"
@@ -707,17 +635,14 @@
       "item_id": "item_5bb184b4df5a0f75",
       "item_index": 0,
       "judge_input_path": "data/items/item_5bb184b4df5a0f75/judge_input.json",
-      "map_index": 38,
       "map_size": 16,
       "master_map_index": 38,
-      "public_item_sha256": "7e860d8c7fd078c3a02a57e7a3b6509bf006bded25e324647d58b949dac1c2a9",
       "source_public_item_sha256": "7e860d8c7fd078c3a02a57e7a3b6509bf006bded25e324647d58b949dac1c2a9"
     },
     {
       "agent_count": 2,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_05_10",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "72daff3663b220d7f46cacbdb38dc2a70d3e4a0ffc870e301cf1891d8be7339a"
@@ -725,17 +650,14 @@
       "item_id": "item_893b26d3e19114a6",
       "item_index": 0,
       "judge_input_path": "data/items/item_893b26d3e19114a6/judge_input.json",
-      "map_index": 39,
       "map_size": 16,
       "master_map_index": 39,
-      "public_item_sha256": "26a237611ee718dfd3fd18e2561d953984220b08af7646d9ca09858cb38c300b",
       "source_public_item_sha256": "26a237611ee718dfd3fd18e2561d953984220b08af7646d9ca09858cb38c300b"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_01",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "a0c4ddc8dfd08c98957bab8d12cea8a34d8783454482c7f27c15a45982edebb7"
@@ -743,17 +665,14 @@
       "item_id": "item_e68bec11a54c399e",
       "item_index": 0,
       "judge_input_path": "data/items/item_e68bec11a54c399e/judge_input.json",
-      "map_index": 40,
       "map_size": 16,
       "master_map_index": 40,
-      "public_item_sha256": "c63ad290e25faf8761033f16a0db52ed5f1cc6f956941aa9e98155ce36e0aeae",
       "source_public_item_sha256": "c63ad290e25faf8761033f16a0db52ed5f1cc6f956941aa9e98155ce36e0aeae"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_02",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "2248620259ce4275aeefffa30b932177dfd555664e7dd70dc4d7c96f7b7054e4"
@@ -761,17 +680,14 @@
       "item_id": "item_6a8b5ffbfa39b799",
       "item_index": 0,
       "judge_input_path": "data/items/item_6a8b5ffbfa39b799/judge_input.json",
-      "map_index": 41,
       "map_size": 16,
       "master_map_index": 41,
-      "public_item_sha256": "49a3f6ebe8c68439fde2d61a19d1107a6327e03fbb9b2418cdb869250d67b4c9",
       "source_public_item_sha256": "49a3f6ebe8c68439fde2d61a19d1107a6327e03fbb9b2418cdb869250d67b4c9"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_03",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "ff0474931e76d731272b24cd6425c42e5bcd9ef34892769d37932e3bae96b870"
@@ -779,17 +695,14 @@
       "item_id": "item_8b5bf83a9b7717fc",
       "item_index": 0,
       "judge_input_path": "data/items/item_8b5bf83a9b7717fc/judge_input.json",
-      "map_index": 42,
       "map_size": 16,
       "master_map_index": 42,
-      "public_item_sha256": "e13d33315e451e6ee3d1bd9c456601981a170a299b87f027cee7bdf051169b50",
       "source_public_item_sha256": "e13d33315e451e6ee3d1bd9c456601981a170a299b87f027cee7bdf051169b50"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_04",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "e1f3e45f8437c168041ab0c91c730c15faa7a76d047b4be823700206f37d3936"
@@ -797,17 +710,14 @@
       "item_id": "item_97035d8f3d6e93ec",
       "item_index": 0,
       "judge_input_path": "data/items/item_97035d8f3d6e93ec/judge_input.json",
-      "map_index": 43,
       "map_size": 16,
       "master_map_index": 43,
-      "public_item_sha256": "2ae95c58bf27d9af2b8e7c95ab13171ce97e31316d3eb20f3120b200e4a47dde",
       "source_public_item_sha256": "2ae95c58bf27d9af2b8e7c95ab13171ce97e31316d3eb20f3120b200e4a47dde"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_05",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "b74e52a80025828b4c7692aaa0e0a77f868fe34ef33aa64f3b9e73bd5756615c"
@@ -815,17 +725,14 @@
       "item_id": "item_8e0067bf9e34f0f4",
       "item_index": 0,
       "judge_input_path": "data/items/item_8e0067bf9e34f0f4/judge_input.json",
-      "map_index": 44,
       "map_size": 16,
       "master_map_index": 44,
-      "public_item_sha256": "1475e4a92ea8480d527e98981a17a95348f98d44791a6afd82b78898bcad7970",
       "source_public_item_sha256": "1475e4a92ea8480d527e98981a17a95348f98d44791a6afd82b78898bcad7970"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_06",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "a5e4a2879dd4b2fcaa8338bfa60ca2c2152cc8713e4039ae34b58f3a69537f94"
@@ -833,17 +740,14 @@
       "item_id": "item_eaf0b0a15c2fe30c",
       "item_index": 0,
       "judge_input_path": "data/items/item_eaf0b0a15c2fe30c/judge_input.json",
-      "map_index": 45,
       "map_size": 16,
       "master_map_index": 45,
-      "public_item_sha256": "003a5573119d1fa15b7d73a1a6f3e6098c9f40b61da5db6b2725fd65e62682f1",
       "source_public_item_sha256": "003a5573119d1fa15b7d73a1a6f3e6098c9f40b61da5db6b2725fd65e62682f1"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_07",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "f9902dea340526394416925572ff2d9d50a820dbd0b269d192d6a17d01a19dce"
@@ -851,17 +755,14 @@
       "item_id": "item_5e884858d6d7ee1f",
       "item_index": 0,
       "judge_input_path": "data/items/item_5e884858d6d7ee1f/judge_input.json",
-      "map_index": 46,
       "map_size": 16,
       "master_map_index": 46,
-      "public_item_sha256": "908bc2da29d0555b7a2cd8faf3fc786e2b902470760125a15d8b700798b40a4a",
       "source_public_item_sha256": "908bc2da29d0555b7a2cd8faf3fc786e2b902470760125a15d8b700798b40a4a"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_08",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "321ea86a5c415f187ccbd0487e5575339b96b0b3770926d36529416945b6d987"
@@ -869,17 +770,14 @@
       "item_id": "item_28aeb793d2003c03",
       "item_index": 0,
       "judge_input_path": "data/items/item_28aeb793d2003c03/judge_input.json",
-      "map_index": 47,
       "map_size": 16,
       "master_map_index": 47,
-      "public_item_sha256": "35f6bcbcd98bd004439a72d9b7d216932f8c1860563df8e41d039b132773c79b",
       "source_public_item_sha256": "35f6bcbcd98bd004439a72d9b7d216932f8c1860563df8e41d039b132773c79b"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_09",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "314d11aeb08bac13e598c9babb52e3c8d5ac96057f279a302873aad142b19598"
@@ -887,17 +785,14 @@
       "item_id": "item_c8e325a3780990ed",
       "item_index": 0,
       "judge_input_path": "data/items/item_c8e325a3780990ed/judge_input.json",
-      "map_index": 48,
       "map_size": 16,
       "master_map_index": 48,
-      "public_item_sha256": "f6282d64949e13b837bdf33bf44459142da849a723b16d792db22579a9b54d0b",
       "source_public_item_sha256": "f6282d64949e13b837bdf33bf44459142da849a723b16d792db22579a9b54d0b"
     },
     {
       "agent_count": 4,
       "artifact_status": "released_immutable",
       "blind_map_id": "map_06_10",
-      "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
       "horizon": 96,
       "input_artifact_sha256": {
         "judge_input": "b5ff17d360d93cfcdca145f2913d84ec0718c97faabbfabc5185fdb380b6bd41"
@@ -905,289 +800,18 @@
       "item_id": "item_b8ffe7b5363c1efa",
       "item_index": 0,
       "judge_input_path": "data/items/item_b8ffe7b5363c1efa/judge_input.json",
-      "map_index": 49,
       "map_size": 16,
       "master_map_index": 49,
-      "public_item_sha256": "36da12b57e7e4525addc41ccd543c6679552133dee16bd087efe49d6fc0e3287",
       "source_public_item_sha256": "36da12b57e7e4525addc41ccd543c6679552133dee16bd087efe49d6fc0e3287"
     }
   ],
-  "items_per_map": 1,
-  "items_per_rater": 50,
-  "judgments_per_item_if_all_slots_complete": 5,
-  "map_count": 50,
-  "presentation_medium": "static_route_maps_bilingual_staged_pages_v1",
-  "rater_slot_max": 4,
-  "rater_slot_min": 0,
-  "release_index_id": "212230a7565da1626c07649f3805ce50526be262ada0dfd927c095b54cdc9970",
+  "master_protocol_id": "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d",
+  "new_item_count": 50,
+  "previous_release_id": null,
+  "release_id": "4e506991e37db574e9c9a0a7c1690246df3aa3aa3d9b8e9923684b04675eca79",
   "release_rule_id": "cumulative_append_only_artifact_binding_v1",
-  "schema_version": "tbam.github_pages_bundle.v1",
-  "slot_assignments": {
-    "0": [
-      "item_60e09f5652177a3c",
-      "item_f2279a0700243c0f",
-      "item_bb7875e31833165e",
-      "item_ff4cb6dd001930ad",
-      "item_05f17730b090c557",
-      "item_b95187c777c532e8",
-      "item_4857eafcb7015ab7",
-      "item_8b5bf83a9b7717fc",
-      "item_c8e325a3780990ed",
-      "item_f96ebccdf8bd7047",
-      "item_6a91f07616efd6d8",
-      "item_e731dcb25da2d495",
-      "item_743f5b2d38361190",
-      "item_e7fd1f815495d972",
-      "item_6a8b5ffbfa39b799",
-      "item_28aeb793d2003c03",
-      "item_86ee6af51cf51dcb",
-      "item_bfb00838f1e294ae",
-      "item_79de1a40549e636a",
-      "item_fe8af812b8ec6d3e",
-      "item_9bf6838f1f0806ba",
-      "item_e68bec11a54c399e",
-      "item_5e884858d6d7ee1f",
-      "item_efc1ea041a95697d",
-      "item_2579c9193db39f20",
-      "item_e5ecc8ed5211d3eb",
-      "item_3884f56fb96113ae",
-      "item_866697cbe7b74afd",
-      "item_893b26d3e19114a6",
-      "item_eaf0b0a15c2fe30c",
-      "item_a537bb5606e91ef6",
-      "item_d10b736278e579d0",
-      "item_3435c92490ef92f5",
-      "item_61aa31d5b4eaca3a",
-      "item_5bb184b4df5a0f75",
-      "item_8e0067bf9e34f0f4",
-      "item_dcc58360e85499f1",
-      "item_04fa977d9969de03",
-      "item_4d9e436bffcdff9a",
-      "item_e2fa06480eb81779",
-      "item_262546d14ef913a9",
-      "item_c4f2ae5a06ef144f",
-      "item_97035d8f3d6e93ec",
-      "item_b8ffe7b5363c1efa",
-      "item_4c2b083ea088ed57",
-      "item_9a0cbef662c047d8",
-      "item_e6a29bd2160e343f",
-      "item_1dad1da411dd62a3",
-      "item_074901e4f5a9e9bc",
-      "item_59376f7eac1d5616"
-    ],
-    "1": [
-      "item_f96ebccdf8bd7047",
-      "item_6a91f07616efd6d8",
-      "item_e731dcb25da2d495",
-      "item_743f5b2d38361190",
-      "item_e7fd1f815495d972",
-      "item_6a8b5ffbfa39b799",
-      "item_28aeb793d2003c03",
-      "item_86ee6af51cf51dcb",
-      "item_bfb00838f1e294ae",
-      "item_79de1a40549e636a",
-      "item_fe8af812b8ec6d3e",
-      "item_9bf6838f1f0806ba",
-      "item_e68bec11a54c399e",
-      "item_5e884858d6d7ee1f",
-      "item_efc1ea041a95697d",
-      "item_2579c9193db39f20",
-      "item_e5ecc8ed5211d3eb",
-      "item_3884f56fb96113ae",
-      "item_866697cbe7b74afd",
-      "item_893b26d3e19114a6",
-      "item_eaf0b0a15c2fe30c",
-      "item_a537bb5606e91ef6",
-      "item_d10b736278e579d0",
-      "item_3435c92490ef92f5",
-      "item_61aa31d5b4eaca3a",
-      "item_5bb184b4df5a0f75",
-      "item_8e0067bf9e34f0f4",
-      "item_dcc58360e85499f1",
-      "item_04fa977d9969de03",
-      "item_4d9e436bffcdff9a",
-      "item_e2fa06480eb81779",
-      "item_262546d14ef913a9",
-      "item_c4f2ae5a06ef144f",
-      "item_97035d8f3d6e93ec",
-      "item_b8ffe7b5363c1efa",
-      "item_4c2b083ea088ed57",
-      "item_9a0cbef662c047d8",
-      "item_e6a29bd2160e343f",
-      "item_1dad1da411dd62a3",
-      "item_074901e4f5a9e9bc",
-      "item_59376f7eac1d5616",
-      "item_8b5bf83a9b7717fc",
-      "item_c8e325a3780990ed",
-      "item_60e09f5652177a3c",
-      "item_f2279a0700243c0f",
-      "item_bb7875e31833165e",
-      "item_ff4cb6dd001930ad",
-      "item_05f17730b090c557",
-      "item_b95187c777c532e8",
-      "item_4857eafcb7015ab7"
-    ],
-    "2": [
-      "item_bfb00838f1e294ae",
-      "item_79de1a40549e636a",
-      "item_fe8af812b8ec6d3e",
-      "item_9bf6838f1f0806ba",
-      "item_e68bec11a54c399e",
-      "item_5e884858d6d7ee1f",
-      "item_efc1ea041a95697d",
-      "item_2579c9193db39f20",
-      "item_e5ecc8ed5211d3eb",
-      "item_3884f56fb96113ae",
-      "item_866697cbe7b74afd",
-      "item_893b26d3e19114a6",
-      "item_eaf0b0a15c2fe30c",
-      "item_a537bb5606e91ef6",
-      "item_d10b736278e579d0",
-      "item_3435c92490ef92f5",
-      "item_262546d14ef913a9",
-      "item_61aa31d5b4eaca3a",
-      "item_5bb184b4df5a0f75",
-      "item_8e0067bf9e34f0f4",
-      "item_dcc58360e85499f1",
-      "item_04fa977d9969de03",
-      "item_4d9e436bffcdff9a",
-      "item_e2fa06480eb81779",
-      "item_c4f2ae5a06ef144f",
-      "item_97035d8f3d6e93ec",
-      "item_b8ffe7b5363c1efa",
-      "item_4c2b083ea088ed57",
-      "item_9a0cbef662c047d8",
-      "item_e6a29bd2160e343f",
-      "item_1dad1da411dd62a3",
-      "item_074901e4f5a9e9bc",
-      "item_59376f7eac1d5616",
-      "item_8b5bf83a9b7717fc",
-      "item_c8e325a3780990ed",
-      "item_60e09f5652177a3c",
-      "item_f2279a0700243c0f",
-      "item_bb7875e31833165e",
-      "item_ff4cb6dd001930ad",
-      "item_05f17730b090c557",
-      "item_b95187c777c532e8",
-      "item_4857eafcb7015ab7",
-      "item_28aeb793d2003c03",
-      "item_86ee6af51cf51dcb",
-      "item_f96ebccdf8bd7047",
-      "item_6a91f07616efd6d8",
-      "item_e731dcb25da2d495",
-      "item_743f5b2d38361190",
-      "item_e7fd1f815495d972",
-      "item_6a8b5ffbfa39b799"
-    ],
-    "3": [
-      "item_e5ecc8ed5211d3eb",
-      "item_3884f56fb96113ae",
-      "item_866697cbe7b74afd",
-      "item_893b26d3e19114a6",
-      "item_eaf0b0a15c2fe30c",
-      "item_a537bb5606e91ef6",
-      "item_d10b736278e579d0",
-      "item_3435c92490ef92f5",
-      "item_262546d14ef913a9",
-      "item_61aa31d5b4eaca3a",
-      "item_5bb184b4df5a0f75",
-      "item_8e0067bf9e34f0f4",
-      "item_dcc58360e85499f1",
-      "item_04fa977d9969de03",
-      "item_4d9e436bffcdff9a",
-      "item_e2fa06480eb81779",
-      "item_c4f2ae5a06ef144f",
-      "item_97035d8f3d6e93ec",
-      "item_b8ffe7b5363c1efa",
-      "item_4c2b083ea088ed57",
-      "item_9a0cbef662c047d8",
-      "item_e6a29bd2160e343f",
-      "item_1dad1da411dd62a3",
-      "item_074901e4f5a9e9bc",
-      "item_59376f7eac1d5616",
-      "item_8b5bf83a9b7717fc",
-      "item_c8e325a3780990ed",
-      "item_60e09f5652177a3c",
-      "item_f2279a0700243c0f",
-      "item_bb7875e31833165e",
-      "item_ff4cb6dd001930ad",
-      "item_05f17730b090c557",
-      "item_b95187c777c532e8",
-      "item_4857eafcb7015ab7",
-      "item_28aeb793d2003c03",
-      "item_86ee6af51cf51dcb",
-      "item_f96ebccdf8bd7047",
-      "item_6a91f07616efd6d8",
-      "item_e731dcb25da2d495",
-      "item_743f5b2d38361190",
-      "item_e7fd1f815495d972",
-      "item_6a8b5ffbfa39b799",
-      "item_efc1ea041a95697d",
-      "item_2579c9193db39f20",
-      "item_bfb00838f1e294ae",
-      "item_79de1a40549e636a",
-      "item_fe8af812b8ec6d3e",
-      "item_9bf6838f1f0806ba",
-      "item_e68bec11a54c399e",
-      "item_5e884858d6d7ee1f"
-    ],
-    "4": [
-      "item_262546d14ef913a9",
-      "item_61aa31d5b4eaca3a",
-      "item_5bb184b4df5a0f75",
-      "item_8e0067bf9e34f0f4",
-      "item_dcc58360e85499f1",
-      "item_04fa977d9969de03",
-      "item_4d9e436bffcdff9a",
-      "item_e2fa06480eb81779",
-      "item_59376f7eac1d5616",
-      "item_c4f2ae5a06ef144f",
-      "item_97035d8f3d6e93ec",
-      "item_b8ffe7b5363c1efa",
-      "item_4c2b083ea088ed57",
-      "item_9a0cbef662c047d8",
-      "item_e6a29bd2160e343f",
-      "item_1dad1da411dd62a3",
-      "item_074901e4f5a9e9bc",
-      "item_8b5bf83a9b7717fc",
-      "item_c8e325a3780990ed",
-      "item_60e09f5652177a3c",
-      "item_f2279a0700243c0f",
-      "item_bb7875e31833165e",
-      "item_ff4cb6dd001930ad",
-      "item_05f17730b090c557",
-      "item_b95187c777c532e8",
-      "item_4857eafcb7015ab7",
-      "item_28aeb793d2003c03",
-      "item_86ee6af51cf51dcb",
-      "item_f96ebccdf8bd7047",
-      "item_6a91f07616efd6d8",
-      "item_e731dcb25da2d495",
-      "item_743f5b2d38361190",
-      "item_e7fd1f815495d972",
-      "item_6a8b5ffbfa39b799",
-      "item_efc1ea041a95697d",
-      "item_2579c9193db39f20",
-      "item_bfb00838f1e294ae",
-      "item_79de1a40549e636a",
-      "item_fe8af812b8ec6d3e",
-      "item_9bf6838f1f0806ba",
-      "item_e68bec11a54c399e",
-      "item_5e884858d6d7ee1f",
-      "item_d10b736278e579d0",
-      "item_3435c92490ef92f5",
-      "item_e5ecc8ed5211d3eb",
-      "item_3884f56fb96113ae",
-      "item_866697cbe7b74afd",
-      "item_893b26d3e19114a6",
-      "item_eaf0b0a15c2fe30c",
-      "item_a537bb5606e91ef6"
-    ]
-  },
-  "source_design_id": "e9_human_pairwise_v2",
-  "source_public_manifest_sha256": "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d",
-  "status": "complete_browser_local_collection",
-  "storage_mode": "browser_local",
+  "schema_version": "tbam.human_staged_release.v1",
+  "status": "frozen_staged_collection_wave1",
   "study_id": "tbam_e9_best_models_staged_pages_v1",
-  "study_mode": "internal_staged_collection"
+  "wave_number": 1
 }

@@ -134,7 +134,7 @@ function renderConfig() {
   $("#metric-votes").textContent = config.judgments_per_item;
   const unlockLabel = $("#tutorial-unlock-label");
   if (unlockLabel) {
-    unlockLabel.textContent = `解锁我的 ${itemCount} 项完整目录`;
+    unlockLabel.textContent = `解锁当前已发布的 ${itemCount} 项`;
   }
   const progressTotal = $("#progress-total");
   if (progressTotal) {
@@ -143,7 +143,7 @@ function renderConfig() {
   const catalogDescription = $("#catalog-description");
   if (catalogDescription) {
     catalogDescription.textContent =
-      `完整目录包含 ${itemCount} 项；可以分多次完成，已提交项目仍可重新修改。`;
+      `当前已发布 ${itemCount} 项；可以分多次完成，后续批次会追加到同一目录。`;
   }
   const catalogSizeLabel = $("#catalog-size-label");
   if (catalogSizeLabel) {
@@ -325,7 +325,7 @@ function updateDashboardStats() {
     button.disabled = true;
     button.textContent = `${total} 项全部完成`;
     $("#progress-message").textContent =
-      "感谢完成完整目录。您仍可导出自己的匿名备份。";
+      "当前已发布项目全部完成。后续批次会追加到同一进度；请先导出结果备份。";
   }
 }
 

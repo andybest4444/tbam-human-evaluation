@@ -1,0 +1,13 @@
+{
+  "generated_utc": "2026-07-27T03:00:06.069237+00:00",
+  "master_protocol_id": "022be20aa0b9d495951ea32e569b26e1987398a3f64e3949ece5530d88ff730d",
+  "private_master_core_sha256": "18c5e3114eee1bf77b117330730fe5bfc4b2ba3fd1120b1d360a404ce60b52ce",
+  "public_master": {
+    "path": "staged_protocol/master_assignment.json",
+    "sha256": "15e28a7465f0fdd46d72fec47e60121f068567764b20094d33837984b3156bda"
+  },
+  "schema_version": "tbam.human_staged_protocol_seal.v1",
+  "seal_id": "c0451bf90034e5a03b6e4d6f3633fe21ef6067e5d661ee39f25041f50bf1dad4",
+  "status": "frozen_staged_collection_wave1",
+  "study_id": "tbam_e9_best_models_staged_pages_v1"
+}
