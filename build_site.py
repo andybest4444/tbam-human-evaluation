@@ -38,17 +38,19 @@ EXPECTED_PUBLIC_MANIFEST_SHA256: str | None = (
     "3f05c6ff1ccb8c18ff74e88c45d5e5771de00994a3354aea79e0b369ea4cfbae"
 )
 EXPECTED_COLLECTION_PROTOCOL_ID: str | None = (
-    "9801e9289fc3a42769fdf335e5904141c891c14c528b23320169b7a7502af44f"
+    "4fe6437171bd203d801fba2ad515cc527603e5bfd652c2e5c8a13decf0da6649"
 )
 EXPECTED_BUNDLE_ID: str | None = (
-    "e1688fd4ec37dd387d97596b3fe2b41ed2f236afd38fa34d280c050ce73c8dc3"
+    "f88dd19749f0bdfac7e4582f75f18b533aa47aa73b463f0a33e6e21564fb3525"
 )
 EXPECTED_DESIGN_ID = "e9_human_pairwise_v2"
-STUDY_ID = "tbam_e9_fixed_budget_human_pairwise_pages_v3"
+STUDY_ID = "tbam_e9_human_pairwise_pages_v4_paused"
+COLLECTION_STATUS = "collection_paused_for_model_selection_review"
+STUDY_MODE = "paused_review"
 PRESENTATION_MEDIUM = "static_route_maps_bilingual_variable_scale_pages_v1"
 ASSIGNMENT_RULE_ID = "complete_catalog_round_robin_v2"
-ASSET_VERSION = "e9-fixed-budget-bilingual-formal-v3"
-CONSENT_VERSION = "pages-e9-internal-formal-collection-notice-v3"
+ASSET_VERSION = "e9-human-pairwise-paused-v4"
+CONSENT_VERSION = "pages-e9-collection-paused-notice-v4"
 RATER_SLOT_MIN = 0
 RATER_SLOT_MAX = 4
 EXPECTED_ITEM_COUNT = 360
@@ -573,6 +575,41 @@ ENGLISH_TRANSLATIONS = {
     "已完成": "Complete",
     "未完成": "Incomplete",
     "封存": "sealed",
+    "本轮人工评判已暂停；禁止注册、保存草稿和提交或修改判断。": (
+        "This human-evaluation round is paused; registration, draft "
+        "saving, submission, and judgment revision are disabled."
+    ),
+    "此浏览器没有可导出的旧版本地评判数据。": (
+        "This browser has no previous-version local evaluation data "
+        "available for export."
+    ),
+    "收集已暂停 · COLLECTION PAUSED": "COLLECTION PAUSED",
+    "请勿继续评判": "Do not continue rating",
+    "我们正在核对每种方法是否使用训练完成后的最佳模型结果。": (
+        "We are verifying that every method uses its best fully trained "
+        "model result."
+    ),
+    "当前目录不会用于正式收集。": (
+        "The current catalog will not be used for formal collection."
+    ),
+    "新用户注册、草稿保存、提交以及修改判断均已从协议层禁用。": (
+        "New registration, draft saving, submission, and judgment "
+        "revision are disabled at the protocol layer."
+    ),
+    "请等待研究者发送新的已验证链接。": (
+        "Wait for the researcher to send a new verified link."
+    ),
+    "导出此浏览器中的旧版本地数据": (
+        "Export previous-version local data from this browser"
+    ),
+    "检测到旧版本地数据；您可以下载留档，但请勿作为正式实验结果提交。": (
+        "Previous-version local data was detected. You may download it "
+        "for archival purposes, but do not submit it as a formal result."
+    ),
+    "此浏览器未检测到旧版本地评判数据。": (
+        "No previous-version local evaluation data was detected in this "
+        "browser."
+    ),
 }
 START_RUBRIC_HTML = """
             <section class="start-rubric" aria-labelledby="start-rubric-title">
@@ -707,6 +744,68 @@ START_RUBRIC_CSS = """
     grid-template-columns: 1fr;
     padding: 18px;
   }
+}
+
+body.collection-paused main > .view {
+  display: none !important;
+}
+
+.pause-view {
+  width: min(820px, 100%);
+  margin: clamp(48px, 9vh, 110px) auto;
+}
+
+.pause-card {
+  padding: clamp(28px, 5vw, 54px);
+  border: 2px solid #b54a36;
+  border-radius: 24px;
+  background: rgba(255, 252, 248, 0.98);
+  box-shadow: 0 28px 80px rgba(79, 37, 26, 0.16);
+}
+
+.pause-kicker {
+  margin: 0 0 12px;
+  color: #a13e2e;
+  font-size: 13px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+}
+
+.pause-card h1 {
+  margin: 0;
+  color: #7e2e22;
+  font-size: clamp(34px, 6vw, 56px);
+  letter-spacing: -0.045em;
+}
+
+.pause-card > p:not(.pause-kicker):not(.pause-export-note) {
+  margin: 18px 0;
+  color: #4b4b47;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+.pause-warning {
+  margin: 24px 0;
+  padding: 18px 20px;
+  border-left: 5px solid #b54a36;
+  border-radius: 10px;
+  background: #fae5df;
+  color: #6f2e24;
+  font-weight: 750;
+  line-height: 1.65;
+}
+
+.pause-export-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.pause-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 """
 
@@ -1742,6 +1841,7 @@ def transformed_static_api_en(public_manifest_sha256: str) -> str:
 
 def stable_collection_binding(manifest: dict[str, Any]) -> dict[str, Any]:
     return {
+        "status": manifest["status"],
         "study_id": manifest["study_id"],
         "study_mode": manifest["study_mode"],
         "storage_mode": manifest["storage_mode"],
@@ -1967,9 +2067,9 @@ def build_site(
     slot_assignments = complete_catalog_assignments(public_items)
     pages_manifest = {
         "schema_version": "tbam.github_pages_bundle.v1",
-        "status": "complete_browser_local_collection",
+        "status": COLLECTION_STATUS,
         "study_id": STUDY_ID,
-        "study_mode": "formal_collection",
+        "study_mode": STUDY_MODE,
         "storage_mode": "browser_local",
         "presentation_medium": PRESENTATION_MEDIUM,
         "built_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
@@ -2032,9 +2132,9 @@ def verify_site(site: Path, allow_unsealed: bool = False) -> dict[str, Any]:
     sealed = identifiers_are_sealed()
     if (
         manifest.get("schema_version") != "tbam.github_pages_bundle.v1"
-        or manifest.get("status") != "complete_browser_local_collection"
+        or manifest.get("status") != COLLECTION_STATUS
         or manifest.get("study_id") != STUDY_ID
-        or manifest.get("study_mode") != "formal_collection"
+        or manifest.get("study_mode") != STUDY_MODE
         or manifest.get("storage_mode") != "browser_local"
         or manifest.get("presentation_medium") != PRESENTATION_MEDIUM
         or manifest.get("source_design_id") != EXPECTED_DESIGN_ID
@@ -2117,6 +2217,35 @@ def verify_site(site: Path, allow_unsealed: bool = False) -> dict[str, Any]:
     index = (site / "index.html").read_text(encoding="utf-8")
     if 'href="/' in index or 'src="/' in index:
         raise RuntimeError("generated Pages index contains a root URL")
+    static_api = (site / "static_api.js").read_text(encoding="utf-8")
+    static_api_en = (site / "static_api-en.js").read_text(encoding="utf-8")
+    pause_requirements = (
+        'const collectionPaused = true;',
+        'method !== "GET"',
+        'method !== "HEAD"',
+        "collection_paused_for_model_selection_review",
+        "tbam_e9_human_pairwise_pages_v4_paused",
+        "tbam_e9_fixed_budget_human_pairwise_pages_v3",
+        "9801e9289fc3a42769fdf335e5904141c891c14c528b23320169b7a7502af44f",
+        "preserveForExport: true",
+        "tbam.pages_retired_collection_export.v1",
+        'paused.id = "collection-paused-view"',
+    )
+    for requirement in pause_requirements:
+        if requirement not in static_api or requirement not in static_api_en:
+            raise RuntimeError(
+                f"generated pause guard is incomplete: {requirement}"
+            )
+    if re.search(r"[\u3400-\u9fff]", static_api_en):
+        raise RuntimeError("generated English pause runtime contains Chinese")
+    results_runtime = (site / "results.js").read_text(encoding="utf-8")
+    if (
+        "collection_paused_for_model_selection_review"
+        not in results_runtime
+        or "当前人工评判收集已暂停，结果汇总入口已禁用"
+        not in results_runtime
+    ):
+        raise RuntimeError("generated result importer is not paused")
     seen: set[str] = set()
     map_counts: dict[str, int] = defaultdict(int)
     map_payloads: dict[str, str] = {}

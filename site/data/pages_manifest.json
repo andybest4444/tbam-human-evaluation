@@ -1,13 +1,13 @@
 {
   "assignment_rule_id": "complete_catalog_round_robin_v2",
-  "built_utc": "2026-07-27T00:06:45.617010+00:00",
-  "bundle_id": "e1688fd4ec37dd387d97596b3fe2b41ed2f236afd38fa34d280c050ce73c8dc3",
-  "collection_protocol_id": "9801e9289fc3a42769fdf335e5904141c891c14c528b23320169b7a7502af44f",
-  "consent_text": "TBAM 匿名路线人工评判：内部评判说明与参与同意\n\n本次是小规模内部匿名路线评判，不是公众招募。您的 A/B 选择和作答时间将在去除直接身份信息后与其他评判者的结果汇总，用于研究分析，并可能以匿名汇总形式写入论文。我们不要求也不应收集您的真实姓名、邮箱、学号、工号或其他直接身份信息。\n\n页面将展示两张匿名完整路线图。每个项目只要求您根据同一条自然语言任务说明，选择整体更好的路线 A 或路线 B；不区分路线是否完成，不做分项评分，也不提供平局选项。路线图包含高程、掩体、完整路径以及按各地图 horizon 等比例设置的时间标记。完整目录包含 60 张地图、360 个对比项目，可分多次完成。提交后仍可重新打开项目并覆盖原选择；结果导出只保留每个项目最后一次提交的选择。\n\n网页会在当前浏览器中保存 A/B 选择、作答时间、化名及恢复进度所需的数据。GitHub Pages 不接收或保存这些评判结果，但 GitHub 会为安全目的记录 Pages 访问者的 IP 地址。完成后，您需要主动下载“结果与进度 JSON”并交给研究负责人；请勿把包含化名或 PIN 恢复信息的完整浏览器备份当作结果文件发送。清除本站浏览器数据可能删除尚未导出的进度。\n\n请只使用不含任何直接身份信息的化名。参与完全自愿；您可以随时停止。若您停止且不发送结果 JSON，网页不会自动向研究者提交您的作答。若发现路线图、文字、保存、恢复或导出问题，请记录项目编号并反馈给研究负责人。\n\n勾选同意表示您已阅读并理解上述说明，自愿参加，并同意将您主动交回的匿名评判结果用于汇总研究和论文分析。\n",
-  "consent_text_en": "TBAM Anonymous Route Human Evaluation: Internal Evaluation Notice and Consent\n\nThis is a small internal anonymous route evaluation, not public recruitment. After direct identifiers are excluded, your A/B choices and response times will be aggregated with other evaluators' results for research analysis and may be reported in a paper only in anonymous, aggregate form. We do not request and should not collect your real name, email address, student ID, employee ID, or any other direct identifier.\n\nEach item shows two anonymous complete route maps. Based on the same natural-language task instruction, choose which route is better overall, Route A or Route B. Do not separately judge whether a route completed the task, assign dimension scores, or use a tie option. The maps show elevation, cover, complete paths, and time markers spaced proportionally across each map's horizon. The complete catalog contains 60 maps and 360 comparisons and may be completed over multiple sessions. You may reopen a submitted item and replace your earlier choice; the result export retains only your latest submitted choice for each item.\n\nThe page stores your A/B choices, response times, pseudonym, and recovery data in this browser. GitHub Pages does not receive or store these evaluation responses, although GitHub records Pages visitors' IP addresses for security purposes. When finished, you must download the “results and progress JSON” and send it to the study coordinator. Do not send the full browser backup, which contains pseudonym and PIN-recovery information, as the result file. Clearing this site's browser data may delete progress that has not been exported.\n\nUse only a pseudonym that contains no direct identifying information. Participation is voluntary, and you may stop at any time. If you stop and do not send the result JSON, the page will not automatically transmit your responses to the researcher. If you encounter a problem with the route maps, text, saving, recovery, or export, record the affected item number and report it to the study coordinator.\n\nBy checking the consent box, you confirm that you have read and understood this notice, volunteer to participate, and agree that the anonymous evaluation result you actively return may be used for aggregate research and paper analysis.\n",
-  "consent_text_en_sha256": "5ca097785859d14ad4a9ff34d20a99cf2ce7763a0893643d3ed982b4e03e8279",
-  "consent_text_sha256": "cb4101b0f46715fe0ce4a095f432e166275fbf64ce57b83b2ffdf31e94ba1cf6",
-  "consent_version": "pages-e9-internal-formal-collection-notice-v3",
+  "built_utc": "2026-07-27T00:46:12.967655+00:00",
+  "bundle_id": "f88dd19749f0bdfac7e4582f75f18b533aa47aa73b463f0a33e6e21564fb3525",
+  "collection_protocol_id": "4fe6437171bd203d801fba2ad515cc527603e5bfd652c2e5c8a13decf0da6649",
+  "consent_text": "TBAM 匿名路线人工评判：收集暂停通知\n\n本轮人工评判已经暂停。研究团队正在核对每种方法是否均使用训练完成后的最佳模型结果；当前目录不得用于正式收集，也请勿继续作答。\n\n新用户注册、草稿保存、提交以及修改判断均已从浏览器本地协议层禁用。此前版本的活动进度不会被读取到当前协议中。若此浏览器中存在此前版本的数据，页面只允许将其导出留档；该数据不得作为正式实验结果提交。\n\n请等待研究负责人发送新的已验证评判链接。GitHub 仍可能为安全目的记录 Pages 访问者的 IP 地址，但本暂停页面不会收集或上传新的评判结果。\n",
+  "consent_text_en": "TBAM Anonymous Route Human Evaluation: Collection Paused\n\nThis human-evaluation round is paused while the research team verifies that every method is represented by its best fully trained model. Do not use the current catalog for formal collection and do not continue rating.\n\nNew registration, draft saving, submission, and judgment revision are disabled at the browser-local protocol layer. Active progress from the previous version is not read into this protocol. If this browser contains previous-version data, the page only permits exporting it for archival purposes; it must not be submitted as a formal experimental result.\n\nWait for the study coordinator to provide a new verified evaluation link. GitHub may still record Pages visitors' IP addresses for security purposes, but this paused page does not collect or upload new evaluation responses.\n",
+  "consent_text_en_sha256": "5b795b02129401889268c871853fb5dcd9a63a9a93745c1e04e53ac04d7d963c",
+  "consent_text_sha256": "ca06e0c2bc94f9558138fd4c47b50fa22f7034eb7aa0eb7e1cd6f2cec01eea80",
+  "consent_version": "pages-e9-collection-paused-notice-v4",
   "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
   "directive_en": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
   "item_count": 360,
@@ -5424,14 +5424,14 @@
   "runtime_sha256": {
     "app-en.js": "61731bab4b30a5fe6570015b41a1dfea639375e11532c83c7b6c3e502b6253e9",
     "app.js": "860af325292968f1903f623dfa51e2f0b670329b578c7be1b21f249db09430a0",
-    "index-en.html": "01ceeaeac983a3096745fa6e105011b5d3c72022da4f7e72af612a58519539a0",
-    "index.html": "67f1d81ccbc146328a3ee22796f4ff0c699186b2048f8043d2ba615aa4915767",
+    "index-en.html": "ef694bd932c36ea691445f7ebc909fa412408e47a8a927accf07a02a38a95e5a",
+    "index.html": "1b535ef68a51702623d1a57b1345cbf1e2d9ed1052473356ae42887da3578b2f",
     "results.css": "3527dd30a55e9f143cf09e8ec4bc252da4db05015e9e3d3e61a99d15cd640052",
     "results.html": "8e014b72dcdc530a6a5415c60b21e7bbd4019e3470da611fbd6fd746f380aa90",
-    "results.js": "d30b5a1c1d55b476388b74f308dc33bd49702bd40340a5763820e9b2fb946f0b",
-    "static_api-en.js": "877251d3d636bcae017e82e6edb5b59e89813004ddf694747508b228afc37ed2",
-    "static_api.js": "fc6a178e09146a151c07c9908d7b911fff86df28ca5d522f6e162ad0f20d9f15",
-    "styles.css": "7d4c93bfbe6620f939593af22b296d63b89241acccc260118429750b37241c2b"
+    "results.js": "1fc3b6abe8144c65e308b83b00472eaeaedaefbb9a5efed99e22a717a91d31b6",
+    "static_api-en.js": "41b1d303cba0b272a9a93fedffc75f703a487c6627b0981fa8fc454bb0f1e595",
+    "static_api.js": "5974870d9934feb22cfa45656ba10807f71c88de4a7faab9ffd857936a88b288",
+    "styles.css": "bb0329a661419f132dd5071955b8b2dc04703185758bb1dd3f189911955991b0"
   },
   "schema_version": "tbam.github_pages_bundle.v1",
   "slot_assignments": {
@@ -7249,8 +7249,8 @@
   "source_design_id": "e9_human_pairwise_v2",
   "source_public_manifest_generated_utc": "2026-07-27T00:03:56.510492+00:00",
   "source_public_manifest_sha256": "3f05c6ff1ccb8c18ff74e88c45d5e5771de00994a3354aea79e0b369ea4cfbae",
-  "status": "complete_browser_local_collection",
+  "status": "collection_paused_for_model_selection_review",
   "storage_mode": "browser_local",
-  "study_id": "tbam_e9_fixed_budget_human_pairwise_pages_v3",
-  "study_mode": "formal_collection"
+  "study_id": "tbam_e9_human_pairwise_pages_v4_paused",
+  "study_mode": "paused_review"
 }

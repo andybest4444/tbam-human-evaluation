@@ -6,7 +6,7 @@ const PAGES_EXPORT_SCHEMA = "tbam.pages_human_rater_export.v2";
 const JUDGMENT_SCHEMA = "tbam.blind_pairwise_choice.v1";
 const MERGED_EXPORT_SCHEMA = "tbam.merged_pairwise_choices.v1";
 const EXPECTED_STUDY_ID =
-  "tbam_e9_fixed_budget_human_pairwise_pages_v3";
+  "tbam_e9_human_pairwise_pages_v4_paused";
 const EXPECTED_DESIGN_ID = "e9_human_pairwise_v2";
 const EXPECTED_ASSIGNMENT_RULE = "complete_catalog_round_robin_v2";
 const EXPECTED_ITEM_COUNT = 360;
@@ -185,6 +185,12 @@ function validateManifest(manifest) {
   assertPlainObject(manifest, "pages_manifest.json");
   if (manifest.schema_version !== MANIFEST_SCHEMA) {
     throw new Error(`不支持的清单版本 ${String(manifest.schema_version)}`);
+  }
+  if (
+    manifest.status === "collection_paused_for_model_selection_review" ||
+    manifest.study_mode === "paused_review"
+  ) {
+    throw new Error("当前人工评判收集已暂停，结果汇总入口已禁用");
   }
   assertNonEmptyString(manifest.study_id, "manifest.study_id");
   if (manifest.study_id !== EXPECTED_STUDY_ID) {

@@ -1,11 +1,7 @@
-TBAM Anonymous Route Human Evaluation: Internal Evaluation Notice and Consent
+TBAM Anonymous Route Human Evaluation: Collection Paused
 
-This is a small internal anonymous route evaluation, not public recruitment. After direct identifiers are excluded, your A/B choices and response times will be aggregated with other evaluators' results for research analysis and may be reported in a paper only in anonymous, aggregate form. We do not request and should not collect your real name, email address, student ID, employee ID, or any other direct identifier.
+This human-evaluation round is paused while the research team verifies that every method is represented by its best fully trained model. Do not use the current catalog for formal collection and do not continue rating.
 
-Each item shows two anonymous complete route maps. Based on the same natural-language task instruction, choose which route is better overall, Route A or Route B. Do not separately judge whether a route completed the task, assign dimension scores, or use a tie option. The maps show elevation, cover, complete paths, and time markers spaced proportionally across each map's horizon. The complete catalog contains 60 maps and 360 comparisons and may be completed over multiple sessions. You may reopen a submitted item and replace your earlier choice; the result export retains only your latest submitted choice for each item.
+New registration, draft saving, submission, and judgment revision are disabled at the browser-local protocol layer. Active progress from the previous version is not read into this protocol. If this browser contains previous-version data, the page only permits exporting it for archival purposes; it must not be submitted as a formal experimental result.
 
-The page stores your A/B choices, response times, pseudonym, and recovery data in this browser. GitHub Pages does not receive or store these evaluation responses, although GitHub records Pages visitors' IP addresses for security purposes. When finished, you must download the “results and progress JSON” and send it to the study coordinator. Do not send the full browser backup, which contains pseudonym and PIN-recovery information, as the result file. Clearing this site's browser data may delete progress that has not been exported.
-
-Use only a pseudonym that contains no direct identifying information. Participation is voluntary, and you may stop at any time. If you stop and do not send the result JSON, the page will not automatically transmit your responses to the researcher. If you encounter a problem with the route maps, text, saving, recovery, or export, record the affected item number and report it to the study coordinator.
-
-By checking the consent box, you confirm that you have read and understood this notice, volunteer to participate, and agree that the anonymous evaluation result you actively return may be used for aggregate research and paper analysis.
+Wait for the study coordinator to provide a new verified evaluation link. GitHub may still record Pages visitors' IP addresses for security purposes, but this paused page does not collect or upload new evaluation responses.

@@ -8,13 +8,17 @@
   const expectedManifestSha =
     "3f05c6ff1ccb8c18ff74e88c45d5e5771de00994a3354aea79e0b369ea4cfbae";
   const expectedStudyId =
-    "tbam_e9_fixed_budget_human_pairwise_pages_v3";
+    "tbam_e9_human_pairwise_pages_v4_paused";
   const expectedDesignId = "e9_human_pairwise_v2";
+  const expectedCollectionStatus =
+    "collection_paused_for_model_selection_review";
+  const expectedStudyMode = "paused_review";
   const expectedPresentationMedium =
     "static_route_maps_bilingual_variable_scale_pages_v1";
   const expectedAssignmentRule = "complete_catalog_round_robin_v2";
   const expectedConsentVersion =
-    "pages-e9-internal-formal-collection-notice-v3";
+    "pages-e9-collection-paused-notice-v4";
+  const collectionPaused = true;
   const expectedItemCount = 360;
   const expectedMapCount = 60;
   const expectedItemsPerMap = 6;
@@ -34,11 +38,69 @@
       protocolId:
         "9dcbcf36e3a192e8f34569e8ccf0cc7575c89a2f0d1c0416a3d8330f7c864bae",
     },
+    {
+      studyId: "tbam_e9_fixed_budget_human_pairwise_pages_v3",
+      protocolId:
+        "9801e9289fc3a42769fdf335e5904141c891c14c528b23320169b7a7502af44f",
+      preserveForExport: true,
+    },
   ];
   const retiredPurgeMarker =
-    `${namespace}:formal-v3-retired-progress-purged:v1`;
+    `${namespace}:paused-v4-retired-progress-purged:v1`;
   const encoder = new TextEncoder();
   let manifestPromise;
+
+  function retiredArchiveKey(studyId, protocolId) {
+    return `${namespace}:retired-export:${studyId}:${protocolId}`;
+  }
+
+  function safeRetiredExport(raw, retired) {
+    let store;
+    try {
+      store = JSON.parse(raw);
+    } catch {
+      return null;
+    }
+    if (
+      store?.schema_version !== "tbam.pages_local_store.v2" ||
+      store?.study_id !== retired.studyId ||
+      store?.collection_protocol_id !== retired.protocolId ||
+      !store.profiles ||
+      typeof store.profiles !== "object" ||
+      Array.isArray(store.profiles)
+    ) {
+      return null;
+    }
+    const profiles = Object.values(store.profiles).map((profile) => {
+      const items =
+        profile?.items && typeof profile.items === "object"
+          ? Object.entries(profile.items).map(([itemId, local]) => ({
+              item_id: itemId,
+              started_utc: local?.started_utc || null,
+              draft: local?.draft || null,
+              judgment: local?.judgment || null,
+            }))
+          : [];
+      return {
+        judge_system_id: profile?.rater_id || null,
+        rater_slot: profile?.rater_slot ?? null,
+        created_utc: profile?.created_utc || null,
+        consented_utc: profile?.consented_utc || null,
+        tutorial_completed_utc:
+          profile?.tutorial_completed_utc || null,
+        items,
+      };
+    });
+    return {
+      schema_version: "tbam.pages_retired_local_export.v1",
+      retired_reason:
+        "collection_paused_pending_trained_best_model_verification",
+      study_id: retired.studyId,
+      collection_protocol_id: retired.protocolId,
+      archived_utc: now(),
+      profiles,
+    };
+  }
 
   function purgeRetiredProgress() {
     try {
@@ -47,11 +109,33 @@
         (_, index) => localStorage.key(index),
       ).filter(Boolean);
       for (const key of localKeys) {
-        const isRetired = retiredVersions.some(({ studyId, protocolId }) =>
+        const retired = retiredVersions.find(({ studyId, protocolId }) =>
           key === `${namespace}:${studyId}:${protocolId}:store` ||
           key.startsWith(`tbam-draft:${studyId}:${protocolId}:`),
         );
-        if (isRetired) {
+        if (retired) {
+          if (
+            retired.preserveForExport &&
+            key ===
+              `${namespace}:${retired.studyId}:${retired.protocolId}:store`
+          ) {
+            const archiveKey = retiredArchiveKey(
+              retired.studyId,
+              retired.protocolId,
+            );
+            if (!localStorage.getItem(archiveKey)) {
+              const archive = safeRetiredExport(
+                localStorage.getItem(key),
+                retired,
+              );
+              if (archive) {
+                localStorage.setItem(
+                  archiveKey,
+                  JSON.stringify(archive),
+                );
+              }
+            }
+          }
           localStorage.removeItem(key);
         }
       }
@@ -117,10 +201,10 @@
         .then((manifest) => {
           if (
             manifest?.schema_version !== "tbam.github_pages_bundle.v1" ||
-            manifest?.status !== "complete_browser_local_collection" ||
+            manifest?.status !== expectedCollectionStatus ||
             manifest?.source_public_manifest_sha256 !== expectedManifestSha ||
             manifest?.study_id !== expectedStudyId ||
-            manifest?.study_mode !== "formal_collection" ||
+            manifest?.study_mode !== expectedStudyMode ||
             manifest?.source_design_id !== expectedDesignId ||
             !/^[0-9a-f]{64}$/.test(manifest?.bundle_id || "") ||
             !/^[0-9a-f]{64}$/.test(
@@ -1048,6 +1132,19 @@
       typeof input === "string" || input instanceof URL ? String(input) : input.url;
     const url = new URL(raw, window.location.href);
     if (url.pathname.startsWith("/api/")) {
+      const method = String(options.method || "GET").toUpperCase();
+      if (
+        collectionPaused &&
+        method !== "GET" &&
+        method !== "HEAD"
+      ) {
+        return errorResponse(
+          new LocalApiError(
+            423,
+            "This human-evaluation round is paused; registration, draft saving, submission, and judgment revision are disabled.",
+          ),
+        );
+      }
       const execute = async () => {
         try {
           return await handleApi(url, options);
@@ -1055,7 +1152,6 @@
           return errorResponse(error);
         }
       };
-      const method = String(options.method || "GET").toUpperCase();
       if (method !== "GET" && method !== "HEAD") {
         return withWriteLock(execute);
       }
@@ -1121,6 +1217,49 @@
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function retiredExports() {
+    const exports = [];
+    for (const retired of retiredVersions) {
+      if (!retired.preserveForExport) continue;
+      const raw = localStorage.getItem(
+        retiredArchiveKey(retired.studyId, retired.protocolId),
+      );
+      if (!raw) continue;
+      try {
+        const payload = JSON.parse(raw);
+        if (
+          payload?.schema_version ===
+            "tbam.pages_retired_local_export.v1" &&
+          payload?.study_id === retired.studyId &&
+          payload?.collection_protocol_id === retired.protocolId
+        ) {
+          exports.push(payload);
+        }
+      } catch {
+        // A malformed archive is ignored and never imported into this protocol.
+      }
+    }
+    return exports;
+  }
+
+  function downloadRetiredExports() {
+    const archived = retiredExports();
+    if (!archived.length) {
+      window.alert("This browser has no previous-version local evaluation data available for export.");
+      return;
+    }
+    downloadJson(
+      {
+        schema_version: "tbam.pages_retired_collection_export.v1",
+        exported_utc: now(),
+        reason:
+          "collection_paused_pending_trained_best_model_verification",
+        retired_collections: archived,
+      },
+      "tbam_paused_collection_local_export.json",
+    );
   }
 
   async function downloadScienceExport() {
@@ -1190,6 +1329,7 @@
   function replaceTextNode() {}
 
   function installStaticInterface() {
+    document.body.classList.add("collection-paused");
     const languageSwitch = document.querySelector("[data-language-switch]");
     if (languageSwitch) {
       const target = new URL(
@@ -1261,6 +1401,41 @@
     }
     document.querySelector("#open-admin-login")?.classList.add("hidden");
 
+    const main = document.querySelector("main");
+    if (main && !document.querySelector("#collection-paused-view")) {
+      const paused = document.createElement("section");
+      paused.className = "pause-view";
+      paused.id = "collection-paused-view";
+      paused.setAttribute("role", "alert");
+      paused.innerHTML = `
+        <div class="pause-card">
+          <p class="pause-kicker">COLLECTION PAUSED</p>
+          <h1>Do not continue rating</h1>
+          <p>
+            We are verifying that every method uses its best fully trained model result.
+            The current catalog will not be used for formal collection.
+          </p>
+          <div class="pause-warning">
+            New registration, draft saving, submission, and judgment revision are disabled at the protocol layer.
+            Wait for the researcher to send a new verified link.
+          </div>
+          <button class="secondary-button" id="export-retired-data" type="button">
+            Export previous-version local data from this browser
+          </button>
+          <p class="pause-export-note" id="pause-export-note"></p>
+        </div>
+      `;
+      main.append(paused);
+      const archivedCount = retiredExports().length;
+      const exportButton = paused.querySelector("#export-retired-data");
+      const exportNote = paused.querySelector("#pause-export-note");
+      exportButton.disabled = archivedCount === 0;
+      exportButton.addEventListener("click", downloadRetiredExports);
+      exportNote.textContent = archivedCount
+        ? "Previous-version local data was detected. You may download it for archival purposes, but do not submit it as a formal result."
+        : "No previous-version local evaluation data was detected in this browser.";
+    }
+
     const exportButton = document.querySelector("#export-mine");
     if (exportButton) {
       exportButton.textContent = "Download results and progress JSON";
@@ -1318,6 +1493,8 @@
     loadManifest,
     scienceExport,
     browserBackup,
+    collectionPaused,
+    retiredExports,
   };
   installStaticInterface();
 })();

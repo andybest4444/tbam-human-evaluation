@@ -1,6 +1,18 @@
-# TBAM E9 GitHub Pages Human-Evaluation Collection
+# TBAM E9 GitHub Pages Human-Evaluation Collection — PAUSED
 
-This repository is a Pages-ready, sealed browser-local collection interface for
+> **Collection is paused.** The research team is verifying that every method is
+> represented by its best fully trained model. The deployed v4 protocol rejects
+> registration, draft writes, submissions, and judgment revisions. Do not ask
+> participants to rate the current catalog.
+
+The previous v3 protocol
+`9801e9289fc3a42769fdf335e5904141c891c14c528b23320169b7a7502af44f`
+is retired precisely by study/protocol key. Its active store, session, and
+draft keys cannot be read by v4. A redacted browser-local archive (no
+pseudonym, PIN, PIN salt, or PIN hash) may be downloaded from the pause page
+for safekeeping, but it is not a formal experimental result.
+
+This repository is a Pages-ready, sealed browser-local paused interface for
 the internal blinded TBAM E9 route evaluation. It displays two static A/B
 full-route maps per item. It contains only the frozen public
 `judge_input.json` files; videos, contact sheets, private A/B mappings,
@@ -11,10 +23,9 @@ confidence ratings, evidence fields, or written rationales.
 
 ## Important limitation
 
-GitHub Pages has no Python or SQLite backend. Progress is stored only in the
-participant's current browser. The same username and PIN can reopen progress
-in that browser, but cannot recover it on another device. Clearing site data or
-using private-browsing mode can erase progress.
+GitHub Pages has no Python or SQLite backend. In an active protocol, progress
+would be stored only in the participant's current browser. The paused v4
+protocol does not create participants or accept any progress writes.
 
 GitHub records a Pages visitor's IP address for security purposes. The bundled
 evaluation notice discloses that hosting behavior, the browser-local data
@@ -27,17 +38,15 @@ from another Pages repository on that account could read or alter this site's
 browser storage. The local PIN is a recovery gate, not cryptographic isolation
 from other pages on the same origin.
 
-Every participant must download their
+In a future active, verified round, every participant must download their
 `tbam.pages_human_rater_export.v2` JSON after finishing and return it to the
 researcher. `results.html` combines those files locally in the researcher's
 browser and exports JSON/JSONL/CSV tables; it does not upload results anywhere.
 
-This distribution is the internal static-route collection presentation. Do not
-mix its judgments with judgments collected under an earlier presentation or
-protocol. Freeze and verify the static-presentation bundle before assigning
-participant links, and do not change it during a collection round.
+This distribution is a pause barrier, not an active collection presentation.
+Its `results.html` entry also fails closed while the pause status is present.
 
-## Frozen source
+## Paused deployment source
 
 - Design: `e9_human_pairwise_v2`
 - Maps: 60 balanced E9 evaluation instances (10 per configuration)
@@ -52,8 +61,10 @@ participant links, and do not change it during a collection round.
 - Agent counts: 2, 3, and 4
 - Horizons: 48, 96, 144, and 192
 - Source public-manifest SHA-256: `3f05c6ff1ccb8c18ff74e88c45d5e5771de00994a3354aea79e0b369ea4cfbae`
-- Collection protocol ID: `9801e9289fc3a42769fdf335e5904141c891c14c528b23320169b7a7502af44f`
-- Deployment bundle ID: `e1688fd4ec37dd387d97596b3fe2b41ed2f236afd38fa34d280c050ce73c8dc3`
+- Collection status: `collection_paused_for_model_selection_review`
+- Study mode: `paused_review`
+- Collection protocol ID: `4fe6437171bd203d801fba2ad515cc527603e5bfd652c2e5c8a13decf0da6649`
+- Deployment bundle ID: `f88dd19749f0bdfac7e4582f75f18b533aa47aa73b463f0a33e6e21564fb3525`
 - Presentation: `static_route_maps_bilingual_variable_scale_pages_v1`
 
 The generated `site/` contains only byte-identical public `judge_input.json`
@@ -121,7 +132,11 @@ and exported result. The direct English URL is
 
 The included workflow publishes only `site/`.
 
-## Assign participant links
+## Retired operational notes — do not assign links while paused
+
+The following describes the retired collection workflow for audit context only.
+Do not send any slot link until a new trained-best-model corpus and protocol
+have been independently verified and deployed.
 
 There is no global slot allocator on Pages. The researcher must send each
 participant a different slot link:
@@ -158,7 +173,10 @@ To resume on another browser, the participant must first export the full
 browser backup and import it on the other browser. A username and PIN alone
 cannot retrieve data from GitHub Pages.
 
-## Combine returned results
+## Retired result-combination notes
+
+The paused deployment intentionally disables this entry. These notes remain
+only to document how an eventual replacement protocol may be operated.
 
 Open:
 
