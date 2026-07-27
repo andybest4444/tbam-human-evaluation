@@ -1,0 +1,5185 @@
+{
+  "blind_map_id": "map_02_08",
+  "design_id": "e9_human_pairwise_v2",
+  "directive": "Reach the goal efficiently, avoid unnecessary elevation change, prefer concealed cells, and maintain separation while exposed but gather while concealed.",
+  "item_id": "item_db47dde94d45f37f",
+  "map": {
+    "agent_count": 3,
+    "cover": [
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "goal": [
+      15,
+      15
+    ],
+    "height": [
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "max_steps": 96,
+    "start": [
+      3,
+      5
+    ]
+  },
+  "routes": {
+    "A": {
+      "completed": true,
+      "completion_step": 26,
+      "trajectory": [
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": null,
+          "agent_actions": null,
+          "positions": [
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              5
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 0
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              4,
+              5
+            ],
+            [
+              4,
+              5
+            ],
+            [
+              4,
+              5
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 1
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "down"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            1
+          ],
+          "positions": [
+            [
+              4,
+              6
+            ],
+            [
+              4,
+              6
+            ],
+            [
+              5,
+              5
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 2
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            1,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              5,
+              6
+            ],
+            [
+              4,
+              7
+            ],
+            [
+              5,
+              6
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 3
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            1,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              6,
+              6
+            ],
+            [
+              4,
+              8
+            ],
+            [
+              5,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 4
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "down"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            1
+          ],
+          "positions": [
+            [
+              6,
+              7
+            ],
+            [
+              4,
+              9
+            ],
+            [
+              6,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 5
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "right",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            3,
+            1
+          ],
+          "positions": [
+            [
+              7,
+              7
+            ],
+            [
+              4,
+              10
+            ],
+            [
+              7,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 6
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "down"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            1
+          ],
+          "positions": [
+            [
+              7,
+              8
+            ],
+            [
+              4,
+              11
+            ],
+            [
+              8,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 7
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "right",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            3,
+            1
+          ],
+          "positions": [
+            [
+              8,
+              8
+            ],
+            [
+              4,
+              12
+            ],
+            [
+              9,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 8
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            3,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              8,
+              9
+            ],
+            [
+              5,
+              12
+            ],
+            [
+              10,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 9
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "right",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            3,
+            1
+          ],
+          "positions": [
+            [
+              9,
+              9
+            ],
+            [
+              5,
+              13
+            ],
+            [
+              11,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 10
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              10,
+              9
+            ],
+            [
+              6,
+              13
+            ],
+            [
+              12,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 11
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              11,
+              9
+            ],
+            [
+              7,
+              13
+            ],
+            [
+              13,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 12
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "left"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            2
+          ],
+          "positions": [
+            [
+              12,
+              9
+            ],
+            [
+              8,
+              13
+            ],
+            [
+              13,
+              6
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 13
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "right"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            3
+          ],
+          "positions": [
+            [
+              13,
+              9
+            ],
+            [
+              9,
+              13
+            ],
+            [
+              13,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 14
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              14,
+              9
+            ],
+            [
+              10,
+              13
+            ],
+            [
+              14,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 15
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              15,
+              9
+            ],
+            [
+              11,
+              13
+            ],
+            [
+              15,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 16
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "down",
+            "up"
+          ],
+          "agent_actions": [
+            3,
+            1,
+            0
+          ],
+          "positions": [
+            [
+              15,
+              10
+            ],
+            [
+              12,
+              13
+            ],
+            [
+              14,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 17
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "down"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            1
+          ],
+          "positions": [
+            [
+              15,
+              11
+            ],
+            [
+              12,
+              14
+            ],
+            [
+              15,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 18
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              15,
+              12
+            ],
+            [
+              12,
+              15
+            ],
+            [
+              15,
+              8
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 19
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "down",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            1,
+            3
+          ],
+          "positions": [
+            [
+              15,
+              13
+            ],
+            [
+              13,
+              15
+            ],
+            [
+              15,
+              9
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 20
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "down",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            1,
+            3
+          ],
+          "positions": [
+            [
+              15,
+              14
+            ],
+            [
+              14,
+              15
+            ],
+            [
+              15,
+              10
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 21
+        },
+        {
+          "active_mask": [
+            false,
+            false,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "down",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            1,
+            3
+          ],
+          "positions": [
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              11
+            ]
+          ],
+          "reached_mask": [
+            true,
+            true,
+            false
+          ],
+          "t": 22
+        },
+        {
+          "active_mask": [
+            false,
+            false,
+            true
+          ],
+          "agent_action_names": [
+            "stay",
+            "stay",
+            "right"
+          ],
+          "agent_actions": [
+            4,
+            4,
+            3
+          ],
+          "positions": [
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              12
+            ]
+          ],
+          "reached_mask": [
+            true,
+            true,
+            false
+          ],
+          "t": 23
+        },
+        {
+          "active_mask": [
+            false,
+            false,
+            true
+          ],
+          "agent_action_names": [
+            "stay",
+            "stay",
+            "right"
+          ],
+          "agent_actions": [
+            4,
+            4,
+            3
+          ],
+          "positions": [
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              13
+            ]
+          ],
+          "reached_mask": [
+            true,
+            true,
+            false
+          ],
+          "t": 24
+        },
+        {
+          "active_mask": [
+            false,
+            false,
+            true
+          ],
+          "agent_action_names": [
+            "stay",
+            "stay",
+            "right"
+          ],
+          "agent_actions": [
+            4,
+            4,
+            3
+          ],
+          "positions": [
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              14
+            ]
+          ],
+          "reached_mask": [
+            true,
+            true,
+            false
+          ],
+          "t": 25
+        },
+        {
+          "active_mask": [
+            false,
+            false,
+            false
+          ],
+          "agent_action_names": [
+            "stay",
+            "stay",
+            "right"
+          ],
+          "agent_actions": [
+            4,
+            4,
+            3
+          ],
+          "positions": [
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              15
+            ],
+            [
+              15,
+              15
+            ]
+          ],
+          "reached_mask": [
+            true,
+            true,
+            true
+          ],
+          "t": 26
+        }
+      ]
+    },
+    "B": {
+      "completed": false,
+      "completion_step": null,
+      "trajectory": [
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": null,
+          "agent_actions": null,
+          "positions": [
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              5
+            ],
+            [
+              3,
+              5
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 0
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              6
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              3,
+              6
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 1
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              7
+            ],
+            [
+              3,
+              7
+            ],
+            [
+              3,
+              7
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 2
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              8
+            ],
+            [
+              3,
+              8
+            ],
+            [
+              3,
+              8
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 3
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              9
+            ],
+            [
+              3,
+              9
+            ],
+            [
+              3,
+              9
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 4
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              10
+            ],
+            [
+              3,
+              10
+            ],
+            [
+              3,
+              10
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 5
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              11
+            ],
+            [
+              3,
+              11
+            ],
+            [
+              3,
+              11
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 6
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              12
+            ],
+            [
+              3,
+              12
+            ],
+            [
+              3,
+              12
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 7
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              13
+            ],
+            [
+              3,
+              13
+            ],
+            [
+              3,
+              13
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 8
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              14
+            ],
+            [
+              3,
+              14
+            ],
+            [
+              3,
+              14
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 9
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "right",
+            "right",
+            "right"
+          ],
+          "agent_actions": [
+            3,
+            3,
+            3
+          ],
+          "positions": [
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              15
+            ],
+            [
+              3,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 10
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              15
+            ],
+            [
+              2,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 11
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 12
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 13
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 14
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 15
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 16
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 17
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 18
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 19
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 20
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 21
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 22
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 23
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 24
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 25
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 26
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 27
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 28
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 29
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 30
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 31
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 32
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 33
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 34
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 35
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 36
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 37
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 38
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 39
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 40
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 41
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 42
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 43
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 44
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 45
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 46
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 47
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 48
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 49
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 50
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 51
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 52
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 53
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 54
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 55
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 56
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 57
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 58
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 59
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 60
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 61
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 62
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 63
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 64
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 65
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 66
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 67
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 68
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 69
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 70
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 71
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 72
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 73
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 74
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 75
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 76
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 77
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 78
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 79
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 80
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 81
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 82
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 83
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 84
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 85
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 86
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 87
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 88
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 89
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 90
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 91
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 92
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 93
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 94
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "up",
+            "up",
+            "up"
+          ],
+          "agent_actions": [
+            0,
+            0,
+            0
+          ],
+          "positions": [
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ],
+            [
+              0,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 95
+        },
+        {
+          "active_mask": [
+            true,
+            true,
+            true
+          ],
+          "agent_action_names": [
+            "down",
+            "down",
+            "down"
+          ],
+          "agent_actions": [
+            1,
+            1,
+            1
+          ],
+          "positions": [
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ],
+            [
+              1,
+              15
+            ]
+          ],
+          "reached_mask": [
+            false,
+            false,
+            false
+          ],
+          "t": 96
+        }
+      ]
+    }
+  },
+  "schema_version": "tbam.blind_judge_input.v1"
+}

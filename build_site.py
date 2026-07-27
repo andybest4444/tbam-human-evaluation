@@ -27,7 +27,7 @@ DEFAULT_ARTIFACT_ROOT = (
     ROOT.parent
     / "paper_experiments"
     / "blind_artifacts"
-    / "e9_human_pairwise_v1"
+    / "e9_human_pairwise_v2"
     / "public"
 )
 DEFAULT_SITE = ROOT / "site"
@@ -35,24 +35,24 @@ DEFAULT_SITE = ROOT / "site"
 # values before production deployment.  Candidate builds require the explicit
 # --allow-unsealed-identifiers flag and can never pass the default verifier.
 EXPECTED_PUBLIC_MANIFEST_SHA256: str | None = (
-    "9441c978a4552b234d725ad1a8a87df76969d426e1a2dc99c22f3e5f8f95fad4"
+    "3f05c6ff1ccb8c18ff74e88c45d5e5771de00994a3354aea79e0b369ea4cfbae"
 )
 EXPECTED_COLLECTION_PROTOCOL_ID: str | None = (
-    "9dcbcf36e3a192e8f34569e8ccf0cc7575c89a2f0d1c0416a3d8330f7c864bae"
+    "9801e9289fc3a42769fdf335e5904141c891c14c528b23320169b7a7502af44f"
 )
 EXPECTED_BUNDLE_ID: str | None = (
-    "9108225b043c091ca87fbcca1f95d2b9962c2b70071a83d0948bacdf92040f0f"
+    "e1688fd4ec37dd387d97596b3fe2b41ed2f236afd38fa34d280c050ce73c8dc3"
 )
-EXPECTED_DESIGN_ID = "e9_human_pairwise_v1"
-STUDY_ID = "tbam_e9_fixed_budget_human_pairwise_pages_v2"
+EXPECTED_DESIGN_ID = "e9_human_pairwise_v2"
+STUDY_ID = "tbam_e9_fixed_budget_human_pairwise_pages_v3"
 PRESENTATION_MEDIUM = "static_route_maps_bilingual_variable_scale_pages_v1"
 ASSIGNMENT_RULE_ID = "complete_catalog_round_robin_v2"
-ASSET_VERSION = "e9-fixed-budget-bilingual-formal-v2"
-CONSENT_VERSION = "pages-e9-internal-formal-collection-notice-v2"
+ASSET_VERSION = "e9-fixed-budget-bilingual-formal-v3"
+CONSENT_VERSION = "pages-e9-internal-formal-collection-notice-v3"
 RATER_SLOT_MIN = 0
 RATER_SLOT_MAX = 4
-EXPECTED_ITEM_COUNT = 216
-EXPECTED_MAP_COUNT = 36
+EXPECTED_ITEM_COUNT = 360
+EXPECTED_MAP_COUNT = 60
 EXPECTED_ITEMS_PER_MAP = 6
 JUDGMENTS_PER_ITEM = 5
 SUPPORTED_MAP_SIZES = {8, 16, 24, 32}
@@ -61,7 +61,7 @@ SUPPORTED_HORIZONS = {48, 96, 144, 192}
 EXPECTED_BLIND_MAP_IDS = {
     f"map_{config_index:02d}_{map_index:02d}"
     for config_index in range(1, 7)
-    for map_index in range(1, 7)
+    for map_index in range(1, 11)
 }
 DIRECTIVE_EN = (
     "Reach the goal efficiently, avoid unnecessary elevation change, "
@@ -1041,7 +1041,13 @@ def public_artifact_path(
 def judge_route_metadata(payload: dict[str, Any], item_id: str) -> dict[str, int]:
     map_payload = payload.get("map")
     routes = payload.get("routes")
-    if not isinstance(map_payload, dict) or not isinstance(routes, dict):
+    if (
+        not isinstance(map_payload, dict)
+        or set(map_payload)
+        != {"agent_count", "cover", "goal", "height", "max_steps", "start"}
+        or not isinstance(routes, dict)
+        or set(routes) != {"A", "B"}
+    ):
         raise RuntimeError(f"invalid judge map/routes: {item_id}")
     height = map_payload.get("height")
     cover = map_payload.get("cover")
@@ -1076,6 +1082,7 @@ def judge_route_metadata(payload: dict[str, Any], item_id: str) -> dict[str, int
         route = routes.get(arm)
         if (
             not isinstance(route, dict)
+            or set(route) != {"completed", "completion_step", "trajectory"}
             or not isinstance(route.get("completed"), bool)
             or "completion_step" not in route
             or "trajectory" not in route
@@ -1104,6 +1111,15 @@ def judge_route_metadata(payload: dict[str, Any], item_id: str) -> dict[str, int
             positions = frame.get("positions") if isinstance(frame, dict) else None
             if (
                 not isinstance(frame, dict)
+                or set(frame)
+                != {
+                    "active_mask",
+                    "agent_action_names",
+                    "agent_actions",
+                    "positions",
+                    "reached_mask",
+                    "t",
+                }
                 or frame.get("t") != expected_time
                 or not isinstance(positions, list)
                 or len(positions) != current_count
@@ -1163,7 +1179,19 @@ def checked_public_items(
     records = manifest.get("items")
     directive = manifest.get("directive")
     if (
-        manifest.get("schema_version")
+        set(manifest)
+        != {
+            "design_id",
+            "directive",
+            "generated_utc",
+            "item_count",
+            "items",
+            "items_per_map",
+            "map_count",
+            "schema_version",
+            "status",
+        }
+        or manifest.get("schema_version")
         != "tbam.e9_human_artifacts_public.v1"
         or manifest.get("status") != "complete_frozen_artifacts"
         or manifest.get("design_id") != EXPECTED_DESIGN_ID
@@ -1183,7 +1211,8 @@ def checked_public_items(
     map_ids = sorted({str(record.get("blind_map_id")) for record in records})
     if set(map_ids) != EXPECTED_BLIND_MAP_IDS:
         raise RuntimeError(
-            "the E9 blind-map IDs must be exactly map_01_01 through map_06_06"
+            "the E9 blind-map IDs must contain map_CC_II for "
+            "CC=01..06 and II=01..10 exactly"
         )
     map_index = {map_id: index for index, map_id in enumerate(map_ids)}
     item_position: dict[str, int] = defaultdict(int)
@@ -1231,7 +1260,17 @@ def checked_public_items(
             raise RuntimeError(f"public item changed: {item_id}")
         public_item = load_json(public_item_path)
         if (
-            public_item.get("schema_version")
+            set(public_item)
+            != {
+                "artifact",
+                "blind_map_id",
+                "design_id",
+                "directive",
+                "item_id",
+                "question",
+                "schema_version",
+            }
+            or public_item.get("schema_version")
             != "tbam.e9_human_item_public.v1"
             or public_item.get("design_id") != EXPECTED_DESIGN_ID
             or public_item.get("item_id") != item_id
@@ -1264,7 +1303,17 @@ def checked_public_items(
             raise RuntimeError(f"public judge input changed: {item_id}")
         judge_payload = load_json(judge_source)
         if (
-            judge_payload.get("schema_version")
+            set(judge_payload)
+            != {
+                "blind_map_id",
+                "design_id",
+                "directive",
+                "item_id",
+                "map",
+                "routes",
+                "schema_version",
+            }
+            or judge_payload.get("schema_version")
             != "tbam.blind_judge_input.v1"
             or judge_payload.get("design_id") != EXPECTED_DESIGN_ID
             or judge_payload.get("item_id") != item_id

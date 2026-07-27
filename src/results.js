@@ -6,9 +6,14 @@ const PAGES_EXPORT_SCHEMA = "tbam.pages_human_rater_export.v2";
 const JUDGMENT_SCHEMA = "tbam.blind_pairwise_choice.v1";
 const MERGED_EXPORT_SCHEMA = "tbam.merged_pairwise_choices.v1";
 const EXPECTED_STUDY_ID =
-  "tbam_e9_fixed_budget_human_pairwise_pages_v2";
-const EXPECTED_DESIGN_ID = "e9_human_pairwise_v1";
+  "tbam_e9_fixed_budget_human_pairwise_pages_v3";
+const EXPECTED_DESIGN_ID = "e9_human_pairwise_v2";
 const EXPECTED_ASSIGNMENT_RULE = "complete_catalog_round_robin_v2";
+const EXPECTED_ITEM_COUNT = 360;
+const EXPECTED_MAP_COUNT = 60;
+const EXPECTED_ITEMS_PER_MAP = 6;
+const EXPECTED_RATER_SLOT_MIN = 0;
+const EXPECTED_RATER_SLOT_MAX = 4;
 const MAX_DURATION_SECONDS = 43200;
 const PAGES_EXPORT_FIELDS = [
   "schema_version",
@@ -212,14 +217,15 @@ function validateManifest(manifest) {
     manifest.map_count <= 0 ||
     !Number.isInteger(manifest.items_per_map) ||
     manifest.items_per_map <= 0 ||
+    manifest.item_count !== EXPECTED_ITEM_COUNT ||
+    manifest.map_count !== EXPECTED_MAP_COUNT ||
+    manifest.items_per_map !== EXPECTED_ITEMS_PER_MAP ||
     manifest.map_count * manifest.items_per_map !== manifest.item_count ||
-    manifest.items_per_rater !== manifest.item_count ||
+    manifest.items_per_rater !== EXPECTED_ITEM_COUNT ||
     manifest.judgments_per_item_if_all_slots_complete !== 5 ||
     manifest.assignment_rule_id !== EXPECTED_ASSIGNMENT_RULE ||
-    !Number.isInteger(manifest.rater_slot_min) ||
-    !Number.isInteger(manifest.rater_slot_max) ||
-    manifest.rater_slot_min < 0 ||
-    manifest.rater_slot_max < manifest.rater_slot_min
+    manifest.rater_slot_min !== EXPECTED_RATER_SLOT_MIN ||
+    manifest.rater_slot_max !== EXPECTED_RATER_SLOT_MAX
   ) {
     throw new Error(
       "manifest 的 Pages 分配参数不完整或内部不一致",

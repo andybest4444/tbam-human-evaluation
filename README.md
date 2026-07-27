@@ -39,24 +39,21 @@ participant links, and do not change it during a collection round.
 
 ## Frozen source
 
-- Design: `e9_human_pairwise_v1`
-- Maps: 36 balanced E9 evaluation instances
-- Public blinded items: 216
+- Design: `e9_human_pairwise_v2`
+- Maps: 60 balanced E9 evaluation instances (10 per configuration)
+- Public blinded items: 360
 - Items per map: all six pairwise comparisons among AZ, UCT, JointPPO, and
   MAPPO+AgentID; method identities remain private
-- Items per participant: all 216
+- Items per participant: all 360
 - Participant slots: 5 (`0` through `4`)
 - Assignment: five frozen round-robin orderings of the complete catalog
 - Response: one required `A` or `B` choice per item
 - Map sizes: 8, 16, 24, and 32
 - Agent counts: 2, 3, and 4
 - Horizons: 48, 96, 144, and 192
-- Source public-manifest SHA-256:
-  `9441c978a4552b234d725ad1a8a87df76969d426e1a2dc99c22f3e5f8f95fad4`
-- Collection protocol ID:
-  `9dcbcf36e3a192e8f34569e8ccf0cc7575c89a2f0d1c0416a3d8330f7c864bae`
-- Deployment bundle ID:
-  `9108225b043c091ca87fbcca1f95d2b9962c2b70071a83d0948bacdf92040f0f`
+- Source public-manifest SHA-256: `3f05c6ff1ccb8c18ff74e88c45d5e5771de00994a3354aea79e0b369ea4cfbae`
+- Collection protocol ID: `9801e9289fc3a42769fdf335e5904141c891c14c528b23320169b7a7502af44f`
+- Deployment bundle ID: `e1688fd4ec37dd387d97596b3fe2b41ed2f236afd38fa34d280c050ce73c8dc3`
 - Presentation: `static_route_maps_bilingual_variable_scale_pages_v1`
 
 The generated `site/` contains only byte-identical public `judge_input.json`
@@ -65,7 +62,7 @@ files. No MP4 files are required or published.
 ## Build and verify
 
 Rebuilding requires the sibling `human_evaluation_portal/` source and frozen
-`paper_experiments/blind_artifacts/e9_human_pairwise_v1/public/` corpus in this TBAM
+`paper_experiments/blind_artifacts/e9_human_pairwise_v2/public/` corpus in this TBAM
 workspace (or explicit `--portal` and `--artifact-root` paths). A standalone
 clone can still verify and deploy the already generated, sealed `site/`.
 
@@ -137,7 +134,7 @@ https://YOUR_ACCOUNT.github.io/tbam-human-evaluation/?slot=4
 ```
 
 Slots are zero-based and must not be reused. Every slot contains every one of
-the 216 items exactly once, in a different frozen order. Four completed slots
+the 360 items exactly once, in a different frozen order. Four completed slots
 give every item four judgments; all five completed slots give every item five
 judgments.
 
@@ -150,7 +147,7 @@ The participant:
 
 1. opens only their assigned slot link;
 2. chooses a pseudonymous username and PIN;
-3. completes the 216-item catalog, over as many sessions as needed;
+3. completes the 360-item catalog, over as many sessions as needed;
    each item requires only one A/B selection and can be reopened to replace
    that selection;
 4. clicks **下载结果与进度 JSON** or

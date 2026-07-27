@@ -8,13 +8,16 @@
   const expectedManifestSha =
     "__E9_PUBLIC_MANIFEST_SHA256__";
   const expectedStudyId =
-    "tbam_e9_fixed_budget_human_pairwise_pages_v2";
-  const expectedDesignId = "e9_human_pairwise_v1";
+    "tbam_e9_fixed_budget_human_pairwise_pages_v3";
+  const expectedDesignId = "e9_human_pairwise_v2";
   const expectedPresentationMedium =
     "static_route_maps_bilingual_variable_scale_pages_v1";
   const expectedAssignmentRule = "complete_catalog_round_robin_v2";
   const expectedConsentVersion =
-    "pages-e9-internal-formal-collection-notice-v2";
+    "pages-e9-internal-formal-collection-notice-v3";
+  const expectedItemCount = 360;
+  const expectedMapCount = 60;
+  const expectedItemsPerMap = 6;
   const retiredVersions = [
     {
       studyId: "tbam_s6_human_forced_choice_full_catalog_pages_v1",
@@ -26,9 +29,14 @@
       protocolId:
         "d44029836227f788c6cf35a1ae68a8392092e52b00fa22a99f868bd4843cf60a",
     },
+    {
+      studyId: "tbam_e9_fixed_budget_human_pairwise_pages_v2",
+      protocolId:
+        "9dcbcf36e3a192e8f34569e8ccf0cc7575c89a2f0d1c0416a3d8330f7c864bae",
+    },
   ];
   const retiredPurgeMarker =
-    `${namespace}:formal-v2-retired-progress-purged:v1`;
+    `${namespace}:formal-v3-retired-progress-purged:v1`;
   const encoder = new TextEncoder();
   let manifestPromise;
 
@@ -126,15 +134,13 @@
             manifest?.assignment_rule_id !== expectedAssignmentRule ||
             manifest?.rater_slot_min !== 0 ||
             manifest?.rater_slot_max !== 4 ||
-            !Number.isInteger(manifest?.item_count) ||
-            manifest.item_count <= 0 ||
-            !Number.isInteger(manifest?.map_count) ||
-            manifest.map_count <= 0 ||
-            !Number.isInteger(manifest?.items_per_map) ||
-            manifest.items_per_map <= 0 ||
+            manifest?.item_count !== expectedItemCount ||
+            manifest?.map_count !== expectedMapCount ||
+            manifest?.items_per_map !== expectedItemsPerMap ||
             manifest.map_count * manifest.items_per_map !==
               manifest.item_count ||
-            manifest?.items_per_rater !== manifest.item_count ||
+            manifest?.items_per_rater !== expectedItemCount ||
+            manifest?.judgments_per_item_if_all_slots_complete !== 5 ||
             !Array.isArray(manifest?.items) ||
             manifest.items.length !== manifest.item_count
           ) {
